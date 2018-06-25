@@ -1,0 +1,11 @@
+F:\SourceTree\AtTest\AtTest\bin\Debug\netcoreapp2.0\AtTest.deps.json
+F:\SourceTree\AtTest\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.json
+F:\SourceTree\AtTest\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.dev.json
+F:\SourceTree\AtTest\AtTest\bin\Debug\netcoreapp2.0\AtTest.dll
+F:\SourceTree\AtTest\AtTest\bin\Debug\netcoreapp2.0\AtTest.pdb
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.csprojAssemblyReference.cache
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.csproj.CoreCompileInputs.cache
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfoInputs.cache
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
+F:\SourceTree\AtTest\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
