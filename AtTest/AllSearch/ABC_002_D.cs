@@ -6,7 +6,7 @@ namespace AtTest.AllSearch
 {
     class ABC_002_D
     {
-        static void Main(string[] args)
+        static void main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -22,61 +22,44 @@ namespace AtTest.AllSearch
             for (int i = 0; i < m; i++)
             {
                 string[] inRelation = Console.ReadLine().Split(' ');
-                int man = int.Parse(inRelation[0])-1;
-                int rel = int.Parse(inRelation[1])-1;
+                int man = int.Parse(inRelation[0]) - 1;
+                int rel = int.Parse(inRelation[1]) - 1;
                 relation[man, rel] = true;
+                relation[rel, man] = true;
             }
-
             for(int i = 0; i < n; i++)
             {
-                string s = "";
-                for(int j = 0; j < n; j++)
-                {
-                    if (relation[i, j]) s += "○";
-                    else s += "□";
-                }
-                Console.WriteLine(s);
+                relation[i, i] = true;
             }
 
+            int max = (int)Math.Pow(2, n);
             int maxRel = 1;
-            for (int i = 0; i < n; i++)
+            for (int i = 1; i < max; i++)
             {
-                List<int> relIndex = new List<int>();
-                for (int j = i + 1; j < n; j++)
+                int cnt = 0;
+                bool ok = true;
+                for (int j = 0; j <n; j++)
                 {
-                    if (relation[i, j]) relIndex.Add(j);
+                    if (((i >> j) & 1) == 1)
+                    {
+                        for (int k = 0; k < n; k++)
+                        {
+                            if (!relation[j, k] && ((i >> k) & 1) == 1)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        cnt++;
+                    }
                 }
 
-                if (relIndex.Count == 0) continue;
-                int relCnt = RelCount(relation, relIndex, relIndex.Count + 1);
-                if (maxRel < relCnt)
+                if (ok && maxRel < cnt)
                 {
-                    maxRel = relCnt;
+                    maxRel = cnt;
                 }
             }
-
-
             Console.WriteLine(maxRel);
-        }
-
-        //再帰関数
-        static int RelCount(bool[,] rels, List<int> relIndexes,int cnt)
-        {
-            int row = relIndexes[0];
-            List<int> newRelIndexes = new List<int>();
-            for (int i = 1; i < relIndexes.Count; i++)
-            {
-                if (rels[row, relIndexes[i]]) newRelIndexes.Add(relIndexes[i]);
-                else cnt--;
-            }
-            if (newRelIndexes.Count == 0)
-            {
-                return cnt;
-            }
-            else
-            {
-                return RelCount(rels, newRelIndexes, cnt);
-            }
         }
     }
 }
