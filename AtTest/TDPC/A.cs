@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest
+namespace AtTest.TDPC
 {
-    class AtTemplate
+    class A
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();

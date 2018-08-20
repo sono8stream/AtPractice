@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
-namespace AtTest.ABC_103
+namespace AtTest.C_Challenge
 {
-    class C
+    class ABC_019
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -21,12 +22,27 @@ namespace AtTest.ABC_103
             {
                 array[i] = int.Parse(input[i]);
             }
-            long f = 0;
+
             for(int i = 0; i < n; i++)
             {
-                f += array[i] - 1;
+                while (array[i] % 2 == 0)
+                {
+                    array[i] /= 2;
+                }
             }
-            Console.WriteLine(f);
+
+            Array.Sort(array);
+            int cnt = 1;
+            int nowVal = array[0];
+            for(int i = 1; i < n; i++)
+            {
+                if (array[i] == nowVal) continue;
+
+                nowVal = array[i];
+                cnt++;
+            }
+
+            Console.WriteLine(cnt);
         }
     }
 }

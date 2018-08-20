@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.ABC_103
+namespace AtTest.ForBlue.ABC_059
 {
-    class C
+    class D
     {
         static void main(string[] args)
         {
@@ -14,19 +14,18 @@ namespace AtTest.ABC_103
 
         static void Method(string[] args)
         {
-            int n = int.Parse(Console.ReadLine());
             string[] input = Console.ReadLine().Split(' ');
-            var array = new int[n];
-            for (int i = 0; i < n; i++)
+            long x = long.Parse(input[0]);
+            long y = long.Parse(input[1]);
+
+            if (Math.Abs(x - y) <= 1)
             {
-                array[i] = int.Parse(input[i]);
+                Console.WriteLine("Brown");
             }
-            long f = 0;
-            for(int i = 0; i < n; i++)
+            else
             {
-                f += array[i] - 1;
+                Console.WriteLine("Alice");
             }
-            Console.WriteLine(f);
         }
     }
 }

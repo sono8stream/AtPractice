@@ -14,13 +14,22 @@ namespace AtTest.ABC_103
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            string s = Console.ReadLine();
+            string t = Console.ReadLine();
+            for (int i = 0; i <= s.Length; i++)
             {
+                if (s.Equals(t))
+                {
+                    Console.WriteLine("Yes");
+                    return;
+                }
 
+                string sub = s.Substring(0, s.Length - 1);
+                s = s.Substring(s.Length - 1);
+                s += sub;
+                //Console.WriteLine(s);
             }
-            Console.WriteLine("text");
+            Console.WriteLine("No");
         }
     }
 }

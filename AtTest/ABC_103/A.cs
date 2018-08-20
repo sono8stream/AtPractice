@@ -6,7 +6,7 @@ namespace AtTest.ABC_103
 {
     class A
     {
-        static void Main(string[] args)
+        static void main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -15,12 +15,18 @@ namespace AtTest.ABC_103
         static void Method(string[] args)
         {
             string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            int[] array = new int[3];
+            for (int i = 0; i < 3; i++)
             {
-
+                array[i] = int.Parse(input[i]);
             }
-            Console.WriteLine("text");
+
+            int cost = 0;
+            Array.Sort(array);
+            cost += array[1] - array[0];
+            cost += array[2] - array[1];
+
+            Console.WriteLine(cost);
         }
     }
 }
