@@ -23,7 +23,7 @@ namespace AtTest.Library.Permutation
             Console.WriteLine("text");
         }
 
-        static long Factorial(int n)
+        static long Factorial(long n)
         {
             if (n == 0) return 1;
 

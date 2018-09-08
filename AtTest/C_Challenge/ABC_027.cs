@@ -6,7 +6,7 @@ namespace AtTest.C_Challenge
 {
     class ABC_027
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -15,17 +15,36 @@ namespace AtTest.C_Challenge
         static void Method(string[] args)
         {
             long n = long.Parse(Console.ReadLine());
-            for (int i = 0; i < n; i++)
+            if (n == 1)
             {
-
+                Console.WriteLine("Aoki");
+                return;
             }
-            Console.WriteLine("text");
+
+            int depth = 0;
+            for (long nn = n; nn > 0; nn /= 2) depth++;
+
+            long nc = 1;
+            bool isTakahashi = true;
+            while (nc <= n)
+            {
+                nc *= 2;
+                if ((depth % 2 == 1 && isTakahashi)
+                    || (depth % 2 == 0 && !isTakahashi))
+                {
+                    nc++;
+                }
+                isTakahashi = !isTakahashi;
+            }
+
+            string s = isTakahashi ? "Takahashi" : "Aoki";
+            Console.WriteLine(s);
         }
 
         //確実に勝てるか返す
         static bool DFS(long n, long x)
         {
-            if (x == n / 2 + 1) return false;
+            if (x >=     n / 2 + 1) return false;
 
             return !DFS(n, x * 2) || !DFS(n, x * 2 + 1);
         }
