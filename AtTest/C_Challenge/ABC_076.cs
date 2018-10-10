@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.C_Challenge
 {
-    class ABC_038
+    class ABC_076
     {
         static void ain(string[] args)
         {
@@ -14,27 +14,39 @@ namespace AtTest.C_Challenge
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[] array = ReadInts();
-
-            long l = 0, r = 0;
-            long allPat = 0;
-            for (; r < n - 1; r++)
+            char[] s = Console.ReadLine().ToCharArray();
+            char[] t = Console.ReadLine().ToCharArray();
+            for (int i = s.Length - t.Length; i >= 0; i--)
             {
-                if (array[r] < array[r + 1])
+                bool ok = true;
+                for(int j = 0; j < t.Length; j++)
                 {
-                    continue;
+                    if (s[i + j] == t[j] || s[i + j] == '?')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        ok = false;
+                        break;
+                    }
+                }
+                if (ok)
+                {
+                    for(int j = 0; j < t.Length; j++)
+                    {
+                        s[i + j] = t[j];
+                    }
+                    string result = new string(s).Replace('?', 'a');
+                    Console.WriteLine(result);
+                    return;
                 }
                 else
                 {
-
-                    allPat += (r - l + 1) * (r - l + 2) / 2;
-                    l = r + 1;
+                    continue;
                 }
             }
-            allPat += (r - l + 1) * (r - l + 2) / 2;
-
-            Console.WriteLine(allPat);
+            Console.WriteLine("UNRESTORABLE");
         }
 
         private static string Read() { return Console.ReadLine(); }

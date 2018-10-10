@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_085
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,22 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            int[] ny = ReadInts();
+            ny[1] /= 1000;
+            for (int i = 0; i <= ny[0]; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                for(int j = 0; j <= ny[0] - i; j++)
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
+                    int val = 10 * i + 5 * j + 1 * (ny[0] - i - j);
+                    if (val == ny[1])
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        Console.WriteLine(string.Format("{0} {1} {2}",
+                            i, j, ny[0] - i - j));
+                        return;
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
+            Console.WriteLine("-1 -1 -1");
         }
 
         private static string Read() { return Console.ReadLine(); }

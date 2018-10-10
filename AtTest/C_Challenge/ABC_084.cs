@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_084
     {
         static void ain(string[] args)
         {
@@ -15,25 +15,39 @@ namespace AtTest.TDPC
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            var cs = new int[n - 1];
+            var ss = new int[n - 1];
+            var fs = new int[n - 1];
+            for (int i = 0; i < n - 1; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                int[] input = ReadInts();
+                cs[i] = input[0];
+                ss[i] = input[1];
+                fs[i] = input[2];
+            }
+            for (int i = 0; i < n; i++)
+            {
+                long time = 0;
+                for(int j = i; j < n; j++)
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
+                    if (j == n - 1)
+                    {
+                        Console.WriteLine(time);
+                    }
                     else
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        if (time <= ss[j])
+                        {
+                            time = ss[j];
+                        }
+                        else if (time % fs[j] != 0)
+                        {
+                            time = (time / fs[j] + 1) * fs[j];
+                        }
+                        time += cs[j];
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace AtTest.D_Challenge
 {
@@ -19,27 +20,56 @@ namespace AtTest.D_Challenge
             int g = int.Parse(input[1]);
             int b = int.Parse(input[2]);
             int rRight = (r - 1) / 2 - 100;
-            int rLeft = -r / 2 - 100;
             int bLeft = -(b - 1) / 2 + 100;
-            int bRight = b / 2 + 100;
-            for (int i = -g + 1; i <= g - 1; i++)
+
+            int minCnt = -1;
+            for (int i = -650; i <= 325; i++)
             {
-                //r
-                if (i <= rRight)
-                {
-                    rLeft += rRight - i - 1;
-                    rRight = i - 1;
-                }
+                int rR = i <= rRight ? i - 1 : rRight;
+                int bL = bLeft <= i + g - 1 ? i + g : bLeft;
 
-                //b
-                if (bLeft <= i + g - 1)
+                int cnt = CalculateCount(
+                    rR - r + 1, rR,
+                    i, i + g - 1,
+                    bL, bL + b - 1);
+                if (minCnt == -1 || cnt < minCnt)
                 {
-                    rLeft += rRight - i - 1;
-                    rRight = i - 1;
+                    minCnt = cnt;
                 }
+                //Console.WriteLine(rR + " " + i + " " + bL);
             }
+            Console.WriteLine(minCnt);
+        }
 
-            Console.WriteLine("text");
+        static int CalculateCount(int rLeft, int rRight,
+            int gLeft, int gRight,
+             int bLeft, int bRight)
+        {
+            int rCnt = OperateCount(rLeft, rRight, -100);
+            int gCnt = OperateCount(gLeft, gRight, 0);
+            int bCnt = OperateCount(bLeft, bRight, 100);
+            return rCnt + gCnt + bCnt;
+        }
+
+        static int OperateCount(int left, int right, int center)
+        {
+            int cnt = 0;
+            if (left <= center && center <= right)
+            {
+                cnt = (center - left) * (center - left + 1) / 2
+                    + (right - center) * (right - center + 1) / 2;
+            }
+            else if (center < left)
+            {
+                cnt = (right + left - center * 2)
+                    * (right - left + 1) / 2;
+            }
+            else if (right < center)
+            {
+                cnt = (center * 2 - right - left)
+                    * (right - left + 1) / 2;
+            }
+            return cnt;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace AtTest.ABC_109
 {
     class D
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();

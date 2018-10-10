@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_068
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,38 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            string[] input = Console.ReadLine().Split(' ');
+            int n = int.Parse(input[0]);
+            int m = int.Parse(input[1]);
+
+            var stoppings = new Dictionary<int, bool>();
+            var abs = new int[m][];
+            for (int i = 0; i < m; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                int[] ab= ReadInts();
+                abs[i] = new int[2];
+                abs[i][0] = ab[0];
+                abs[i][1] = ab[1];
+            }
+            Array.Sort(abs, (a, b) => a[0] - b[0]);
+
+            for(int i = 0; i < m; i++)
+            {
+                if (abs[i][0] == 1)
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
+                    stoppings.Add(abs[i][1], true);
+                }
+                else
+                {
+                    if (abs[i][1] == n&&stoppings.ContainsKey(abs[i][0]))
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        Console.WriteLine("POSSIBLE");
+                        return;
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
+
+            Console.WriteLine("IMPOSSIBLE");
         }
 
         private static string Read() { return Console.ReadLine(); }

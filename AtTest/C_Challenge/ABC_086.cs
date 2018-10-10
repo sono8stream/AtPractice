@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.C_Challenge
 {
-    class ABC_038
+    class ABC_086
     {
         static void ain(string[] args)
         {
@@ -15,26 +15,40 @@ namespace AtTest.C_Challenge
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] array = ReadInts();
-
-            long l = 0, r = 0;
-            long allPat = 0;
-            for (; r < n - 1; r++)
+            var ts = new int[n];
+            var xs = new int[n];
+            var ys = new int[n];
+            for(int i = 0; i < n; i++)
             {
-                if (array[r] < array[r + 1])
+                int[] input = ReadInts();
+                ts[i] = input[0];
+                xs[i] = input[1];
+                ys[i] = input[2];
+            }
+
+            int time = 0;
+            int nowX = 0;
+            int nowY = 0;
+            for(int i = 0; i < n; i++)
+            {
+                int span = ts[i] - time;
+                int distance 
+                    = Math.Abs(xs[i] - nowX) + Math.Abs(ys[i] - nowY);
+                if (distance <= span && distance % 2 == span % 2)
                 {
+                    time = ts[i];
+                    nowX = xs[i];
+                    nowY = ys[i];
+                    //Console.WriteLine("OK");
                     continue;
                 }
                 else
                 {
-
-                    allPat += (r - l + 1) * (r - l + 2) / 2;
-                    l = r + 1;
+                    Console.WriteLine("No");
+                    return;
                 }
             }
-            allPat += (r - l + 1) * (r - l + 2) / 2;
-
-            Console.WriteLine(allPat);
+            Console.WriteLine("Yes");
         }
 
         private static string Read() { return Console.ReadLine(); }

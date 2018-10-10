@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ABC_110
 {
-    class A
+    class D
     {
+
         static void ain(string[] args)
         {
             Method(args);
@@ -14,26 +15,28 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            string[] input = Console.ReadLine().Split(' ');
+            int n = int.Parse(input[0]);
+            long m = long.Parse(input[1]);
+            long[] factors;
+            factors = GetFactors(m);
+            for (int i = 0; i < n; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
-                {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
-                    {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
-                    }
-                }
+
             }
-            Console.WriteLine(posList.Count);
+            Console.WriteLine("text");
+        }
+
+        static long[] GetFactors(long m)
+        {
+            long rm = (long)Math.Sqrt(m);
+            var list = new List<long>();
+            for (long i = 1; i <= rm; i++)
+            {
+                if (m % i == 0) list.Add(m);
+            }
+
+            return list.ToArray();
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_092
     {
         static void ain(string[] args)
         {
@@ -15,25 +15,34 @@ namespace AtTest.TDPC
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
+            long[] array = ReadLongs();
+            long sum = 0;
+            long now = 0;
+            var eachFee = new long[n];
+            var skipFee = new long[n];
+            for (int i = 0; i < n; i++)
+            {
+                sum += Math.Abs(array[i] - now);
+                if (i == n - 1)
+                {
+                    eachFee[i]= Math.Abs(array[i] - now)
+                        + Math.Abs(array[i]);
+                    skipFee[i]=Math.Abs(now);
+                }
+                else
+                {
+                    eachFee[i] = Math.Abs(array[i] - now)
+                        + Math.Abs(array[i + 1] - array[i]);
+                    skipFee[i] = Math.Abs(array[i + 1] - now);
+                }
+                now = array[i];
+            }
+            sum += Math.Abs(array[n - 1]);
+
             for(int i = 0; i < n; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
-                {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
-                    {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
-                    }
-                }
+                Console.WriteLine(sum - eachFee[i] + skipFee[i]);
             }
-            Console.WriteLine(posList.Count);
         }
 
         private static string Read() { return Console.ReadLine(); }

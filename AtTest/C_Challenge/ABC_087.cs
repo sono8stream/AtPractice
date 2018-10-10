@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_087
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,38 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            var cs = new int[3, 3];
+            for(int i = 0; i < 3; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                int[] input = ReadInts();
+                cs[i, 0] = input[0];
+                cs[i, 1] = input[1];
+                cs[i, 2] = input[2];
+            }
+
+            int a1 = cs[0, 0];
+            int a2 = cs[1, 0];
+            int a3 = cs[2, 0];
+            int b1 = 0;
+
+            for(int i = 1; i < 3; i++)
+            {
+                int bi = cs[0, i] - cs[0, 0];
+                for(int j = 1; j < 3; j++)
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
+                    if (bi == cs[j, i] - cs[j, 0])
+                    {
+                        continue;
+                    }
                     else
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        Console.WriteLine("No");
+                        return;
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
+
+            Console.WriteLine("Yes");
         }
 
         private static string Read() { return Console.ReadLine(); }

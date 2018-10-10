@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_088
     {
         static void ain(string[] args)
         {
@@ -15,25 +15,43 @@ namespace AtTest.TDPC
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
+            var marchCnt = new ulong[5];
             for(int i = 0; i < n; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                string s = Console.ReadLine();
+                switch (s[0])
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
+                    case 'M':
+                        marchCnt[0]++;
+                        break;
+                    case 'A':
+                        marchCnt[1]++;
+                        break;
+                    case 'R':
+                        marchCnt[2]++;
+                        break;
+                    case 'C':
+                        marchCnt[3]++;
+                        break;
+                    case 'H':
+                        marchCnt[4]++;
+                        break;
+                }
+            }
+
+            ulong allCnt = 0;
+            for(int i = 0; i < 3; i++)
+            {
+                for(int j = i + 1; j < 4; j++)
+                {
+                    for(int k = j + 1; k < 5; k++)
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        allCnt += marchCnt[i] * marchCnt[j] * marchCnt[k];
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
+
+            Console.WriteLine(allCnt);
         }
 
         private static string Read() { return Console.ReadLine(); }

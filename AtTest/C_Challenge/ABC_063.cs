@@ -16,33 +16,28 @@ namespace AtTest.C_Challenge
         {
             int n = int.Parse(Console.ReadLine());
             var ss = new int[n];
+            int sum = 0;
             for (int i = 0; i < n; i++)
             {
                 ss[i] = int.Parse(Console.ReadLine());
+                sum += ss[i];
             }
             Array.Sort(ss);
-            //Array.Reverse(ss);
-            var dp = new int[n,10];//i番目までの数を使える時の各余りでの最大値
-            dp[0, ss[0] % 10] = ss[0];
-            for (int i = 1; i < n; i++)
+            if (sum % 10 == 0)
             {
-                string s = "";
-                int margin = ss[i] % 10;
-                for (int j = 0; j < 10; j++)
+                for (int i = 0; i < n; i++)
                 {
-                    int nextIndex = (j + margin) % 10;
-                    dp[i, nextIndex] = dp[i, j] + ss[i];
-                    s += dp[i, nextIndex].ToString();
-                }
-                Console.WriteLine(s);
+                    if (ss[i] % 10 == 0) continue;
 
+                    Console.WriteLine(sum - ss[i]);
+                    return;
+                }
+                Console.WriteLine(0);
             }
-            int max = 0;
-            for(int i = 1; i < 10; i++)
+            else
             {
-                if (max < dp[n - 1, i]) max = dp[n - 1, i];
+                Console.WriteLine(sum);
             }
-            Console.WriteLine(max);
         }
     }
 }

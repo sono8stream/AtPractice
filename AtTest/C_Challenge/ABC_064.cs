@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.C_Challenge
 {
-    class A
+    class ABC_064
     {
         static void ain(string[] args)
         {
@@ -15,25 +15,38 @@ namespace AtTest.TDPC
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] ps = ReadInts();
-            bool[] poses = new bool[100001];//0~10000
-            var posList = new List<int>();
-            poses[0] = true;
-            posList.Add(0);
-            for(int i = 0; i < n; i++)
+            int[] array = ReadInts();
+            var levelWall = new int[8]
+                { 400, 800, 1200, 1600, 2000, 2400, 2800, 3200 };
+            var levelCnt = new int[9];
+            for (int i = 0; i < n; i++)
             {
-                int cnt = posList.Count;
-                for(int j = 0; j < cnt; j++)
+                for(int j = 0; j <= levelWall.Length; j++)
                 {
-                    if (poses[posList[j] + ps[i]]) continue;
-                    else
+                    if (j == levelWall.Length)
                     {
-                        poses[posList[j] + ps[i]] = true;
-                        posList.Add(posList[j] + ps[i]);
+                        levelCnt[levelWall.Length]++;
+                    }
+                    else if (array[i] < levelWall[j])
+                    {
+                        levelCnt[j]++;
+                        break;
                     }
                 }
             }
-            Console.WriteLine(posList.Count);
+
+            int colorCnt = 0;
+            for (int i = 0; i < levelWall.Length; i++)
+            {
+                if (levelCnt[i] > 0)
+                {
+                    colorCnt++;
+                }
+            }
+            int min = colorCnt > 0 ? colorCnt : 1;
+            int max = colorCnt + levelCnt[levelWall.Length];
+
+            Console.WriteLine(min + " " + max);
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest
+namespace AtTest.C_Challenge
 {
-    class AtTemplate
+    class ABC_099
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -16,11 +16,35 @@ namespace AtTest
         {
             string[] input = Console.ReadLine().Split(' ');
             int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            var patterns = new List<int>();
+            patterns.Add(1);
+            patterns.AddRange(new int[6]
+                {6,36,216,1296,7776,46656});
+            patterns.AddRange(new int[5]
+            { 9,81,729,6561,59049});
+            patterns.Sort();
+            int cnt = n;
+            for (int i = 0; i <= n; i++)//6^pで表すものをiとし, 最小回数を全探索
             {
+                int a = n - i;
+                int p = 0;
+                while (a > 0)
+                {
+                    p += a % 6;
+                    a /= 6;
+                }
 
+                int b = i;
+                int q = 0;
+                while (b > 0)
+                {
+                    q += b % 9;
+                    b /= 9;
+                }
+
+                cnt = Math.Min(p + q, cnt);
             }
-            Console.WriteLine("text");
+            Console.WriteLine(cnt);
         }
 
         private static string Read() { return Console.ReadLine(); }
