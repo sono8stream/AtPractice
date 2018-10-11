@@ -6,7 +6,7 @@ namespace AtTest.C_Challenge
 {
     class ABC_112
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
