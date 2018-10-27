@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.D_Challenge
+namespace AtTest.Library.UnionFind
 {
-    class ABC_087
+    class UnionFind
     {
-        static void ain(string[] args)
+        static void main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -14,44 +14,16 @@ namespace AtTest.D_Challenge
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            var lrds = new int[nm[1]][];
-            for (int i = 0; i < nm[1]; i++)
+            string[] input = Console.ReadLine().Split(' ');
+            int n = int.Parse(input[0]);
+            for (int i = 0; i < n; i++)
             {
-                lrds[i] = ReadInts();
-            }
-            var unionFind = new int[nm[0]];
-            var rank = new int[nm[0]];
-            var diff = new int[nm[0]];
-            for (int i = 0; i < nm[0]; i++)
-            {
-                unionFind[i] = i;
-            }
-            for (int i = 0; i < nm[1]; i++)
-            {
-                int x = lrds[i][0] - 1;
-                int y = lrds[i][1] - 1;
-                if (IsSame(ref unionFind, ref diff,x,y))
-                {
-                    int weight = Weight(ref unionFind, ref diff, y)
-                        - Weight(ref unionFind, ref diff, x);
-                    if (weight != lrds[i][2])
-                    {
-                        Console.WriteLine("No");
-                        return;
-                    }
-                }
-                else
-                {
-                    Unite(ref unionFind, ref diff, ref rank,
-                        lrds[i][0] - 1, lrds[i][1] - 1, lrds[i][2]);
-                }
-            }
 
-            Console.WriteLine("Yes");
+            }
+            Console.WriteLine("text");
         }
 
-        static int Root(ref int[] tree,ref int[] wTree, int x)
+        static int Root(ref int[] tree, ref int[] wTree, int x)
         {
             int rx = x;
             int weight = wTree[x];
@@ -65,19 +37,19 @@ namespace AtTest.D_Challenge
             return rx;
         }
 
-        static int Weight(ref int[] tree,ref int[] wTree, int x)
+        static int Weight(ref int[] tree, ref int[] wTree, int x)
         {
             Root(ref tree, ref wTree, x);
             return wTree[x];
         }
 
-        static bool IsSame(ref int[] tree,ref int[] wTree,int x,int y)
+        static bool IsSame(ref int[] tree, ref int[] wTree, int x, int y)
         {
             return Root(ref tree, ref wTree, x)
                 == Root(ref tree, ref wTree, y);
         }
 
-        static void Unite(ref int[] tree, ref int[] wTree,ref int[] rank,
+        static void Unite(ref int[] tree, ref int[] wTree, ref int[] rank,
             int x, int y, int diff)
         {
             int rx = Root(ref tree, ref wTree, x);

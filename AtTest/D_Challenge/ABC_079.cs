@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
-namespace AtTest.Dijkstra
+namespace AtTest.D_Challenge
 {
-    class ABC_012_D
+    class ABC_079
     {
         static Node[] nodes;
 
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -16,38 +16,44 @@ namespace AtTest.Dijkstra
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            int m = int.Parse(input[1]);
-
-            nodes = new Node[n];
-            for (int i = 0; i < n; i++)
+            int[] hw = ReadInts();
+            nodes = new Node[10];
+            for(int i = 0; i < 10; i++)
             {
-                nodes[i] = new Node(n);
-                nodes[i].distances[i] = 0;
-                nodes[i].isMin[i] = true;
-            }
-
-            for (int i = 0; i < m; i++)
-            {
-                string[] nodeInput = Console.ReadLine().Split(' ');
-                int n1 = int.Parse(nodeInput[0]) - 1;
-                int n2 = int.Parse(nodeInput[1]) - 1;
-                int t = int.Parse(nodeInput[2]);
-                nodes[n1].edges.Add(new Edge(n2, t));
-                nodes[n2].edges.Add(new Edge(n1, t));
-            }
-
-            long minDistance = 0;
-            for (int i = 0; i < n; i++)
-            {
-                long distance = Dijkstra(i);
-                if (i == 0 || distance < minDistance)
+                int[] costs = ReadInts();
+                nodes[i] = new Node(10);
+                for(int j = 0; j < 10; j++)
                 {
-                    minDistance = distance;
+                    if (i == j) continue;
+                    nodes[i].edges.Add(new Edge(j, costs[j]));
                 }
             }
-            Console.WriteLine(minDistance);
+            var oneCost = new int[10];
+            for(int i = 0; i < 10; i++)
+            {
+                if (i == 1)
+                {
+                    oneCost[i] = 0;
+                }
+                else
+                {
+                    InitializeNodes();
+                    Dijkstra(i);
+                    oneCost[i] = (int)nodes[i].distances[1];
+                }
+                //Console.WriteLine(oneCost[i]);
+            }
+
+            int res = 0;
+            for(int i = 0; i < hw[0]; i++)
+            {
+                int[] wall = ReadInts();
+                for(int j = 0; j < hw[1]; j++)
+                {
+                    res += wall[j] == -1 ? 0 : oneCost[wall[j]];
+                }
+            }
+            Console.WriteLine(res);
         }
 
         static void InitializeNodes()
@@ -116,33 +122,42 @@ namespace AtTest.Dijkstra
             return maxDistance;
         }
 
-        class Node
+        private static string Read() { return Console.ReadLine(); }
+        private static int ReadInt() { return int.Parse(Read()); }
+        private static long ReadLong() { return long.Parse(Read()); }
+        private static double ReadDouble() { return double.Parse(Read()); }
+        private static int[] ReadInts() { return Array.ConvertAll(Read().Split(), int.Parse); }
+        private static long[] ReadLongs() { return Array.ConvertAll(Read().Split(), long.Parse); }
+        private static double[] ReadDoubles() { return Array.ConvertAll(Read().Split(), double.Parse); }
+    }
+
+
+    class Node
+    {
+        public long[] distances;
+        public bool[] isMin;
+        public List<Edge> edges;
+        public Node(int length)
         {
-            public long[] distances;
-            public bool[] isMin;
-            public List<Edge> edges;
-            public Node(int length)
+            distances = new long[length];
+            isMin = new bool[length];
+            for (int i = 0; i < length; i++)
             {
-                distances = new long[length];
-                isMin = new bool[length];
-                for (int i = 0; i < length; i++)
-                {
-                    distances[i] = -1;
-                }
-                edges = new List<Edge>();
+                distances[i] = -1;
             }
+            edges = new List<Edge>();
         }
+    }
 
-        class Edge
+    class Edge
+    {
+        public int toIndex;
+        public int distance;
+
+        public Edge(int toIndex, int distance)
         {
-            public int toIndex;
-            public int distance;
-
-            public Edge(int toIndex, int distance)
-            {
-                this.toIndex = toIndex;
-                this.distance = distance;
-            }
+            this.toIndex = toIndex;
+            this.distance = distance;
         }
     }
 }
