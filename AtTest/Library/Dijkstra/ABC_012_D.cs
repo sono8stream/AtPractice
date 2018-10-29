@@ -8,7 +8,7 @@ namespace AtTest.Dijkstra
     {
         static Node[] nodes;
 
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -24,8 +24,6 @@ namespace AtTest.Dijkstra
             for (int i = 0; i < n; i++)
             {
                 nodes[i] = new Node(n);
-                nodes[i].distances[i] = 0;
-                nodes[i].isMin[i] = true;
             }
 
             for (int i = 0; i < m; i++)
@@ -38,30 +36,13 @@ namespace AtTest.Dijkstra
                 nodes[n2].edges.Add(new Edge(n1, t));
             }
 
-            long minDistance = 0;
+            long minDistance = long.MaxValue;
             for (int i = 0; i < n; i++)
             {
                 long distance = Dijkstra(i);
-                if (i == 0 || distance < minDistance)
-                {
-                    minDistance = distance;
-                }
+                minDistance = Math.Min(minDistance, distance);
             }
             Console.WriteLine(minDistance);
-        }
-
-        static void InitializeNodes()
-        {
-            for (int i = 0; i < nodes.Length; i++)
-            {
-                for (int j = 0; j < nodes.Length; j++)
-                {
-                    nodes[i].distances[j] = -1;
-                    nodes[i].isMin[j] = false;
-                }
-                nodes[i].distances[i] = 0;
-                nodes[i].isMin[i] = true;
-            }
         }
 
         //最大距離を帰す
@@ -70,65 +51,59 @@ namespace AtTest.Dijkstra
             Node startNode = nodes[start];
             int cnt = 1;
             int nowIndex = start;
+            var pQueue = new PriorityQueue<long, int>();
+            var pDict = new Dictionary<int, long>();
+
+            for(int i = 0; i < startNode.distances.Length; i++)
+            {
+                startNode.distances[i] = -1;
+            }
+            startNode.distances[start] = 0;
 
             while (cnt < nodes.Length)
             {
-                for (int i = 0; i < nodes[nowIndex].edges.Count; i++)
+                Node nowNode = nodes[nowIndex];
+                for (int i = 0; i < nowNode.edges.Count; i++)
                 {
-                    int destIndex = nodes[nowIndex].edges[i].toIndex;
-                    if (startNode.isMin[destIndex]) continue;//確定ノードは無視
+                    int destIndex = nowNode.edges[i].toIndex;
+                    if (startNode.distances[destIndex] >= 0)
+                    {
+                        continue;//確定ノードは無視
+                    }
 
                     long distance = startNode.distances[nowIndex]
-                        + nodes[nowIndex].edges[i].distance;
-                    if (distance < startNode.distances[destIndex]
-                        || startNode.distances[destIndex] == -1)
+                        + nowNode.edges[i].distance;
+                    if ((pDict.ContainsKey(destIndex)
+                       && distance < pDict[destIndex]))
                     {
-                        startNode.distances[destIndex] = distance;
+                        pQueue.RemoveKeyValue(pDict[destIndex], destIndex);
+                        pQueue.Add(distance, destIndex);
+                        pDict[destIndex] = distance;
+                    }
+                    else if (!pDict.ContainsKey(destIndex))
+                    {
+                        pQueue.Add(distance, destIndex);
+                        pDict.Add(destIndex, distance);
                     }
                 }
 
-                int settleIndex = -1;
-                for (int i = 0; i < startNode.distances.Length; i++)
-                {
-                    if (startNode.isMin[i] || startNode.distances[i] == -1) continue;
-
-                    if (settleIndex == -1
-                        || startNode.distances[i] < startNode.distances[settleIndex])
-                    {
-                        settleIndex = i;
-                    }
-                }
-                if (settleIndex == -1) break;
-                startNode.isMin[settleIndex] = true;
-                nowIndex = settleIndex;
+                if (pQueue.Count == 0) break;
+                var pair = pQueue.Dequeue();
+                pDict.Remove(pair.Value);
+                nowIndex = pair.Value;
+                startNode.distances[nowIndex] = pair.Key;
                 cnt++;
             }
-
-            long maxDistance = 0;
-            for (int i = 0; i < startNode.distances.Length; i++)
-            {
-                if (maxDistance < startNode.distances[i])
-                {
-                    maxDistance = startNode.distances[i];
-                }
-            }
-
-            return maxDistance;
+            return startNode.distances[nowIndex];
         }
 
         class Node
         {
             public long[] distances;
-            public bool[] isMin;
             public List<Edge> edges;
             public Node(int length)
             {
                 distances = new long[length];
-                isMin = new bool[length];
-                for (int i = 0; i < length; i++)
-                {
-                    distances[i] = -1;
-                }
                 edges = new List<Edge>();
             }
         }
@@ -142,6 +117,64 @@ namespace AtTest.Dijkstra
             {
                 this.toIndex = toIndex;
                 this.distance = distance;
+            }
+        }
+
+        public class PriorityQueue<TKey, TValue>
+        {
+            SortedDictionary<TKey, Dictionary<TValue, bool>> dict
+                = new SortedDictionary<TKey, Dictionary<TValue, bool>>();
+
+            public int Count { get; private set; } = 0;
+
+            public void Add(TKey key, TValue value)
+            {
+                if (!dict.ContainsKey(key))
+                {
+                    dict[key] = new Dictionary<TValue, bool>();
+                }
+
+                dict[key].Add(value, true);
+                Count++;
+            }
+
+            public KeyValuePair<TKey, TValue> Dequeue(bool reverse = false)
+            {
+                KeyValuePair<TKey, Dictionary<TValue, bool>> queue;
+                if (reverse)
+                {
+                    queue = dict.Last();
+                }
+                else
+                {
+                    queue = dict.First();
+                }
+                if (queue.Value.Count <= 1)
+                {
+                    dict.Remove(queue.Key);
+                }
+                Count--;
+                TValue val = queue.Value.First().Key;
+                queue.Value.Remove(val);
+                return new KeyValuePair<TKey, TValue>(
+                    queue.Key, val);
+            }
+
+            public void RemoveKeyValue(TKey key, TValue val)
+            {
+                if (!dict.ContainsKey(key)) return;
+                if (!dict[key].ContainsKey(val)) return;
+
+                var valDict = dict[key];
+                if (valDict.Count <= 1)
+                {
+                    dict.Remove(key);
+                }
+                else
+                {
+                    valDict.Remove(val);
+                }
+                Count--;
             }
         }
     }

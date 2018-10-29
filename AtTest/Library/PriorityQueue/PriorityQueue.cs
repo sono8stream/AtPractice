@@ -1,117 +1,165 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dijkstra
 {
-    class PriorityQueue
+    public class PriorityQueueTest
     {
-        int heapSize;
-        List<Node> nodeList;
-
-        public List<Node> NodeList
+        static void ain(string[] args)
         {
-            get
+            Method(args);
+            Console.ReadLine();
+        }
+
+        static void Method(string[] args)
+        {
+            var pQueue = new PriorityQueue<long, int>();
+            pQueue.Add(15, 1);
+            pQueue.Add(120, 11);
+            pQueue.Add(6, 14);
+            pQueue.RemoveKeyValue(6, 15);
+            while (pQueue.Count > 0)
             {
-                return nodeList;
+                var queue = pQueue.Dequeue(true);
+                Console.WriteLine(queue.Key + ": " + queue.Value);
             }
         }
 
-        public PriorityQueue(List<Node> nl)
+        public class PriorityQueue<TKey, TValue>
         {
-            heapSize = nl.Count;
-            nodeList = new List<Node>();
+            SortedDictionary<TKey, Dictionary<TValue, bool>> dict
+                = new SortedDictionary<TKey, Dictionary<TValue, bool>>();
 
-            for (int i = 0; i < nl.Count; i++)
-                nodeList.Add(nl[i]);
-        }
+            public int Count { get; private set; } = 0;
 
-        public void exchange(int i, int j)
-        {
-            Node temp = nodeList[i];
-
-            nodeList[i] = nodeList[j];
-            nodeList[j] = temp;
-        }
-
-        public void heapify(int i)
-        {
-            int l = 2 * i + 1;
-            int r = 2 * i + 2;
-            int largest = -1;
-
-            if (l < heapSize && nodeList[l].Distance > nodeList[i].Distance)
-                largest = l;
-            else
-                largest = i;
-            if (r < heapSize && nodeList[r].Distance > nodeList[largest].Distance)
-                largest = r;
-            if (largest != i)
+            public void Add(TKey key, TValue value)
             {
-                exchange(i, largest);
-                heapify(largest);
+                if (!dict.ContainsKey(key))
+                {
+                    dict[key] = new Dictionary<TValue, bool>();
+                }
+
+                dict[key].Add(value, true);
+                Count++;
+            }
+
+            public KeyValuePair<TKey, TValue> Dequeue(bool reverse = false)
+            {
+                KeyValuePair<TKey, Dictionary<TValue, bool>> queue;
+                if (reverse)
+                {
+                    queue = dict.Last();
+                }
+                else
+                {
+                    queue = dict.First();
+                }
+                if (queue.Value.Count <= 1)
+                {
+                    dict.Remove(queue.Key);
+                }
+                Count--;
+                TValue val = queue.Value.First().Key;
+                queue.Value.Remove(val);
+                return new KeyValuePair<TKey, TValue>(
+                    queue.Key, val);
+            }
+
+            public void RemoveKeyValue(TKey key, TValue val)
+            {
+                if (!dict.ContainsKey(key)) return;
+                if (!dict[key].ContainsKey(val)) return;
+
+                var valDict = dict[key];
+                if (valDict.Count <= 1)
+                {
+                    dict.Remove(key);
+                }
+                else
+                {
+                    valDict.Remove(val);
+                }
+                Count--;
             }
         }
 
-        public void buildHeap()
+        public class PriorityQueue2<TKey, TValue>
         {
-            for (int i = heapSize / 2; i >= 0; i--)
-                heapify(i);
-        }
+            SortedDictionary<TKey, Queue<TValue>> dict
+                = new SortedDictionary<TKey, Queue<TValue>>();
 
-        int heapSearch(Node node)
-        {
-            for (int i = 0; i < heapSize; i++)
+            public int Count { get; private set; } = 0;
+
+            public void Add(TKey key, TValue value)
             {
-                Node aNode = nodeList[i];
+                if (!dict.ContainsKey(key))
+                {
+                    dict[key] = new Queue<TValue>();
+                }
 
-                if (node.Id == aNode.Id)
-                    return i;
+                dict[key].Enqueue(value);
+                Count++;
             }
 
-            return -1;
-        }
-
-        public int size()
-        {
-            return heapSize;
-        }
-
-        public Node elementAt(int i)
-        {
-            return nodeList[i];
-        }
-
-        public void heapSort()
-        {
-            int temp = heapSize;
-
-            buildHeap();
-
-            for (int i = heapSize - 1; i >= 1; i--)
+            public KeyValuePair<TKey, TValue> Dequeue(bool reverse = false)
             {
-                exchange(0, i);
-                heapSize--;
-                heapify(0);
+                KeyValuePair<TKey, Queue<TValue>> queue;
+                if (reverse)
+                {
+                    queue = dict.Last();
+                }
+                else
+                {
+                    queue = dict.First();
+                }
+                if (queue.Value.Count <= 1)
+                {
+                    dict.Remove(queue.Key);
+                }
+                Count--;
+                return new KeyValuePair<TKey, TValue>(
+                    queue.Key, queue.Value.Dequeue());
+            }
+        }
+
+        public class PriorityQueueNum<TValue>
+        {
+            SortedDictionary<long, Queue<TValue>> dict
+                = new SortedDictionary<long, Queue<TValue>>();
+
+            public int Count { get; private set; } = 0;
+            bool reverse = false;
+
+            public PriorityQueueNum(bool reverse = false)
+            {
+                this.reverse = reverse;
             }
 
-            heapSize = temp;
-        }
+            public void Add(long key, TValue value)
+            {
+                if (reverse) key = -key;
+                if (!dict.ContainsKey(key))
+                {
+                    dict[key] = new Queue<TValue>();
+                }
+                dict[key].Enqueue(value);
+                Count++;
+            }
 
-        public Node extractMin()
-        {
-            if (heapSize < 1)
-                return null;
-
-            heapSort();
-
-            exchange(0, heapSize - 1);
-            heapSize--;
-            return nodeList[heapSize];
-        }
-
-        public int find(Node node)
-        {
-            return heapSearch(node);
+            public KeyValuePair<long, TValue> Dequeue()
+            {
+                KeyValuePair<long, Queue<TValue>> queue = dict.First();
+                if (queue.Value.Count <= 1)
+                {
+                    dict.Remove(queue.Key);
+                }
+                Count--;
+                long key = queue.Key;
+                if (reverse) key = -key;
+                return new KeyValuePair<long, TValue>(
+                    key, queue.Value.Dequeue());
+            }
         }
     }
 }
