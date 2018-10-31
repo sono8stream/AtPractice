@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.Library.UnionFind
 {
-    class UnionFind
+    class WeightedUnionFind
     {
         static void main(string[] args)
         {
@@ -23,40 +23,53 @@ namespace AtTest.Library.UnionFind
             Console.WriteLine("text");
         }
 
-        static int Root(ref int[] tree, int x)
+        static int Root(ref int[] tree, ref int[] wTree, int x)
         {
             int rx = x;
+            int weight = wTree[x];
             while (tree[rx] != rx)
             {
                 rx = tree[rx];
+                weight += wTree[rx];
             }
             tree[x] = rx;
+            wTree[x] = weight;
             return rx;
         }
 
-        static bool IsSame(ref int[] tree, int x, int y)
+        static int Weight(ref int[] tree, ref int[] wTree, int x)
         {
-            return Root(ref tree, x)
-                == Root(ref tree, y);
+            Root(ref tree, ref wTree, x);
+            return wTree[x];
         }
 
-        static void Unite(ref int[] tree, ref int[] rank,
-            int x, int y)
+        static bool IsSame(ref int[] tree, ref int[] wTree, int x, int y)
         {
-            int rx = Root(ref tree, x);
-            int ry = Root(ref tree, y);
+            return Root(ref tree, ref wTree, x)
+                == Root(ref tree, ref wTree, y);
+        }
+
+        static void Unite(ref int[] tree, ref int[] wTree, ref int[] rank,
+            int x, int y, int diff)
+        {
+            int rx = Root(ref tree, ref wTree, x);
+            int ry = Root(ref tree, ref wTree, y);
+            diff += Weight(ref tree, ref wTree, x)
+                     - Weight(ref tree, ref wTree, y);
             if (rx == ry) return;
             if (rank[rx] < rank[ry])
             {
                 int temp = rx;
                 rx = ry;
                 ry = temp;
+                diff *= -1;
             }
             if (rank[rx] == rank[ry])
             {
                 rank[rx]++;
             }
             tree[ry] = rx;
+            wTree[ry] = diff;
         }
 
         private static string Read() { return Console.ReadLine(); }
