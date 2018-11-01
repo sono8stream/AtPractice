@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AtTest.D_Challenge
@@ -16,13 +17,12 @@ namespace AtTest.D_Challenge
         {
             int[] nab = ReadInts();
             long[] vs = ReadLongs();
-            Array.Sort(vs);
-            Array.Reverse(vs);
+            vs = vs.OrderBy(a => -a).ToArray();
             var sameCnt = new List<long[]>();
-            for(int i = 0; i < nab[0]; i++)
+            sameCnt.Add(new long[2] { vs[0], 1 });
+            for(int i = 1; i < nab[0]; i++)
             {
-                if (sameCnt.Count == 0 
-                    || sameCnt[sameCnt.Count - 1][0] != vs[i])
+                if (sameCnt[sameCnt.Count - 1][0] != vs[i])
                 {
                     sameCnt.Add(new long[2] { vs[i], 1 });
                 }
@@ -31,44 +31,39 @@ namespace AtTest.D_Challenge
                     sameCnt[sameCnt.Count - 1][1]++;
                 }
             }
-            var aves = new double[nab[0]];
-            var cnts = new long[nab[0]];
-            for (int i = nab[1] - 1; i < nab[2]; i++)
+            double ave=0;
+            long cnt=0;
+            if (sameCnt[0][1] < nab[1])
             {
-                int remain = i + 1;
+                int remain = nab[1];
                 long sum = 0;
-                int itr = 0;
-                long comb = 1;
-                while (itr < sameCnt.Count && remain >= (int)sameCnt[itr][1])
+                for (int i = 0; i < sameCnt.Count; i++)
                 {
-                    sum += sameCnt[itr][0] * sameCnt[itr][1];
-                    remain -= (int)sameCnt[itr][1];
-                    itr++;
+                    if (remain <= sameCnt[i][1])
+                    {
+                        cnt = Combination(sameCnt[i][1], remain);
+                        sum += sameCnt[i][0] * remain;
+                        ave = 1.0 * sum / nab[1];
+                        break;
+                    }
+                    else
+                    {
+                        sum += sameCnt[i][0] * sameCnt[i][1];
+                        remain -= (int)sameCnt[i][1];
+                    }
                 }
-                if (itr < sameCnt.Count)
-                {
-                    sum += sameCnt[itr][0] * remain;
-                    comb = Combination(sameCnt[itr][1], remain);
-                }
-                aves[i] = sum * 1.0 / (i+1);
-                cnts[i] = comb;
-                Console.Error.WriteLine(cnts[i]);
             }
-            long cnt = 0;
-            double maxAve = double.MinValue;
-            for(int i = nab[1] - 1; i < nab[2]; i++)
+            else
             {
-                if (maxAve < aves[i])
+                ave = sameCnt[0][0];
+                for(int i = nab[1]; i <= nab[2]; i++)
                 {
-                    maxAve = aves[i];
-                    cnt = cnts[i];
-                }
-                else if (maxAve == aves[i])
-                {
-                    cnt += cnts[i];
+                    if (sameCnt[0][1] < i) break;
+                    cnt += Combination(sameCnt[0][1], i);
+
                 }
             }
-            Console.WriteLine(maxAve);
+            Console.WriteLine(ave);
             Console.WriteLine(cnt);
         }
 
