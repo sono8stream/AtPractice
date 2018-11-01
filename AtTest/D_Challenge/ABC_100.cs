@@ -27,15 +27,16 @@ namespace AtTest.D_Challenge
                 paramArray[i][2] = input[2];
             }
 
-            long result = 0;
-            for(int i = 0; i < 8; i++)
+            long result = long.MinValue;
+            for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    for(int k = 0; k < nm[0]; k++)
+                    bool plus = ((i >> j) & 1) == 1;
+                    for (int k = 0; k < nm[0]; k++)
                     {
                         if (j == 0) paramArray[k][3] = 0;
-                        if (((i >> j) & 1) == 1)
+                        if (plus)
                         {
                             paramArray[k][3] += paramArray[k][j];
                         }
@@ -45,13 +46,13 @@ namespace AtTest.D_Challenge
                         }
                     }
                 }
-                Array.Sort(paramArray, (a, b) => (int)(b[3] - a[3]));
+                paramArray = paramArray.OrderBy(a => -a[3]).ToArray();
                 var tempResults = new long[4];
                 for (int mm = 0; mm < nm[1]; mm++)
                 {
-                    tempResults[0] += paramArray[nm[0] - mm - 1][0];
-                    tempResults[1] += paramArray[nm[0] - mm - 1][1];
-                    tempResults[2] += paramArray[nm[0] - mm - 1][2];
+                    tempResults[0] += paramArray[mm][0];
+                    tempResults[1] += paramArray[mm][1];
+                    tempResults[2] += paramArray[mm][2];
                 }
                 tempResults[3] = Math.Abs(tempResults[0])
                     + Math.Abs(tempResults[1])
@@ -69,21 +70,5 @@ namespace AtTest.D_Challenge
         private static int[] ReadInts() { return Array.ConvertAll(Read().Split(), int.Parse); }
         private static long[] ReadLongs() { return Array.ConvertAll(Read().Split(), long.Parse); }
         private static double[] ReadDoubles() { return Array.ConvertAll(Read().Split(), double.Parse); }
-    }
-
-    struct Value
-    {
-        public long x;
-        public long y;
-        public long z;
-        public long sum;
-
-        public Value(long x,long y,long z,long sum)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.sum = sum;
-        }
     }
 }

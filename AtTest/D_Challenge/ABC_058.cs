@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.D_Challenge
 {
-    class ABC_047
+    class ABC_058
     {
         static void ain(string[] args)
         {
@@ -14,34 +14,24 @@ namespace AtTest.D_Challenge
 
         static void Method(string[] args)
         {
-            long[] nt = ReadLongs();
-            int n = (int)nt[0];
-            int[] array = ReadInts();
-            var maxSellIndex = new int[n];
-            maxSellIndex[n - 1] = n - 1;
-            int maxSurplus = 0;
-            for(int i = n - 2; i >= 0; i--)
+            int[] nm = ReadInts();
+            long[] xs = ReadLongs();
+            long[] ys = ReadLongs();
+            long mask = 1000000000 + 7;
+            long ySum = 0;
+            for (int i = 0; i < nm[1] / 2; i++)
             {
-                if (array[maxSellIndex[i + 1]] < array[i])
-                {
-                    maxSellIndex[i] = i;
-                }
-                else
-                {
-                    maxSellIndex[i] = maxSellIndex[i + 1];
-                }
-                maxSurplus
-                    = Math.Max(array[maxSellIndex[i]] - array[i], maxSurplus);
+                ySum += (ys[nm[1] - i - 1] - ys[i]) * (nm[1] - i * 2 - 1);
+                ySum %= mask;
             }
-            int res = 0;
-            for(int i = 0; i < n; i++)
+            long xSum = 0;
+            for(int i = 0; i < nm[0] / 2; i++)
             {
-                int tmp = array[maxSellIndex[i]] - array[i];
-                if (tmp == maxSurplus)
-                {
-                    res++;
-                }
+                xSum+= (xs[nm[0] - i - 1] - xs[i]) * (nm[0] - i * 2 - 1);
+                xSum %= mask;
             }
+
+            Console.WriteLine((xSum * ySum) % mask);
         }
 
         private static string Read() { return Console.ReadLine(); }
