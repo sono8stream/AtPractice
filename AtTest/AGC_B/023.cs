@@ -6,7 +6,7 @@ namespace AtTest.AGC_B
 {
     class _023
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -15,18 +15,52 @@ namespace AtTest.AGC_B
         static void Method(string[] args)
         {
             int n = ReadInt();
-            var sGrid = new int[n * 2, n * 2];
+            var sGrid = new char[n * 2, n * 2];
             for (int i = 0; i < n; i++)
             {
                 string s = Read();
                 for (int j = 0; j < n; j++)
                 {
-                    sGrid[i, j] = s[j]-'a';
-                    sGrid[i, j + n] = s[j] - 'a';
-                    sGrid[i + n, j] = s[j] - 'a';
-                    sGrid[i + n, j  + n] = s[j] - 'a';
+                    sGrid[i, j] = s[j];
+                    sGrid[i, j + n] = s[j];
+                    sGrid[i + n, j] = s[j];
+                    sGrid[i + n, j  + n] = s[j];
                 }
             }
+
+            int res = 0;
+            int tarCnt = (n * n - n) / 2;
+            for (int i = 0; i < n; i++)
+            {
+                int cnt = 0;
+                for (int k = 1; k < n; k++)
+                {
+                    for (int l = 0; l < k; l++)
+                    {
+                        if (sGrid[i + k, l] == sGrid[i + l, k])
+                        {
+                            cnt++;
+                        }
+                    }
+                }
+                if (cnt == tarCnt) res += n - i;
+            }
+            for (int i = 1; i < n; i++)
+            {
+                int cnt = 0;
+                for (int k = 1; k < n; k++)
+                {
+                    for (int l = 0; l < k; l++)
+                    {
+                        if (sGrid[k, i + l] == sGrid[l, i + k])
+                        {
+                            cnt++;
+                        }
+                    }
+                }
+                if (cnt == tarCnt) res += n - i;
+            }
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }
