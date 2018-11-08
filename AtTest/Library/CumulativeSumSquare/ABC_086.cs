@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CumulativeSumSquare
+namespace AtTest.D_Challenge
 {
     class ABC_086
     {
