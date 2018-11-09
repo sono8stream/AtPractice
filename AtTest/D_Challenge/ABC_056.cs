@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AtTest.D_Challenge
 {
-    class ABC_044
+    class ABC_056
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -14,27 +14,32 @@ namespace AtTest.D_Challenge
 
         static void Method(string[] args)
         {
-            long n = ReadLong();
-            long s = ReadLong();
-            long bottom = 2;
-            long top = (long)Math.Pow(10, 11) + 1;
-
-            if (s==1)
+            int[] nk = ReadInts();
+            long[] array = ReadLongs();
+            Array.Sort(array);
+            Array.Reverse(array);
+            for(int i = 0; i < nk[0]; i++)
             {
-                Console.WriteLine(n);
-                return;
+                //Console.WriteLine(array[i]);
             }
-            else if (n < s)
+            int validIndex = 0;
+            for (int i = 0; i < nk[0]; i++)
             {
-                Console.WriteLine(-1);
-                return;
+                long sum = array[i];
+                for (int j = validIndex + 1; j < nk[0]; j++)
+                {
+                    if (sum >= nk[1])
+                    {
+                        validIndex = j;
+                        break;
+                    }
+                    else
+                    {
+                        sum += array[j];
+                    }
+                }
             }
-            else
-            {
-
-            }
-
-            Console.WriteLine("text");
+            Console.WriteLine(nk[0] - validIndex);
         }
 
         private static string Read() { return Console.ReadLine(); }
