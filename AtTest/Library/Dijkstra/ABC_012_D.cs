@@ -8,7 +8,7 @@ namespace AtTest.Dijkstra
     {
         static Node[] nodes;
 
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -51,8 +51,7 @@ namespace AtTest.Dijkstra
             Node startNode = nodes[start];
             int cnt = 1;
             int nowIndex = start;
-            var pQueue = new PriorityQueue<long, int>();
-            var pDict = new Dictionary<int, long>();
+            var pQueue = new PriorityQueueNum();
 
             for(int i = 0; i < startNode.distances.Length; i++)
             {
@@ -66,30 +65,18 @@ namespace AtTest.Dijkstra
                 for (int i = 0; i < nowNode.edges.Count; i++)
                 {
                     int destIndex = nowNode.edges[i].toIndex;
-                    if (startNode.distances[destIndex] >= 0)
-                    {
-                        continue;//確定ノードは無視
-                    }
+                    if (startNode.distances[destIndex] >= 0) continue;
 
                     long distance = startNode.distances[nowIndex]
                         + nowNode.edges[i].distance;
-                    if ((pDict.ContainsKey(destIndex)
-                       && distance < pDict[destIndex]))
+                    if (pQueue.GetKey(destIndex) > distance)
                     {
-                        pQueue.RemoveKeyValue(pDict[destIndex], destIndex);
+                        pQueue.Remove(destIndex);
                         pQueue.Add(distance, destIndex);
-                        pDict[destIndex] = distance;
-                    }
-                    else if (!pDict.ContainsKey(destIndex))
-                    {
-                        pQueue.Add(distance, destIndex);
-                        pDict.Add(destIndex, distance);
                     }
                 }
 
-                if (pQueue.Count == 0) break;
-                var pair = pQueue.Dequeue();
-                pDict.Remove(pair.Value);
+                KeyValuePair<long, int> pair=pQueue.Dequeue();
                 nowIndex = pair.Value;
                 startNode.distances[nowIndex] = pair.Key;
                 cnt++;
@@ -120,61 +107,84 @@ namespace AtTest.Dijkstra
             }
         }
 
-        public class PriorityQueue<TKey, TValue>
+        public class PriorityQueueNum
         {
-            SortedDictionary<TKey, Dictionary<TValue, bool>> dict
-                = new SortedDictionary<TKey, Dictionary<TValue, bool>>();
+            SortedDictionary<long, Dictionary<int, bool>> dict
+                = new SortedDictionary<long, Dictionary<int, bool>>();
+            Dictionary<int, long> valueExistDict
+                = new Dictionary<int, long>();
 
             public int Count { get; private set; } = 0;
+            bool reverse = false;
 
-            public void Add(TKey key, TValue value)
+            public PriorityQueueNum(bool reverse = false)
             {
+                this.reverse = reverse;
+            }
+
+            public void Add(long key, int value)
+            {
+                if (valueExistDict.ContainsKey(value)) return;
+
+                if (reverse) key = -key;
                 if (!dict.ContainsKey(key))
                 {
-                    dict[key] = new Dictionary<TValue, bool>();
+                    dict[key] = new Dictionary<int, bool>();
                 }
-
                 dict[key].Add(value, true);
+                valueExistDict.Add(value, key);
                 Count++;
             }
 
-            public KeyValuePair<TKey, TValue> Dequeue(bool reverse = false)
+            public void Remove(int value)
             {
-                KeyValuePair<TKey, Dictionary<TValue, bool>> queue;
-                if (reverse)
-                {
-                    queue = dict.Last();
-                }
-                else
-                {
-                    queue = dict.First();
-                }
-                if (queue.Value.Count <= 1)
-                {
-                    dict.Remove(queue.Key);
-                }
-                Count--;
-                TValue val = queue.Value.First().Key;
-                queue.Value.Remove(val);
-                return new KeyValuePair<TKey, TValue>(
-                    queue.Key, val);
-            }
+                if (!valueExistDict.ContainsKey(value)) return;
 
-            public void RemoveKeyValue(TKey key, TValue val)
-            {
-                if (!dict.ContainsKey(key)) return;
-                if (!dict[key].ContainsKey(val)) return;
-
-                var valDict = dict[key];
-                if (valDict.Count <= 1)
+                long key = valueExistDict[value];
+                if (dict[key].Count == 1)
                 {
                     dict.Remove(key);
                 }
                 else
                 {
-                    valDict.Remove(val);
+                    dict[key].Remove(value);
                 }
+                valueExistDict.Remove(value);
+            }
+
+            public long GetKey(int value)
+            {
+                if (valueExistDict.ContainsKey(value))
+                {
+                    return valueExistDict[value];
+                }
+                else return int.MaxValue;
+            }
+
+            public KeyValuePair<long, int> Dequeue()
+            {
+                KeyValuePair<long, Dictionary<int, bool>>
+                    queue = dict.First();
+
+                int value = 0;
+                foreach (int v in queue.Value.Keys)
+                {
+                    value = v;
+                }
+
+                if (queue.Value.Count <= 1)
+                {
+                    dict.Remove(queue.Key);
+                }
+                else
+                {
+                    dict[queue.Key].Remove(value);
+                }
+                valueExistDict.Remove(value);
                 Count--;
+                long key = queue.Key;
+                if (reverse) key = -key;
+                return new KeyValuePair<long, int>(key, value);
             }
         }
     }

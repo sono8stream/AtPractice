@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.D_Challenge
 {
-    class ABC_056
+    class ABC_038
     {
         static void ain(string[] args)
         {
@@ -14,32 +14,23 @@ namespace AtTest.D_Challenge
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            long[] array = ReadLongs();
-            Array.Sort(array);
-            Array.Reverse(array);
-            for(int i = 0; i < nk[0]; i++)
+            int n = ReadInt();
+            var hws = new int[n][];
+            for (int i = 0; i < n; i++)
             {
-                //Console.WriteLine(array[i]);
+                hws[i] = ReadInts();
             }
-            int validIndex = 0;
-            for (int i = 0; i < nk[0]; i++)
+            Array.Sort(hws, (a, b) => a[0] - b[0]);
+            Array.Sort(hws);
+            int[] inCnts = new int[n];
+            for(int i = 1; i < n; i++)
             {
-                long sum = array[i];
-                for (int j = validIndex + 1; j < nk[0]; j++)
+                for(int j = 0; j < i; j++)
                 {
-                    if (sum >= nk[1])
-                    {
-                        validIndex = j;
-                        break;
-                    }
-                    else
-                    {
-                        sum += array[j];
-                    }
+
                 }
             }
-            Console.WriteLine(nk[0] - validIndex);
+            Console.WriteLine("text");
         }
 
         private static string Read() { return Console.ReadLine(); }
