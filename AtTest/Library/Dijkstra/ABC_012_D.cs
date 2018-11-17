@@ -8,7 +8,7 @@ namespace AtTest.Dijkstra
     {
         static Node[] nodes;
 
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
