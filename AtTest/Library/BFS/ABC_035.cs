@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.D_Challenge
+namespace BFS
 {
     class ABC_035
     {
