@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace AtTest.Dwango5
+namespace AtTest.Library.DivideNumber
 {
-    class C
+    class DMC4_C
     {
         static void ain(string[] args)
         {
@@ -15,12 +14,13 @@ namespace AtTest.Dwango5
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            string s = Read();
-            int q = ReadInt();
-            int[] ks = ReadInts();
+            string[] input = Console.ReadLine().Split(' ');
+            int n = int.Parse(input[0]);
+            for (int i = 0; i < n; i++)
+            {
 
-            var resCnts = new long[n];
+            }
+            Console.WriteLine("text");
         }
 
         private static string Read() { return Console.ReadLine(); }

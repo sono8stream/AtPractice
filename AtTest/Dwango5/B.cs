@@ -6,7 +6,7 @@ namespace AtTest.Dwango5
 {
     class B
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace AtTest.Dwango5
+namespace AtTest.CodeThanksFestival2018
 {
-    class C
+    class B
     {
         static void ain(string[] args)
         {
@@ -15,12 +14,21 @@ namespace AtTest.Dwango5
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            string s = Read();
-            int q = ReadInt();
-            int[] ks = ReadInts();
-
-            var resCnts = new long[n];
+            long[] xy = ReadLongs();
+            long min = Math.Min(xy[0], xy[1]);
+            long max = Math.Max(xy[0], xy[1]);
+            long margin = max - min;
+            long div = margin / 2;
+            min -= div;
+            max -= div*3;
+            if (min != max || min < 0 || min % 4 > 0)
+            {
+                Console.WriteLine("No");
+            }
+            else
+            {
+                Console.WriteLine("Yes");
+            }
         }
 
         private static string Read() { return Console.ReadLine(); }

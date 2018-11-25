@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace AtTest.Dwango5
+namespace AtTest.CodeThanksFestival2018
 {
     class C
     {
@@ -16,11 +15,22 @@ namespace AtTest.Dwango5
         static void Method(string[] args)
         {
             int n = ReadInt();
-            string s = Read();
-            int q = ReadInt();
-            int[] ks = ReadInts();
+            long[] xs = ReadLongs();
+            Array.Sort(xs);
+            long[] xMargins = new long[n-1];
+            for (int i = 0; i < n-1; i++)
+            {
+                xMargins[i] = xs[i + 1] - xs[i];
+            }
 
-            var resCnts = new long[n];
+            long res = 0;
+            for(int i = 0; i < n - 1; i++)
+            {
+                long l = i + 1;
+                long r = n - l;
+                res += xMargins[i] * l * r;
+            }
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }
