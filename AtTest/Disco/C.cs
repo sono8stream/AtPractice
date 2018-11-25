@@ -6,7 +6,7 @@ namespace AtTest.Disco
 {
     class C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
