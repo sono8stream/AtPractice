@@ -6,7 +6,7 @@ namespace AtTest.Library.LCS
 {
     class Indeed_C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
