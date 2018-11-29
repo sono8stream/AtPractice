@@ -14,19 +14,18 @@ namespace Dijkstra
 
         static void Method(string[] args)
         {
-            var pQueue = new PriorityQueue<long, int>();
-            pQueue.Add(15, 1);
-            pQueue.Add(120, 11);
-            pQueue.Add(6, 14);
-            pQueue.RemoveKeyValue(6, 15);
-            while (pQueue.Count > 0)
+            var pQueue = new PriorityQueue<int>();
+            pQueue.Enqueue(120, 11);
+            pQueue.Enqueue(15, 1);
+            pQueue.Enqueue(6, 14);
+            while (pQueue.Exist())
             {
-                var queue = pQueue.Dequeue(true);
+                var queue = pQueue.Dequeue();
                 Console.WriteLine(queue.Key + ": " + queue.Value);
             }
         }
 
-        public class PriorityQueue<TKey, TValue>
+        public class PriorityQueueRough<TKey, TValue>
         {
             SortedDictionary<TKey, Dictionary<TValue, bool>> dict
                 = new SortedDictionary<TKey, Dictionary<TValue, bool>>();
@@ -84,7 +83,7 @@ namespace Dijkstra
             }
         }
 
-        public class PriorityQueue2<TKey, TValue>
+        public class PriorityQueueRough2<TKey, TValue>
         {
             SortedDictionary<TKey, Queue<TValue>> dict
                 = new SortedDictionary<TKey, Queue<TValue>>();
@@ -160,6 +159,78 @@ namespace Dijkstra
                 return new KeyValuePair<long, TValue>(
                     key, queue.Value.Dequeue());
             }
+        }
+
+        class PriorityQueue<T>
+        {
+            private readonly List<KeyValuePair<long,T>> list;
+            private int count;
+
+            public PriorityQueue()
+            {
+                list = new List<KeyValuePair<long, T>>();
+                count = 0;
+            }
+
+            private void Add(KeyValuePair<long,T> pair)
+            {
+                if (count == list.Count)
+                {
+                    list.Add(pair);
+                }
+                else
+                {
+                    list[count] = pair;
+                }
+                count++;
+            }
+
+            private void Swap(int a, int b)
+            {
+                KeyValuePair<long,T> tmp = list[a];
+                list[a] = list[b];
+                list[b] = tmp;
+            }
+
+            public void Enqueue(long key,T value)
+            {
+                Add(new KeyValuePair<long, T>(key, value));
+                int c = count - 1;
+                while (c > 0)
+                {
+                    int p = (c - 1) / 2;
+                    if (list[c].Key >= list[p].Key) break;
+
+                    Swap(p, c);
+                    c = p;
+                }
+            }
+
+            public KeyValuePair<long,T> Dequeue()
+            {
+                KeyValuePair<long,T> pair = list[0];
+                count--;
+                if (count == 0) return pair;
+
+                list[0] = list[count];
+                int p = 0;
+                while (true)
+                {
+                    int c1 = p * 2 + 1;
+                    int c2 = p * 2 + 2;
+                    if (c1 >= count) break;
+
+                    int c = (c2 >= count || list[c1].Key < list[c2].Key)
+                        ? c1 : c2;
+                    if (list[c].Key >= list[p].Key) break;
+
+                    Swap(p, c);
+                    p = c;
+                }
+                return pair;
+            }
+
+            public bool Exist() { return count > 0; }
         }
     }
 }

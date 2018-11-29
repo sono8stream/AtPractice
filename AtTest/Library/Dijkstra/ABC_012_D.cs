@@ -6,9 +6,7 @@ namespace AtTest.Dijkstra
 {
     class ABC_012_D
     {
-        static Node[] nodes;
-
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -20,7 +18,7 @@ namespace AtTest.Dijkstra
             int n = int.Parse(input[0]);
             int m = int.Parse(input[1]);
 
-            nodes = new Node[n];
+            Node[] nodes = new Node[n];
             for (int i = 0; i < n; i++)
             {
                 nodes[i] = new Node(n);
@@ -39,49 +37,57 @@ namespace AtTest.Dijkstra
             long minDistance = long.MaxValue;
             for (int i = 0; i < n; i++)
             {
-                long distance = Dijkstra(i);
+                long distance = Dijkstra(i, nodes);
                 minDistance = Math.Min(minDistance, distance);
             }
             Console.WriteLine(minDistance);
         }
 
         //最大距離を帰す
-        static long Dijkstra(int start)
+        static long Dijkstra(int startIndex, Node[] nodes)
         {
-            Node startNode = nodes[start];
-            int cnt = 1;
-            int nowIndex = start;
-            var pQueue = new PriorityQueueNum();
+            Node startNode = nodes[startIndex];
+            var pQueue = new PriorityQueue<int>();
+            var visitFlags = new bool[nodes.Length];
 
-            for(int i = 0; i < startNode.distances.Length; i++)
+            //Initialize nodes
+            for (int i = 0; i < startNode.distances.Length; i++)
             {
-                startNode.distances[i] = -1;
+                startNode.distances[i] = long.MaxValue;
+                visitFlags[i] = false;
             }
-            startNode.distances[start] = 0;
+            pQueue.Enqueue(0, startIndex);
+            startNode.distances[startIndex] = 0;
+            long maxDistance = 0;
 
-            while (cnt < nodes.Length)
+            while (pQueue.Exist())
             {
-                Node nowNode = nodes[nowIndex];
+                KeyValuePair<long, int> pair = pQueue.Dequeue();
+                long distance = pair.Key;
+                int index = pair.Value;
+
+                if (startNode.distances[index] < distance) continue;
+
+                //Confirm distances
+                Node nowNode = nodes[index];
+                visitFlags[index] = true;
+                maxDistance = Math.Max(maxDistance, distance);
+
+                //Update priority queue
                 for (int i = 0; i < nowNode.edges.Count; i++)
                 {
-                    int destIndex = nowNode.edges[i].toIndex;
-                    if (startNode.distances[destIndex] >= 0) continue;
+                    int nextIndex = nowNode.edges[i].toIndex;
+                    if (visitFlags[nextIndex]) continue;
 
-                    long distance = startNode.distances[nowIndex]
-                        + nowNode.edges[i].distance;
-                    if (pQueue.GetKey(destIndex) > distance)
+                    long nextDistance = distance + nowNode.edges[i].distance;
+                    if (startNode.distances[nextIndex] > nextDistance)
                     {
-                        pQueue.Remove(destIndex);
-                        pQueue.Add(distance, destIndex);
+                        startNode.distances[nextIndex] = nextDistance;
+                        pQueue.Enqueue(nextDistance, nextIndex);
                     }
                 }
-
-                KeyValuePair<long, int> pair=pQueue.Dequeue();
-                nowIndex = pair.Value;
-                startNode.distances[nowIndex] = pair.Key;
-                cnt++;
             }
-            return startNode.distances[nowIndex];
+            return maxDistance;
         }
 
         class Node
@@ -98,94 +104,85 @@ namespace AtTest.Dijkstra
         class Edge
         {
             public int toIndex;
-            public int distance;
+            public long distance;
 
-            public Edge(int toIndex, int distance)
+            public Edge(int toIndex, long distance)
             {
                 this.toIndex = toIndex;
                 this.distance = distance;
             }
         }
 
-        public class PriorityQueueNum
+        class PriorityQueue<T>
         {
-            SortedDictionary<long, Dictionary<int, bool>> dict
-                = new SortedDictionary<long, Dictionary<int, bool>>();
-            Dictionary<int, long> valueExistDict
-                = new Dictionary<int, long>();
+            private readonly List<KeyValuePair<long, T>> list;
+            private int count;
 
-            public int Count { get; private set; } = 0;
-            bool reverse = false;
-
-            public PriorityQueueNum(bool reverse = false)
+            public PriorityQueue()
             {
-                this.reverse = reverse;
+                list = new List<KeyValuePair<long, T>>();
+                count = 0;
             }
 
-            public void Add(long key, int value)
+            private void Add(KeyValuePair<long, T> pair)
             {
-                if (valueExistDict.ContainsKey(value)) return;
-
-                if (reverse) key = -key;
-                if (!dict.ContainsKey(key))
+                if (count == list.Count)
                 {
-                    dict[key] = new Dictionary<int, bool>();
-                }
-                dict[key].Add(value, true);
-                valueExistDict.Add(value, key);
-                Count++;
-            }
-
-            public void Remove(int value)
-            {
-                if (!valueExistDict.ContainsKey(value)) return;
-
-                long key = valueExistDict[value];
-                if (dict[key].Count == 1)
-                {
-                    dict.Remove(key);
+                    list.Add(pair);
                 }
                 else
                 {
-                    dict[key].Remove(value);
+                    list[count] = pair;
                 }
-                valueExistDict.Remove(value);
+                count++;
             }
 
-            public long GetKey(int value)
+            private void Swap(int a, int b)
             {
-                if (valueExistDict.ContainsKey(value))
-                {
-                    return valueExistDict[value];
-                }
-                else return int.MaxValue;
+                KeyValuePair<long, T> tmp = list[a];
+                list[a] = list[b];
+                list[b] = tmp;
             }
 
-            public KeyValuePair<long, int> Dequeue()
+            public void Enqueue(long key, T value)
             {
-                KeyValuePair<long, Dictionary<int, bool>>
-                    queue = dict.First();
+                Add(new KeyValuePair<long, T>(key, value));
+                int c = count - 1;
+                while (c > 0)
+                {
+                    int p = (c - 1) / 2;
+                    if (list[c].Key >= list[p].Key) break;
 
-                int value = 0;
-                foreach (int v in queue.Value.Keys)
-                {
-                    value = v;
+                    Swap(p, c);
+                    c = p;
                 }
-
-                if (queue.Value.Count <= 1)
-                {
-                    dict.Remove(queue.Key);
-                }
-                else
-                {
-                    dict[queue.Key].Remove(value);
-                }
-                valueExistDict.Remove(value);
-                Count--;
-                long key = queue.Key;
-                if (reverse) key = -key;
-                return new KeyValuePair<long, int>(key, value);
             }
+
+            public KeyValuePair<long, T> Dequeue()
+            {
+                KeyValuePair<long, T> pair = list[0];
+                count--;
+                if (count == 0) return pair;
+
+                list[0] = list[count];
+                int p = 0;
+                while (true)
+                {
+                    int c1 = p * 2 + 1;
+                    int c2 = p * 2 + 2;
+                    if (c1 >= count) break;
+
+                    int c = (c2 >= count || list[c1].Key < list[c2].Key)
+                        ? c1 : c2;
+                    if (list[c].Key >= list[p].Key) break;
+
+                    Swap(p, c);
+                    p = c;
+                }
+                return pair;
+            }
+
+            public bool Exist() { return count > 0; }
         }
     }
 }
