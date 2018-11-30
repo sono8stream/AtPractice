@@ -6,7 +6,7 @@ namespace AtTest.Dijkstra
 {
     class ABC_012_D
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
