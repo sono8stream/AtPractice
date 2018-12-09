@@ -14,47 +14,71 @@ namespace AtTest.D_Challenge
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
+            long n = ReadInt();
             var xy = new int[n][];
             for(int i = 0; i < n; i++)
             {
                 xy[i] = ReadInts();
-
-            }
-            var dists = new double[n,n];
-            for (int i = 0; i < n - 1; i++)
-            {
-                for (int j = i + 1; j < n; j++)
-                {
-                    double dist
-                        = Math.Pow(xy[j][0] - xy[i][0], 2)
-                        + Math.Pow(xy[j][1] - xy[i][1], 2);
-                    dists[i, j] = dist;
-                }
             }
 
-            int sharp = 0;
-            int right = 0;
-            int obtuse = 0;
-            for(int i = 0; i < n - 2; i++)
+            long rightCnt = 0;
+            long obtuseCnt = 0;
+            for (int i = 0; i < n; i++)
             {
-                for(int j = i+1; j < n - 1; j++)
+                var angles = new double[n-1];
+                for (int j = 0; j < n; j++)
                 {
-                    for(int k = j + 1; k < n; k++)
+                    if (j == i) continue;
+                    double angle = Math.Atan2(
+                        xy[j][1] - xy[i][1], xy[j][0] - xy[i][0]);
+                    if (j < i)
                     {
-                        var tempDists = new double[3] {
-                            dists[i,j],dists[j,k],dists[i,k]};
-                        Array.Sort(tempDists);
-                        double margin 
-                            = tempDists[2] - tempDists[1] - tempDists[0];
-                        if (margin > 0) obtuse++;
-                        else if (margin == 0) right++;
-                        else sharp++;
+                        angles[j] = angle;
+                    }
+                    else
+                    {
+                        angles[j - 1] = angle;
                     }
                 }
+                Array.Sort(angles);
+                Array.Reverse(angles);
+                var anglesTwice = new double[2 * (n - 1)];
+                for(int j = 0; j < n - 1; j++)
+                {
+                    anglesTwice[j] = angles[j];
+                    anglesTwice[j + n - 1] = angles[j] - 2 * Math.PI;
+                    //Console.WriteLine(angles[j] + " ");
+                }
+                //Console.WriteLine();
+                int sharp = 0;
+                int right = 0;
+                int obtuse = 0;
+                for(int j = 0; j < n - 1; j++)
+                {
+                    while (sharp<anglesTwice.Length
+                        &&anglesTwice[j] - anglesTwice[sharp] < Math.PI / 2)
+                    {
+                        sharp++;
+                    }
+                    right = sharp;
+                    while (right < anglesTwice.Length
+                        &&anglesTwice[j] - anglesTwice[right] == Math.PI / 2)
+                    {
+                        right++;
+                    }
+                    obtuse = right;
+                    while (obtuse < anglesTwice.Length
+                        && anglesTwice[j] - anglesTwice[obtuse] < Math.PI)
+                    {
+                        obtuse++;
+                    }
+                    rightCnt += right - sharp;
+                    obtuseCnt += obtuse - right;
+                    //Console.WriteLine(sharp + " " + right + " " + obtuse);
+                }
             }
-
-            Console.WriteLine(sharp + " " + right + " " + obtuse);
+            long sharpCnt = n * (n -1) * (n - 2) / 6 - rightCnt - obtuseCnt;
+            Console.WriteLine(sharpCnt + " " + rightCnt + " " + obtuseCnt);
         }
 
         private static string Read() { return Console.ReadLine(); }
