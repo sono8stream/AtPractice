@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.Library.Combination
+namespace AtTest.D_Challenge
 {
-    class Combination_Permutation
+    class ABC_021
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,10 @@ namespace AtTest.Library.Combination
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            int m = int.Parse(input[1]);
+            long n = ReadLong();
+            long k = ReadLong();
             long mask = 1000000000 + 7;
-            long cnt = Combination(n, m, mask);
-
-            Console.WriteLine(cnt);
+            Console.WriteLine(Combination(n + k - 1, k, mask));
         }
 
         static long Combination(long n, long m, long mask)
