@@ -6,7 +6,7 @@ namespace AtTest.AGC_029
 {
     class C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
