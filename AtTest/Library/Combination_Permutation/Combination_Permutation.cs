@@ -25,10 +25,7 @@ namespace AtTest.Library.Combination
 
         static long Combination(long n, long m, long mask)
         {
-            if (n - m < m)
-            {
-                m = n - m;
-            }
+            if (n - m < m) m = n - m;
 
             long val = Permutation(n, m, mask);
             long div = Permutation(m, m, mask);
