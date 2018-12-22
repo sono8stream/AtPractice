@@ -43,6 +43,17 @@ namespace AtTest.Library.Combination
             return val;
         }
 
+        static long[] AllPermutations(long n, long mask)
+        {
+            var perms = new long[n + 1];
+            perms[0] = 1;
+            for (int i = 0; i <= n; i++)
+            {
+                perms[i] = perms[i - 1] * i;
+            }
+            return perms;
+        }
+
         static long MultiMod(long a, long b, long mask)
         {
             return ((a % mask) * (b % mask)) % mask;
