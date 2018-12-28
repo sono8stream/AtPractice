@@ -32,28 +32,32 @@ namespace AtTest.D_Challenge
             long yCnt = y / d;
             long remain = (n - (x + y) / d) / 2;
 
-            double res = 1;
-            for (int i = 1; i <= n; i++)
-            {
-                res *= i * 0.25;
-            }
-
-            double perms = 0;
+            double res = 0;
+            
             for (int i = 0; i <= remain; i++)
             {
                 var xyCnts = new long[4]
                 { xCnt + i, i, yCnt + remain - i, remain - i };
-                double perm = 1;
-                for (int j = 0; j < 4; j++)
+                Array.Sort(xyCnts);
+                Array.Reverse(xyCnts);
+                double val = 1;
+                int index = 0;
+                double div = xyCnts[index];
+                for(int j = 0; j < n; j++)
                 {
-                    for (int k = 1; k <= xyCnts[j]; k++)
+                    val *= (n - j);
+                    val /= div;
+                    val /= 4;
+                    div--;
+                    if(div == 0&&index<3)
                     {
-                        perm /= k;
+                        index++;
+                        div = xyCnts[index];
                     }
                 }
-                perms += perm;
+                res += val;
             }
-            Console.WriteLine(res * perms);
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }

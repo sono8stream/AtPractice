@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.Library.PrimeNumber
+namespace AtTest.D_Challenge
 {
-    class PrimeNumber
+    class ABC_020
     {
         static void ain(string[] args)
         {
@@ -14,42 +14,31 @@ namespace AtTest.Library.PrimeNumber
 
         static void Method(string[] args)
         {
-            long[] primes = PrimeNumbers(1, 1000);
-            for (int i = 0; i < primes.Length; i++)
+            long[] nk = ReadLongs();
+            long n = nk[0];
+            long k = nk[1];
+            long mask = 1000000000 + 7;
+            long[] primes = PrimeNumbers(k);
+            long kk = k;
+            long[] primeCnts = new long[primes.Length];
+            long allPat = 1;
+            for(int i = 0; i < primes.Length; i++)
             {
-                Console.WriteLine(primes[i]);
+                while (kk % primes[i] == 0)
+                {
+                    primeCnts[i]++;
+                    kk /= primes[i];
+                }
+                Console.WriteLine(primeCnts[i]);
+                allPat *= (primeCnts[i] + 1);
             }
-        }
+            Console.WriteLine(allPat);
+            long res = 0;
+            for(long i = allPat; i > 0; i--)
+            {
+                long div = 1;
 
-        static long[] PrimeNumbers(long min,long max)
-        {
-            var primes = new List<long>();
-            if (min <= 2 && max >= 2)
-            {
-                primes.Add(2);
             }
-            for (long i = 3; i <= max; i += 2)
-            {
-                long rootI = (long)Math.Sqrt(i);
-                bool isPrime = true;
-                for (long j = 3; j <= rootI; j += 2)
-                {
-                    if (i % j == 0)
-                    {
-                        isPrime = false;
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                if (isPrime)
-                {
-                    primes.Add(i);
-                }
-            }
-            return primes.ToArray();
         }
 
         static long[] PrimeNumbers(long max)
@@ -66,20 +55,20 @@ namespace AtTest.Library.PrimeNumber
             {
                 return primes.ToArray();
             }
-            for (long i = 1; i * 6 - 1 <= max; i++)
+            for (long i = 1; i*6-1 <= max; i ++)
             {
                 long val = i * 6 - 1;
                 long val2 = i * 6 + 1;
                 bool prime1 = true;
                 bool prime2 = true;
-                for (int j = 0; j < primes.Count; j++)
+                for(int j = 0; j < primes.Count; j++)
                 {
                     if (val % primes[j] == 0) prime1 = false;
                     if (val2 % primes[j] == 0) prime2 = false;
                     if (!prime1 && !prime2) break;
                 }
                 if (prime1) primes.Add(val);
-                if (prime2 && val2 <= max) primes.Add(val2);
+                if (prime2&&val2<=max) primes.Add(val2);
             }
             return primes.ToArray();
         }

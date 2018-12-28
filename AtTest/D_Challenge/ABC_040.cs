@@ -6,7 +6,7 @@ namespace AtTest.D_Challenge
 {
     class ABC_040
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
