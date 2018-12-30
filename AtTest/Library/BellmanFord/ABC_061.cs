@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.D_Challenge
 {
-    class ABC_061
+    class Bellman
     {
         static void ain(string[] args)
         {
