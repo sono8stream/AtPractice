@@ -16,25 +16,45 @@ namespace AtTest.D_Challenge
         {
             long n = ReadLong();
             long s = ReadLong();
-            long bottom = 2;
-            long top = (long)Math.Pow(10, 11) + 1;
-
-            if (s==1)
+            if (n == s)
             {
-                Console.WriteLine(n);
+                Console.WriteLine(n + 1);
                 return;
             }
-            else if (n < s)
-            {
-                Console.WriteLine(-1);
-                return;
-            }
-            else
-            {
 
-            }
+            long sqrt = (long)Math.Sqrt(n);
 
-            Console.WriteLine("text");
+            for(long i = 2; i <= sqrt; i++)
+            {
+                long val = 0;
+                long nn = n;
+                while (nn > 0)
+                {
+                    val += nn % i;
+                    nn /= i;
+                }
+                if (val == s)
+                {
+                    Console.WriteLine(i);
+                    return;
+                }
+            }
+            for (long i = Math.Min(sqrt, s); i >= 1; i--)
+            {
+                long margin = s - i;
+                if (n - margin < 0) continue;
+
+                if ((n - margin) % i == 0)
+                {
+                    long val = (n - margin) / i;
+                    if (i==val
+                        ||val <= margin) continue;
+
+                    Console.WriteLine((n - margin) / i);
+                    return;
+                }
+            }
+            Console.WriteLine(-1);
         }
 
         private static string Read() { return Console.ReadLine(); }

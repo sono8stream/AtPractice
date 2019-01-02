@@ -17,29 +17,51 @@ namespace AtTest.D_Challenge
             int[] nk = ReadInts();
             long[] array = ReadLongs();
             Array.Sort(array);
-            Array.Reverse(array);
-            for(int i = 0; i < nk[0]; i++)
+            int bottom = -1;
+            int top = nk[0];
+
+            while (bottom + 1 < top)
             {
-                //Console.WriteLine(array[i]);
-            }
-            int validIndex = 0;
-            for (int i = 0; i < nk[0]; i++)
-            {
-                long sum = array[i];
-                for (int j = validIndex + 1; j < nk[0]; j++)
+                int x = (bottom + top) / 2;
+                bool need = false;
+
+                if (array[x] >= nk[1]) need = true;
+                else
                 {
-                    if (sum >= nk[1])
+                    var dp = new bool[nk[1]];
+                    dp[0] = true;
+                    for (int i = 0; i < nk[0]; i++)
                     {
-                        validIndex = j;
-                        break;
-                    }
-                    else
-                    {
-                        sum += array[j];
+                        if (x == i) continue;
+
+                        var nextDp = new bool[nk[1]];
+                        for (int j = 0; j < nk[1]; j++)
+                        {
+                            if (!dp[j]) continue;
+
+                            nextDp[j] = true;
+
+                            if (j + array[i] >= nk[1]) continue;
+
+                            if (j + array[i] >= nk[1] - array[x])
+                            {
+                                need = true;
+                            }
+                            nextDp[j + array[i]] = true;
+                        }
+                        dp = nextDp;
                     }
                 }
+                if (need)
+                {
+                    top = x;
+                }
+                else
+                {
+                    bottom = x;
+                }
             }
-            Console.WriteLine(nk[0] - validIndex);
+            Console.WriteLine(bottom + 1);
         }
 
         private static string Read() { return Console.ReadLine(); }

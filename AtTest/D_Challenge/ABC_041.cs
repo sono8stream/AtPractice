@@ -15,12 +15,12 @@ namespace AtTest.D_Challenge
         static void Method(string[] args)
         {
             int[] nm = ReadInts();
-            var bList = new List<List<int>>();
-            var eList = new List<List<int>>();
+            var bDict = new Dictionary<int, bool>[nm[0]];
+            var eDict = new Dictionary<int,bool>[nm[0]];
             for(int i = 0; i < nm[0]; i++)
             {
-                bList.Add(new List<int>());
-                eList.Add(new List<int>());
+                bDict[i] = new Dictionary<int, bool>();
+                eDict[i] = new Dictionary<int, bool>();
             }
             var xys = new int[nm[1]][];
             for(int i = 0; i < nm[1]; i++)
@@ -28,14 +28,46 @@ namespace AtTest.D_Challenge
                 xys[i] = ReadInts();
                 int x = xys[i][0] - 1;
                 int y = xys[i][1] - 1;
-                bList[y].Add(x);
-                eList[x].Add(y);
+                if (x < y) bDict[y].Add(x,true);
+                if (x > y) eDict[x].Add(y,true);
             }
-            for(int i = 0; i < nm[0]; i++)
+            var first = new List<int>();
+            first.Add(0);
+            Console.WriteLine(DFS(first, bDict, eDict));
+        }
+
+        static long DFS(List<int> order,
+            Dictionary<int, bool>[] bDict, Dictionary<int, bool>[] eDict)
+        {
+            int now = order.Count;
+
+            List<int> poses = new List<int>();
+            int bCnt = 0;
+            for (int i = 0; i <= order.Count; i++)
             {
-                //if(bList[i].Co)
+                if (bCnt == bDict[now].Count) poses.Add(i);
+                if (i < order.Count)
+                {
+                    if (bDict[now].ContainsKey(order[i])) bCnt++;
+                    if (eDict[now].ContainsKey(order[i])) break;
+                }
             }
-            Console.WriteLine("text");
+
+            if (now == bDict.Length - 1)
+            {
+                return poses.Count;
+            }
+            else
+            {
+                long cnt = 0;
+                for (int i = 0; i < poses.Count; i++)
+                {
+                    order.Insert(poses[i], now);
+                    cnt += DFS(order, bDict, eDict);
+                    order.RemoveAt(poses[i]);
+                }
+                return cnt;
+            }
         }
 
         private static string Read() { return Console.ReadLine(); }
