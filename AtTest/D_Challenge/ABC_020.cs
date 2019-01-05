@@ -17,60 +17,61 @@ namespace AtTest.D_Challenge
             long[] nk = ReadLongs();
             long n = nk[0];
             long k = nk[1];
+            if (k > 100) return;
             long mask = 1000000000 + 7;
-            long[] primes = PrimeNumbers(k);
-            long kk = k;
-            long[] primeCnts = new long[primes.Length];
-            long allPat = 1;
-            for(int i = 0; i < primes.Length; i++)
-            {
-                while (kk % primes[i] == 0)
-                {
-                    primeCnts[i]++;
-                    kk /= primes[i];
-                }
-                Console.WriteLine(primeCnts[i]);
-                allPat *= (primeCnts[i] + 1);
-            }
-            Console.WriteLine(allPat);
             long res = 0;
-            for(long i = allPat; i > 0; i--)
+            for(long i = 0; i < k; i++)
             {
-                long div = 1;
-
+                long cnt = (n - i) / k;
+                long sum = MultiMod(cnt, cnt + 1, mask);
+                sum = MultiMod(sum, ReverseMod(2, mask - 2, mask), mask);
+                sum = MultiMod(sum, k, mask);
+                sum += (cnt + 1) * i;
+                sum %= mask;
+                long gcd = GCD(i, k);
+                sum = MultiMod(sum, k, mask);
+                sum = MultiMod(sum, ReverseMod(gcd, mask - 2, mask), mask);
+                res += sum;
+                res %= mask;
+                Console.WriteLine(sum);
             }
+            Console.WriteLine(res);
         }
 
-        static long[] PrimeNumbers(long max)
+        static long GCD(long a, long b)
         {
-            var primes = new List<long>();
-            if (max < 2) return primes.ToArray();
-            primes.Add(2);
-            if (max < 3)
+            long c = b;
+            do
             {
-                return primes.ToArray();
-            }
-            primes.Add(3);
-            if (max < 5)
+                c = a % b;
+                a = b;
+                b = c;
+            } while (c > 0);
+            return a;
+        }
+
+        static long MultiMod(long a, long b, long mask)
+        {
+            return ((a % mask) * (b % mask)) % mask;
+        }
+
+        static long ReverseMod(long a, long pow, long mask)
+        {
+            if (pow == 0) return 1;
+            else if (pow == 1) return a % mask;
+            else
             {
-                return primes.ToArray();
-            }
-            for (long i = 1; i*6-1 <= max; i ++)
-            {
-                long val = i * 6 - 1;
-                long val2 = i * 6 + 1;
-                bool prime1 = true;
-                bool prime2 = true;
-                for(int j = 0; j < primes.Count; j++)
+                long halfMod = ReverseMod(a, pow / 2, mask);
+                long nextMod = MultiMod(halfMod, halfMod, mask);
+                if (pow % 2 == 0)
                 {
-                    if (val % primes[j] == 0) prime1 = false;
-                    if (val2 % primes[j] == 0) prime2 = false;
-                    if (!prime1 && !prime2) break;
+                    return nextMod;
                 }
-                if (prime1) primes.Add(val);
-                if (prime2&&val2<=max) primes.Add(val2);
+                else
+                {
+                    return MultiMod(nextMod, a, mask);
+                }
             }
-            return primes.ToArray();
         }
 
         private static string Read() { return Console.ReadLine(); }

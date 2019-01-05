@@ -23,58 +23,39 @@ namespace AtTest.D_Challenge
 
             long rightCnt = 0;
             long obtuseCnt = 0;
+            double eps = 0.000000001;
             for (int i = 0; i < n; i++)
             {
-                var angles = new double[n-1];
+                var angles = new List<double>();
                 for (int j = 0; j < n; j++)
                 {
                     if (j == i) continue;
                     double angle = Math.Atan2(
                         xy[j][1] - xy[i][1], xy[j][0] - xy[i][0]);
-                    if (j < i)
-                    {
-                        angles[j] = angle;
-                    }
-                    else
-                    {
-                        angles[j - 1] = angle;
-                    }
+                    angles.Add(angle);
                 }
-                Array.Sort(angles);
-                Array.Reverse(angles);
-                var anglesTwice = new double[2 * (n - 1)];
-                for(int j = 0; j < n - 1; j++)
+                angles.Sort();
+                for (int j = 0; j < n - 1; j++)
                 {
-                    anglesTwice[j] = angles[j];
-                    anglesTwice[j + n - 1] = angles[j] - 2 * Math.PI;
-                    //Console.WriteLine(angles[j] + " ");
+                    angles.Add(angles[j] + 2 * Math.PI);
                 }
-                //Console.WriteLine();
-                int sharp = 0;
-                int right = 0;
-                int obtuse = 0;
-                for(int j = 0; j < n - 1; j++)
+                int rightIndex = 0;//初めて90度以上になるインデックス
+                int obtuseIndex = 0;//初めて180度を超えるインデックス
+                for (int j = 0; j < n - 1; j++)
                 {
-                    while (sharp<anglesTwice.Length
-                        &&anglesTwice[j] - anglesTwice[sharp] < Math.PI / 2)
+                    while (angles[rightIndex] - angles[j]
+                        < Math.PI * 0.5 - eps)
+                        rightIndex++;
+                    while (angles[obtuseIndex] - angles[j]
+                        < Math.PI + eps)
+                        obtuseIndex++;
+                    if (Math.Abs(angles[rightIndex] - angles[j]
+                        - Math.PI * 0.5) < eps)
                     {
-                        sharp++;
+                        rightCnt++;
+                        rightIndex++;
                     }
-                    right = sharp;
-                    while (right < anglesTwice.Length
-                        &&anglesTwice[j] - anglesTwice[right] == Math.PI / 2)
-                    {
-                        right++;
-                    }
-                    obtuse = right;
-                    while (obtuse < anglesTwice.Length
-                        && anglesTwice[j] - anglesTwice[obtuse] < Math.PI)
-                    {
-                        obtuse++;
-                    }
-                    rightCnt += right - sharp;
-                    obtuseCnt += obtuse - right;
-                    //Console.WriteLine(sharp + " " + right + " " + obtuse);
+                    obtuseCnt += obtuseIndex - rightIndex;
                 }
             }
             long sharpCnt = n * (n -1) * (n - 2) / 6 - rightCnt - obtuseCnt;

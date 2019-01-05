@@ -84,6 +84,28 @@ namespace AtTest.Library.PrimeNumber
             return primes.ToArray();
         }
 
+        static List<int[]> PrimeFactors(int n)
+        {
+            var res = new List<int[]>();
+            int tmp = n;
+
+            for (int i=2; i * i <= n;i++)
+            {
+                if (tmp % i == 0)
+                {
+                    res.Add(new int[2] { i, 0 });
+                    while (tmp % i == 0)
+                    {
+                        tmp /= i;
+                        res[res.Count - 1][1]++;
+                    }
+                }
+            }
+            if (tmp != 1) res.Add(new int[2] { tmp, 1 });//最後の素数も返す
+
+            return res;
+        }
+
         private static string Read() { return Console.ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }

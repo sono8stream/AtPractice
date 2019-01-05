@@ -23,18 +23,41 @@ namespace AtTest.D_Challenge
             input = Console.ReadLine().Split(' ');
             int d = int.Parse(input[0]);
             int l = int.Parse(input[1]);
+
             int roomPat = (r - x + 1) * (c - y + 1);
             long mask = 1000000007;
-            int combinationCnt = d < l ? d : l;
-            int objectCnt = d + l;
-            long allPat = 1;
-            for(int i = 0; i < combinationCnt; i++)
+            long pat = Combination(x * y, d + l, mask);
+            if (y > d + l && x == 1)
+                pat -= Combination(y, d + l, mask);
+            else if (x > d + l && y == 1)
+                pat -= Combination(x, d + l, mask);
+            else if (x * y > d + l)
+                pat -= Combination((x - 1) * (y - 1), d + l, mask);
+            if (pat < 0) pat += mask;
+            long allPat = Combination(x * y, d, mask);
+            allPat = MultiMod(allPat, roomPat, mask);
+            allPat = MultiMod(allPat, pat, mask);
+            Console.WriteLine(allPat);
+        }
+
+        static long Combination(long n, long m, long mask)
+        {
+            if (n - m < m) m = n - m;
+
+            long val = Permutation(n, m, mask);
+            long div = Permutation(m, m, mask);
+            return MultiMod(val, ReverseMod(div, mask - 2, mask), mask);
+        }
+
+        static long Permutation(long n, long m, long mask)
+        {
+            long val = 1;
+            for (long i = 0; i < m; i++)
             {
-                allPat = MultiMod(allPat, objectCnt - i, mask);
-                allPat = MultiMod(allPat,
-                    ReverseMod(combinationCnt - i, mask - 2, mask), mask);
+                val *= ((n - i) % mask);
+                val %= mask;
             }
-            Console.WriteLine((allPat * roomPat) % mask);
+            return val;
         }
 
         static long MultiMod(long a, long b, long mask)
