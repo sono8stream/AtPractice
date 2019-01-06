@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.ABC_108
+namespace AtTest.ABC_107
 {
     class D
     {
@@ -14,28 +14,32 @@ namespace AtTest.ABC_108
 
         static void Method(string[] args)
         {
-            int l = ReadInt();
-            var marginList = new List<bool>();
-            int m = 0;
-            int ll = l;
-            while (ll > 1)
+            int n = ReadInt();
+            int[] array = ReadInts();
+
+        }
+
+        static long MultiMod(long a, long b, long mask)
+        {
+            return ((a % mask) * (b % mask)) % mask;
+        }
+
+        static long ReverseMod(long a, long pow, long mask)
+        {
+            if (pow == 0) return 1;
+            else if (pow == 1) return a % mask;
+            else
             {
-                marginList.Add(ll % 2 == 1);
-                m += 2 + (ll & 1);
-                ll /= 2;
-            }
-            int n = marginList.Count;
-            Console.WriteLine((n + 1) + " " + m);
-            for(int i = 0; i < marginList.Count; i++)
-            {
-                if (marginList[i])
+                long halfMod = ReverseMod(a, pow / 2, mask);
+                long nextMod = MultiMod(halfMod, halfMod, mask);
+                if (pow % 2 == 0)
                 {
-                    l--;
-                    Console.WriteLine((i + 1) + " " + (n + 1) + " " + l);
+                    return nextMod;
                 }
-                Console.WriteLine((i + 1) + " " + (i + 2) + " " + 0);
-                Console.WriteLine((i + 1) + " " + (i + 2) + " " + l / 2);
-                l /= 2;
+                else
+                {
+                    return MultiMod(nextMod, a, mask);
+                }
             }
         }
 

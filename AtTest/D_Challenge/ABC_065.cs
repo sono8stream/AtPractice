@@ -16,55 +16,143 @@ namespace AtTest.D_Challenge
         {
             int n = ReadInt();
             var xys = new int[n][];
-            var xys2 = new int[n][];
+            var nodes = new Node[n];
             for (int i = 0; i < n; i++)
             {
                 int[] xy = ReadInts();
                 xys[i] = new int[3] { xy[0], xy[1], i };
-                xys2[i] = new int[3] { xy[0], xy[1],i };
+                nodes[i] = new Node();
             }
             Array.Sort(xys, (a, b) => a[0] - b[0]);
-            Array.Sort(xys2, (a, b) => a[1] - b[1]);
-            var indexArray = new int[n][];
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n - 1; i++)
             {
-                indexArray[xys[i][2]] = new int[2] { i, 0 };
+                long distance = Math.Abs(xys[i][0] - xys[i + 1][0]);
+                nodes[xys[i][2]].edges.Add(new Edge(xys[i + 1][2], distance));
+                nodes[xys[i + 1][2]].edges.Add(new Edge(xys[i][2], distance));
             }
-            for(int i = 0; i < n; i++)
+            Array.Sort(xys, (a, b) => a[1] - b[1]);
+            for (int i = 0; i < n - 1; i++)
             {
-                indexArray[xys2[i][2]][1] = i;
+                long distance = Math.Abs(xys[i][1] - xys[i + 1][1]);
+                nodes[xys[i][2]].edges.Add(new Edge(xys[i + 1][2], distance));
+                nodes[xys[i + 1][2]].edges.Add(new Edge(xys[i][2], distance));
             }
-            long res = 0;
 
-            for(int i = 0; i < n; i++)
+            var pQueue = new PriorityQueue<int>();
+            pQueue.Enqueue(0, 0);
+            var checks= new bool[n];
+            long sum = 0;
+            while (pQueue.Exist())
             {
-                int delta = int.MaxValue;
-                if (indexArray[i][0] > 0)
-                    delta = Math.Min(delta,
-                        Math.Abs(xys[indexArray[i][0]][0]
-                        - xys[indexArray[i][0]-1][0]));
-                if (indexArray[i][0] < n - 1)
-                    delta = Math.Min(delta,
-                        Math.Abs(xys[indexArray[i][0]][0]
-                        - xys[indexArray[i][0]+1][0]));
-                if (indexArray[i][1] > 0)
-                    delta = Math.Min(delta,
-                        Math.Abs(xys2[indexArray[i][1]][1]
-                        - xys2[indexArray[i][1] - 1][1]));
-                if (indexArray[i][1] <n-1)
-                    delta = Math.Min(delta,
-                        Math.Abs(xys2[indexArray[i][1]][1]
-                        - xys2[indexArray[i][1] + 1][1]));
-                Console.WriteLine(delta);
-                res += delta;
+                var pair = pQueue.Dequeue();
+                if (checks[pair.Value]) continue;
+
+                checks[pair.Value] = true;
+                sum += pair.Key;
+
+                Node nowNode = nodes[pair.Value];
+                for(int i = 0; i < nowNode.edges.Count; i++)
+                {
+                    Edge edge = nowNode.edges[i];
+                    if (checks[edge.toIndex]) continue;
+
+                    pQueue.Enqueue(edge.distance, edge.toIndex);
+                }
             }
-            Console.WriteLine(res);
-            /*
-            for(int i = 0; i < n; i++)
+            Console.WriteLine(sum);
+        }
+
+        class Node
+        {
+            public List<Edge> edges;
+            public Node()
             {
-                Console.WriteLine(indexArray[i][0] + " " + indexArray[i][1]);
+                edges = new List<Edge>();
             }
-            */
+        }
+
+        class Edge
+        {
+            public int toIndex;
+            public long distance;
+
+            public Edge(int toIndex, long distance)
+            {
+                this.toIndex = toIndex;
+                this.distance = distance;
+            }
+        }
+
+        class PriorityQueue<T>
+        {
+            private readonly List<KeyValuePair<long, T>> list;
+            private int count;
+
+            public PriorityQueue()
+            {
+                list = new List<KeyValuePair<long, T>>();
+                count = 0;
+            }
+
+            private void Add(KeyValuePair<long, T> pair)
+            {
+                if (count == list.Count)
+                {
+                    list.Add(pair);
+                }
+                else
+                {
+                    list[count] = pair;
+                }
+                count++;
+            }
+
+            private void Swap(int a, int b)
+            {
+                KeyValuePair<long, T> tmp = list[a];
+                list[a] = list[b];
+                list[b] = tmp;
+            }
+
+            public void Enqueue(long key, T value)
+            {
+                Add(new KeyValuePair<long, T>(key, value));
+                int c = count - 1;
+                while (c > 0)
+                {
+                    int p = (c - 1) / 2;
+                    if (list[c].Key >= list[p].Key) break;
+
+                    Swap(p, c);
+                    c = p;
+                }
+            }
+
+            public KeyValuePair<long, T> Dequeue()
+            {
+                KeyValuePair<long, T> pair = list[0];
+                count--;
+                if (count == 0) return pair;
+
+                list[0] = list[count];
+                int p = 0;
+                while (true)
+                {
+                    int c1 = p * 2 + 1;
+                    int c2 = p * 2 + 2;
+                    if (c1 >= count) break;
+
+                    int c = (c2 >= count || list[c1].Key < list[c2].Key)
+                        ? c1 : c2;
+                    if (list[c].Key >= list[p].Key) break;
+
+                    Swap(p, c);
+                    p = c;
+                }
+                return pair;
+            }
+
+            public bool Exist() { return count > 0; }
         }
 
         private static string Read() { return Console.ReadLine(); }
