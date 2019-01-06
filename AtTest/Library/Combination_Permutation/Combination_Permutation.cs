@@ -23,6 +23,25 @@ namespace AtTest.Library.Combination
             Console.WriteLine(cnt);
         }
 
+        static long Combination(long n,long m)
+        {
+            if (n - m < m) m = n - m;
+
+            long val = Permutation(n, m);
+            long div = Permutation(m, m);
+            return val / div;
+        }
+
+        static long Permutation(long n, long m)
+        {
+            long val = 1;
+            for (long i = 0; i < m; i++)
+            {
+                val *= (n - i);
+            }
+            return val;
+        }
+
         static long Combination(long n, long m, long mask)
         {
             if (n - m < m) m = n - m;
