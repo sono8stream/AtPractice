@@ -6,7 +6,7 @@ namespace AtTest.AGC_Challenge
 {
     class _007_B
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
