@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace AtTest.D_Challenge
 {
@@ -15,22 +16,50 @@ namespace AtTest.D_Challenge
         static void Method(string[] args)
         {
             int n = ReadInt();
-            var hws = new int[n][];
+            var whs = new int[n][];
             for (int i = 0; i < n; i++)
             {
-                hws[i] = ReadInts();
+                whs[i] = ReadInts();
             }
-            Array.Sort(hws, (a, b) => a[0] - b[0]);
-            Array.Sort(hws);
-            int[] inCnts = new int[n];
-            for(int i = 1; i < n; i++)
-            {
-                for(int j = 0; j < i; j++)
-                {
+            whs = whs.OrderBy(a => -a[1]).ToArray();//安定ソート
+            whs = whs.OrderBy(a => a[0]).ToArray();
 
+            var dp = new List<int>();//位置、最大値
+            dp.Add(whs[0][1]);
+            for (int i = 1; i < n; i++)
+            {
+                if (dp[dp.Count - 1] < whs[i][1])
+                {
+                    dp.Add(whs[i][1]);
+                }
+                else
+                {
+                    dp[BinarySearch(dp, whs[i][1])] = whs[i][1];
                 }
             }
-            Console.WriteLine("text");
+
+            Console.WriteLine(dp.Count);
+        }
+
+        //value以上の最小の値を返す
+        static int BinarySearch(List<int> list, int value)
+        {
+            int bottom = 0;
+            int top = list.Count;
+            while (top - bottom > 1)
+            {
+                int x = (top + bottom) / 2;
+                if (list[x] <= value)
+                {
+                    bottom = x;
+                }
+                else
+                {
+                    top = x;
+                }
+            }
+            if (list[bottom] < value) bottom++;
+            return bottom;
         }
 
         private static string Read() { return Console.ReadLine(); }
