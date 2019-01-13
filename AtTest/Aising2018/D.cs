@@ -6,7 +6,7 @@ namespace AtTest.Aising2018
 {
     class D
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
