@@ -32,11 +32,11 @@ namespace AtTest.D_Challenge
             {
                 if (wMax <= 1000)
                 {
-                    Console.WriteLine(ValueDP(vws, w));
+                    Console.WriteLine(BasicDP(vws, w));
                 }
                 else
                 {
-                    Console.WriteLine(ValueDP2(vws, w));
+                    Console.WriteLine(BasicDP2(vws, w));
                 }
             }
         }
@@ -83,46 +83,62 @@ namespace AtTest.D_Challenge
             return max;
         }
 
-        static long ValueDP2(long[][] vws, long w)
+        static long BasicDP(long[][] vws,long w)
         {
-            var dict = new Dictionary<long, long>();
-            dict.Add(0, 0);
-            long max = 0;
-            for (int i = 0; i < vws.GetLength(0); i++)
+            int n = vws.Length;
+            var dp = new long[Math.Min(n * 1000, w) + 1];
+            for(int i = 0; i < n; i++)
             {
-                var nextDict = new Dictionary<long, long>();
-                foreach (long key in dict.Keys)
+                var next = new long[dp.Length];
+                for(int j = 0; j < vws[i][1]; j++)
                 {
-                    if (nextDict.ContainsKey(key))
-                    {
-                        nextDict[key] = Math.Max(nextDict[key], dict[key]);
-                    }
-                    else
-                    {
-                        nextDict.Add(key, dict[key]);
-                    }
-
-                    long val = key + vws[i][0];
-                    long weight = dict[key] + vws[i][1];
-                    if (w < weight) continue;
-
-                    if (dict.ContainsKey(val))
-                    {
-                        weight = Math.Min(weight, dict[val]);
-                    }
-                    if (nextDict.ContainsKey(val))
-                    {
-                        nextDict[val] = Math.Max(weight, nextDict[val]);
-                    }
-                    else
-                    {
-                        nextDict.Add(val,weight);
-                    }
-                    max = Math.Max(max, val);
+                    next[j] = dp[j];
                 }
-                dict = nextDict;
+                for(long j = vws[i][1]; j < dp.Length; j++)
+                {
+                    next[j] = Math.Max(dp[j], dp[j - vws[i][1]] + vws[i][0]);
+                }
+                dp = next;
             }
-            return max;
+            return dp[dp.Length - 1];
+        }
+
+        static long BasicDP2(long[][] vws, long w)
+        {
+            int n = vws.Length;
+            var dp = new long[n * 1000 + 1];
+            long val = 0;
+            for (int i = 0; i < n; i++)
+            {
+                var next = new long[dp.Length];
+                for (int j = 0; j < vws[i][0]; j++)
+                {
+                    next[j] = dp[j];
+                }
+                for (long j = vws[i][0]; j < dp.Length; j++)
+                {
+                    if (j - vws[i][0] > 0 && dp[j - vws[i][0]] == 0
+                        || dp[j - vws[i][0]] + vws[i][1] > w)
+                    {
+                        next[j] = dp[j];
+                    }
+                    else
+                    {
+                        if (dp[j] == 0)
+                        {
+                            next[j] = dp[j - vws[i][0]] + vws[i][1];
+                        }
+                        else
+                        {
+                            next[j] 
+                                = Math.Min(dp[j], dp[j - vws[i][0]] + vws[i][1]);
+                        }
+                        val = Math.Max(val, j);
+                    }
+                }
+                dp = next;
+            }
+            return val;
         }
 
         private static string Read() { return Console.ReadLine(); }
