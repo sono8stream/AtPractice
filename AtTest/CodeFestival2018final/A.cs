@@ -15,90 +15,53 @@ namespace AtTest.CodeFestival2018final
         static void Method(string[] args)
         {
             int[] nm = ReadInts();
-            var distDict = new Dictionary<int, List<int>>[nm[0]];
-            for(int i = 0; i < nm[0]; i++)
+            int n = nm[0];
+            int m = nm[1];
+            var distDict = new Dictionary<int, List<int>>[n];
+            for(int i = 0; i < n; i++)
             {
                 distDict[i] = new Dictionary<int, List<int>>();
             }
-            var edges = new int[nm[1]][];
-            for (int i = 0; i < nm[1]; i++)
+            for (int i = 0; i < m; i++)
             {
                 int[] abl = ReadInts();
-                if (!distDict[abl[0] - 1].ContainsKey(abl[2]))
+                int a = abl[0] - 1;
+                int b = abl[1] - 1;
+                int l = abl[2];
+                if (!distDict[a].ContainsKey(l))
                 {
-                    distDict[abl[0] - 1].Add(abl[2], new List<int>());
+                    distDict[a].Add(l, new List<int>());
                 }
-                distDict[abl[0] - 1][abl[2]].Add(abl[1] - 1);
-                if (!distDict[abl[1] - 1].ContainsKey(abl[2]))
+                distDict[a][l].Add(b);
+                if (!distDict[b].ContainsKey(l))
                 {
-                    distDict[abl[1] - 1].Add(abl[2], new List<int>());
+                    distDict[b].Add(l, new List<int>());
                 }
-                distDict[abl[1] - 1][abl[2]].Add(abl[0] - 1);
-                edges[i] = new int[3] { abl[0] - 1, abl[1] - 1, abl[2] };
+                distDict[b][l].Add(a);
             }
-
-            for(int i = 0; i < nm[0]; i++)
+            long cnt = 0;
+            for(int i = 0; i < n; i++)
             {
-                foreach(var list in distDict[i].Values)
+                foreach(int length in distDict[i].Keys)
                 {
-                    list.Sort();
-                }
-            }
-
-            int cnt = 0;
-            for(int i = 0; i < nm[0]; i++)
-            {
-                foreach(int dist in distDict[i].Keys)
-                {
-                    if (dist > 1270) continue;
-                    
-                    if (dist == 1270)
+                    for(int j = 0; j < distDict[i][length].Count; j++)
                     {
-                        cnt += (distDict[i][dist].Count
-                            * (distDict[i][dist].Count - 1)) / 2;
-                    }
-                }
-            }
-            /*
-            for (int i = 0; i < nm[1]; i++)
-            {
-                int a = edges[i][0];
-                int b = edges[i][1];
-                int distance = edges[i][2];
-                if (distance > 1540) continue;
-                if (distDict[b].ContainsKey(2540 - distance))
-                {
-                    var list = distDict[b][2540 - distance];
-                    int bottom = 0;
-                    int top = list.Count;
-                    while (top - bottom > 1)
-                    {
-                        int x = (bottom + top) / 2;
-                        if (a < list[x])
+                        int to = distDict[i][length][j];
+                        if (distDict[to].ContainsKey(2540 - length))
                         {
-                            top = x;
-                        }
-                        else
-                        {
-                            bottom = x;
+                            if (length == 1270)
+                            {
+                                cnt += distDict[to][2540 - length].Count - 1;
+                            }
+                            else
+                            {
+                                cnt += distDict[to][2540 - length].Count;
+                            }
                         }
                     }
-                    cnt += list.Count - top + 1;
                 }
             }
-            */
-            /*
-            var listTest = new List<int>();
-            listTest.Add(1);
-            listTest.Add(3);
-            listTest.Add(5);
-            listTest.Add(8);
-            Console.WriteLine(listTest.BinarySearch(2));
-            Console.WriteLine(listTest.BinarySearch(3));
-            Console.WriteLine(listTest.BinarySearch(6));
-            */
-
-            Console.WriteLine(cnt);
+            Console.WriteLine(cnt/2);
         }
 
         private static string Read() { return Console.ReadLine(); }
