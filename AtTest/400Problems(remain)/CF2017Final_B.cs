@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.AGC_Challenge
+namespace AtTest._400Problems_remain_
 {
-    class _011_B
+    class CF2017Final_B
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,14 @@ namespace AtTest.AGC_Challenge
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            long[] array = ReadLongs();
-            Array.Sort(array);
-            long[] sums = new long[n];
-            sums[0] = array[0];
-            for(int i =1; i < n; i++)
+            string s = Read();
+            int[] cnts = new int[3];
+            for(int i = 0; i < s.Length; i++)
             {
-                sums[i] = sums[i - 1] + array[i];
+                cnts[s[i] - 'a']++;
             }
-            int cnt = 1;
-            for(int i = n - 2; i >= 0; i--)
-            {
-                if (sums[i]*2 < array[i + 1])
-                {
-                    Console.WriteLine(cnt);
-                    return;
-                }
-                cnt++;
-            }
-            Console.WriteLine(cnt);
+            Array.Sort(cnts);
+            Console.WriteLine(cnts[2] - cnts[0] <= 1 ? "YES" : "NO");
         }
 
         private static string Read() { return Console.ReadLine(); }

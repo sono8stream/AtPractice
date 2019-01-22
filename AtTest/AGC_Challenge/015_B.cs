@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AtTest.AGC_Challenge
 {
-    class _011_B
+    class _015_B
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,22 @@ namespace AtTest.AGC_Challenge
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            long[] array = ReadLongs();
-            Array.Sort(array);
-            long[] sums = new long[n];
-            sums[0] = array[0];
-            for(int i =1; i < n; i++)
+            string s = Read();
+            long res = 0;
+            for (int i = 0; i < s.Length; i++)
             {
-                sums[i] = sums[i - 1] + array[i];
-            }
-            int cnt = 1;
-            for(int i = n - 2; i >= 0; i--)
-            {
-                if (sums[i]*2 < array[i + 1])
+                if (s[i] == 'U')
                 {
-                    Console.WriteLine(cnt);
-                    return;
+                    res += s.Length - i - 1;
+                    res += i * 2;
                 }
-                cnt++;
+                else
+                {
+                    res += (s.Length - i - 1) * 2;
+                    res += i;
+                }
             }
-            Console.WriteLine(cnt);
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }

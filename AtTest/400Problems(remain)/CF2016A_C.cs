@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.AGC_Challenge
+namespace AtTest._400Problems_remain_
 {
-    class _011_B
+    class CF2016A_C
     {
         static void ain(string[] args)
         {
@@ -14,26 +14,25 @@ namespace AtTest.AGC_Challenge
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            long[] array = ReadLongs();
-            Array.Sort(array);
-            long[] sums = new long[n];
-            sums[0] = array[0];
-            for(int i =1; i < n; i++)
+            string s = Read();
+            char[] chars = s.ToCharArray();
+            int k = ReadInt();
+            for (int i = 0; i < s.Length - 1; i++)
             {
-                sums[i] = sums[i - 1] + array[i];
-            }
-            int cnt = 1;
-            for(int i = n - 2; i >= 0; i--)
-            {
-                if (sums[i]*2 < array[i + 1])
+                if (chars[i] == 'a') continue;
+
+                int delta = 'a' + 26 - chars[i];
+                if (delta <= k)
                 {
-                    Console.WriteLine(cnt);
-                    return;
+                    chars[i] = 'a';
+                    k -= delta;
                 }
-                cnt++;
             }
-            Console.WriteLine(cnt);
+            //Console.WriteLine(k);
+            k %= 26;
+            chars[s.Length - 1] 
+                = (char)('a'+(chars[s.Length - 1] + k-'a') % 26);
+            Console.WriteLine(chars);
         }
 
         private static string Read() { return Console.ReadLine(); }

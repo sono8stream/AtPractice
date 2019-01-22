@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.AGC_Challenge
+namespace AtTest.ABC116
 {
-    class _011_B
+    class C
     {
         static void ain(string[] args)
         {
@@ -15,23 +15,30 @@ namespace AtTest.AGC_Challenge
         static void Method(string[] args)
         {
             int n = ReadInt();
-            long[] array = ReadLongs();
-            Array.Sort(array);
-            long[] sums = new long[n];
-            sums[0] = array[0];
-            for(int i =1; i < n; i++)
+            int[] hs = ReadInts();
+            int cnt = 0;
+            int remain = n;
+            while (remain > 0)
             {
-                sums[i] = sums[i - 1] + array[i];
-            }
-            int cnt = 1;
-            for(int i = n - 2; i >= 0; i--)
-            {
-                if (sums[i]*2 < array[i + 1])
+                remain = 0;
+                bool removing = false;
+                for (int i = 0; i < n; i++)
                 {
-                    Console.WriteLine(cnt);
-                    return;
+                    if (hs[i] > 0)
+                    {
+                        if (!removing)
+                        {
+                            removing = true;
+                            cnt++;
+                        }
+                        hs[i]--;
+                        remain++;
+                    }
+                    else
+                    {
+                        removing = false;
+                    }
                 }
-                cnt++;
             }
             Console.WriteLine(cnt);
         }

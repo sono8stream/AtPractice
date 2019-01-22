@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
-namespace AtTest.Dijkstra
+namespace AtTest.SoundHound2018
 {
-    class ABC_012_D
+    class D
     {
         static void ain(string[] args)
         {
@@ -14,46 +14,65 @@ namespace AtTest.Dijkstra
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            int m = int.Parse(input[1]);
-
+            int[] nmst = ReadInts();
+            int n = nmst[0];
+            int m = nmst[1];
+            int s = nmst[2]-1;
+            int t = nmst[3]-1;
+            int[][] uvabs = new int[m][];
+            for(int i = 0; i < m; i++)
+            {
+                uvabs[i] = ReadInts();
+            }
             Node[] nodes = new Node[n];
+            for(int i = 0; i < n; i++)
+            {
+                nodes[i] = new Node();
+            }
+            for(int i = 0; i < m; i++)
+            {
+                int u = uvabs[i][0] - 1;
+                int v = uvabs[i][1] - 1;
+                int a = uvabs[i][2];
+                nodes[u].edges.Add(new Edge(v, a));
+                nodes[v].edges.Add(new Edge(u, a));
+            }
+            long[] startDistances = Dijkstra(s, nodes);
+            nodes = new Node[n];
             for (int i = 0; i < n; i++)
             {
                 nodes[i] = new Node();
             }
-
             for (int i = 0; i < m; i++)
             {
-                string[] nodeInput = Console.ReadLine().Split(' ');
-                int n1 = int.Parse(nodeInput[0]) - 1;
-                int n2 = int.Parse(nodeInput[1]) - 1;
-                int t = int.Parse(nodeInput[2]);
-                nodes[n1].edges.Add(new Edge(n2, t));
-                nodes[n2].edges.Add(new Edge(n1, t));
+                int u = uvabs[i][0] - 1;
+                int v = uvabs[i][1] - 1;
+                int b = uvabs[i][3];
+                nodes[u].edges.Add(new Edge(v, b));
+                nodes[v].edges.Add(new Edge(u, b));
             }
-            long res = long.MaxValue;
+            long[] goalDistances = Dijkstra(t, nodes);
+            long[] spends = new long[n];
+            spends[0] = startDistances[n - 1] + goalDistances[n - 1];
+            for(int i = 1; i < n; i++)
+            {
+                spends[i] = Math.Min(spends[i - 1],
+                    startDistances[n - 1 - i] + goalDistances[n - 1 - i]);
+            }
+            Array.Reverse(spends);
             for(int i = 0; i < n; i++)
             {
-                long distance;
-                Dijkstra(i, nodes, out distance);
-                res = Math.Min(res, distance);
+                Console.WriteLine(Math.Pow(10, 15) - spends[i]);
             }
-            Console.WriteLine(res);
         }
 
-        //改良ダイクストラ
-        //すべての距離を帰す
-        //これが一番早いです
-        static long[] Dijkstra(int startIndex,
-            Node[] nodes,out long maxDistance)
+        //最大距離を帰す
+        static long[] Dijkstra(int startIndex,Node[] nodes)
         {
             Node startNode = nodes[startIndex];
             var pQueue = new PriorityQueue<int>();
             var visitFlags = new bool[nodes.Length];
             var distances = new long[nodes.Length];
-            maxDistance = 0;
 
             //Initialize nodes
             for (int i = 0; i < distances.Length; i++)
@@ -75,7 +94,6 @@ namespace AtTest.Dijkstra
                 //Confirm distances
                 Node nowNode = nodes[index];
                 visitFlags[index] = true;
-                maxDistance = Math.Max(maxDistance, distance);
 
                 //Update priority queue
                 for (int i = 0; i < nowNode.edges.Count; i++)
@@ -186,5 +204,13 @@ namespace AtTest.Dijkstra
 
             public bool Exist() { return count > 0; }
         }
+
+        private static string Read() { return Console.ReadLine(); }
+        private static int ReadInt() { return int.Parse(Read()); }
+        private static long ReadLong() { return long.Parse(Read()); }
+        private static double ReadDouble() { return double.Parse(Read()); }
+        private static int[] ReadInts() { return Array.ConvertAll(Read().Split(), int.Parse); }
+        private static long[] ReadLongs() { return Array.ConvertAll(Read().Split(), long.Parse); }
+        private static double[] ReadDoubles() { return Array.ConvertAll(Read().Split(), double.Parse); }
     }
 }
