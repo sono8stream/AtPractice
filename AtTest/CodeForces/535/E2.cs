@@ -6,7 +6,7 @@ namespace AtTest.CodeForces._535
 {
     class E2
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
