@@ -31,38 +31,61 @@ namespace AtTest._400Problems_remain_
                 if (parent < 0) root = i;
                 else childs[parent].Add(i);
             }
-            int[] childCnts = new int[n];
-            for(int i = 0; i < n; i++)
+            int[] rank = new int[n];
+            bool[] visit = new bool[n];
+            NestDFS(childs, ref rank, root, 1);
+            int remain = DFS(childs, rank, visit, root);
+            int[] res = new int[m];
+            for (int i = 0; i < m; i++)
             {
-                childCnts[i] = -1;
+                bool canPut = false;
+                for (int j = 0; j < n; j++)
+                {
+                    if (visit[j]) continue;
+                    int count = DFS(childs, rank, visit, j);
+                    if ((i < m - 1 && remain - count >= k - rank[j])
+                        || (i == m - 1 && rank[j] == k))
+                    {
+                        visit[j] = true;
+                        canPut = true;
+                        res[i] = j + 1;
+                        remain -= count;
+                        k -= rank[j];
+                        //Console.WriteLine(res[i]);
+                        break;
+                    }
+                }
+                if (!canPut)
+                {
+                    Console.WriteLine(-1);
+                    return;
+                }
             }
-            DFS(childs, ref childCnts, root);
-            for(int i = 0; i < n; i++)
+            for(int i = 0; i < m; i++)
             {
-                Console.WriteLine(childCnts[i]);
-            }
-            for(int i = 0; i < n; i++)
-            {
-
+                Console.Write(res[i] + " ");
             }
         }
 
-        static void DFS(List<int>[] childs, ref int[] childCnts, int index)
+        static void NestDFS(List<int>[] childs, ref int[] rank,
+            int now, int nowRank)
         {
-            if (childCnts[index] != -1) return;
+            rank[now] = nowRank;
+            for(int i = 0; i < childs[now].Count; i++)
+            {
+                NestDFS(childs, ref rank, childs[now][i], nowRank + 1);
+            }
+        }
 
-            if (childs[index].Count == 0)
+        static int DFS(List<int>[] childs,int[] rank,bool[] visit, int now)
+        {
+            if (visit[now]) return 0;
+            int res = rank[now];
+            for(int i = 0; i < childs[now].Count; i++)
             {
-                childCnts[index] = 0;
-                return;
+                res += DFS(childs, rank, visit, childs[now][i]);
             }
-            int cnt = 0;
-            for(int i = 0; i < childs[index].Count; i++)
-            {
-                DFS(childs, ref childCnts, childs[index][i]);
-                cnt += childCnts[childs[index][i]] + 1;
-            }
-            childCnts[index] = cnt;
+            return res;
         }
 
         private static string Read() { return Console.ReadLine(); }

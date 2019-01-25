@@ -6,7 +6,7 @@ namespace AtTest._400Problems_remain_
 {
     class COLOCON2018Final_B
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();

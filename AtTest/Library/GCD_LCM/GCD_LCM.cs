@@ -20,6 +20,12 @@ namespace AtTest.Library.GCD_LCM
 
         static long GCD(long a,long b)
         {
+            if (b > a)
+            {
+                long temp = b;
+                b=a;
+                a = temp;
+            }
             long c = b;
             do
             {
