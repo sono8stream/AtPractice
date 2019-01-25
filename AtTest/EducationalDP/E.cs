@@ -22,33 +22,32 @@ namespace AtTest.EducationalDP
             {
                 wvs[i] = ReadInts();
             }
-            var dp = new Dictionary<int, long>();
-            dp.Add(0, 0);
-            long max = 0;
-            for(int i = 0; i < n; i++)
+            var vDict = new Dictionary<int, long>();
+            vDict.Add(0, 0);
+            for (int i = 0; i < n; i++)
             {
-                var nextDp = new Dictionary<int, long>();
-                foreach(int key in dp.Keys)
+                var nextDict = new Dictionary<int, long>();
+                foreach (int key in vDict.Keys)
                 {
-                    if (nextDp.ContainsKey(key))
+                    if (nextDict.ContainsKey(key))
                     {
-                        nextDp[key] = Math.Max(dp[key], nextDp[key]);
+                        nextDict[key] = Math.Min(vDict[key], nextDict[key]);
                     }
-                    else nextDp.Add(key, dp[key]);
-                    int nextW = key + wvs[i][0];
-                    if (nextW > w) continue;
-                    if (nextDp.ContainsKey(nextW))
+                    else nextDict.Add(key, vDict[key]);
+                    int next = key + wvs[i][1];
+                    if (nextDict.ContainsKey(next))
                     {
-                        nextDp[nextW]
-                            = Math.Max(nextDp[nextW], dp[key] + wvs[i][1]);
+                        nextDict[next] = Math.Min(
+                                nextDict[next], vDict[key] + wvs[i][0]);
                     }
-                    else
-                    {
-                        nextDp.Add(nextW, dp[key] + wvs[i][1]);
-                        max = Math.Max(max, dp[key] + wvs[i][1]);
-                    }
+                    else nextDict.Add(next, vDict[key] + wvs[i][0]);
                 }
-                dp = nextDp;
+                vDict = nextDict;
+            }
+            int max = 0;
+            foreach(int key in vDict.Keys)
+            {
+                if (vDict[key] <= w) max = Math.Max(max, key);
             }
             Console.WriteLine(max);
         }
