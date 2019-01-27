@@ -18,17 +18,47 @@ namespace AtTest._400Problems_remain_
             long a = ab[0];
             long b = ab[1];
             long n = b - a + 1;
-            long cnt2 = 0;
-            long cnt3 = 0;
-            long cnt6 = 0;
-            List<long> others = new List<long>();
-            for(long i = a; i <= b; i++)
+            bool[,] cans = new bool[n, n];
+            for (long i = a; i <= b; i++)
             {
-                if (i % 2 == 0) { cnt2++; continue; }
-                if (i % 3 == 0) { cnt3++; continue; }
-                others.Add(i);
+                for (long j = i + 1; j <= b; j++)
+                {
+                    bool can = GCD(i, j) == 1;
+                    cans[i, j] = can;
+                    cans[j, i] = can;
+                }
             }
-            long allPat = (long)Math.Pow(2, others.Count);
+            Console.WriteLine(DFS(new List<long>(), cans, a, b));
+        }
+
+        static long DFS(List<long> selected,bool[,] cans, 
+            long now,long max)
+        {
+            bool can = true;
+            for (int i = 0; i < selected.Count; i++)
+            {
+                if (!cans[selected[i],now])
+                {
+                    can = false;
+                    //break;
+                }
+                //Console.Write(selected[i] + " ");
+            }
+            //Console.WriteLine();
+            if (now == max)
+            {
+                long cnt = 1;
+                if (can) cnt++;
+                return cnt;
+            }
+            long val = DFS(selected, cans, now + 1,max);
+            if (can)
+            {
+                selected.Add(now);
+                val += DFS(selected, cans, now + 1, max);
+                selected.RemoveAt(selected.Count - 1);
+            }
+            return val;
         }
 
         static long GCD(long a, long b)

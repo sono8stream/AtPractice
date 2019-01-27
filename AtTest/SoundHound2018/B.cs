@@ -7,7 +7,7 @@ namespace AtTest.SoundHound2018
 {
     class B
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -23,54 +23,32 @@ namespace AtTest.SoundHound2018
             {
                 array[i] = long.Parse(Console.ReadLine());
             }
-
-            var sums = Sums(array, n, k);
-            int minIndex = MinIndex(sums);
-            while (sums[minIndex] < 0)
-            {
-                for (int i = 0; i < k; i++)
-                {
-                    array[minIndex + i] = 0;
-                }
-                sums = Sums(array, n, k);
-                minIndex = MinIndex(sums);
-            }
-
-            long sum = 0;
-            for(int i = 0; i < n; i++)
-            {
-                sum += array[i];
-            }
-            Console.WriteLine(sum);
-        }
-
-        static long[] Sums(long[] array,int n,int k)
-        {
-            int nn = n - k + 1;
-            var newSums = new long[nn];
-            newSums[0] = 0;
+            var dp = new long[n];
+            var max = new long[n];
             for (int i = 0; i < k; i++)
             {
-                newSums[0] += array[i];
-            }
-            for (int i = 1; i < nn; i++)
-            {
-                newSums[i] = newSums[i - 1] + array[i + k - 1] - array[i - 1];
-            }
-            return newSums;
-        }
-
-        static int MinIndex(long[] array)
-        {
-            int index = 0;
-            for(int i = 1; i < array.Length; i++)
-            {
-                if(array[i]< array[index])
+                if (i == 0)
                 {
-                    index = i;
+                    dp[i] = array[i];
+                    max[i] = Math.Max(array[i], 0);
+                }
+                else
+                {
+                    dp[i] = dp[i - 1] + array[i];
+                    max[i] = Math.Max(max[i - 1], dp[i]);
                 }
             }
-            return index;
+            dp[k - 1] = Math.Max(dp[k - 1], 0);
+            for(int i = k; i < n; i++)
+            {
+                dp[i] = Math.Max(max[i - k], dp[i - 1] + array[i]);
+                max[i] = Math.Max(max[i - 1], dp[i]);
+            }
+            /*for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine(dp[i]);
+            }*/
+            Console.WriteLine(dp[n - 1]);
         }
     }
 }
