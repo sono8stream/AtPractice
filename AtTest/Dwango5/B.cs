@@ -17,18 +17,38 @@ namespace AtTest.Dwango5
             int[] nk = ReadInts();
             int n = nk[0];
             int k = nk[1];
+            int all = n * (n + 1) / 2;
             long[] array = ReadLongs();
-            var sums = new long[n * (n + 1) / 2];
-            var sumBits = new int[n * (n - 1) / 2, 20];
+            var sumList = new List<long>();
             for (int i = 0; i < n; i++)
             {
-                for (int j = i; j < n; j++)
+                sumList.Add(array[i]);
+                for (int j = i+1; j < n; j++)
                 {
-
+                    sumList.Add(sumList[sumList.Count - 1] + array[j]);
                 }
             }
+            long res = 0;
+            for(long i = 40; i >= 0; i--)
+            {
+                long div = (long)Math.Pow(2, i);
+                int cnt = 0;
+                for(int j = 0; j < sumList.Count; j++)
+                {
+                    if ((sumList[j] & div) > 0) cnt++;
+                }
+                if (cnt < k) continue;
 
-            Console.WriteLine("text");
+                res += div;
+                var nextList = new List<long>();
+                for(int j = 0; j < sumList.Count; j++)
+                {
+                    if ((sumList[j] & div) > 0) nextList.Add(sumList[j]);
+                }
+                sumList = nextList;
+            }
+
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -26,49 +26,34 @@ namespace AtTest.D_Challenge
                 ps[i] = (int)wp[1];
             }
 
-            var dp = new long[n, k][];
-            for(int i = 0; i < n; i++)
+            double bottom = 0;
+            double top = 100;
+            double thres = 0.000001;
+            while (top-bottom>=thres)
             {
-                for(int j = 0; j < k; j++)
+                double x = (bottom + top) * 0.5;
+                double[] wpps = new double[n];
+                for(int i =0; i < n; i++)
                 {
-                    dp[i,j] = new long[2] { 0, 0 };
+                    wpps[i] = ws[i] * (ps[i] - x);
+                }
+                Array.Sort(wpps);
+                Array.Reverse(wpps);
+                double val = 0;
+                for(int i = 0; i < k; i++)
+                {
+                    val += wpps[i];
+                }
+                if (val >= 0)
+                {
+                    bottom = x;
+                }
+                else
+                {
+                    top = x;
                 }
             }
-            dp[0, 0] = new long[2] { ws[0], ws[0] * ps[0] };
-            for (int i = 1; i < n; i++)
-            {
-                for (int j = 0; j < Math.Min(i + 1, k); j++)
-                {
-                    long v = ws[i] * ps[i];
-                    long all = ws[i];
-                    if (j > 0)
-                    {
-                        v += dp[i - 1, j - 1][1];
-                        all += dp[i - 1, j - 1][0];
-                    }
-                    if (dp[i - 1, j][0] == 0
-                        || v * dp[i - 1, j][0] > dp[i - 1, j][1] * all)
-                    {
-                        dp[i, j] = new long[2] { all, v };
-                    }
-                    else
-                    {
-                        dp[i, j] = new long[2] {
-                            dp[i-1,j][0], dp[i-1,j][1] };
-                    }
-                }
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < k; j++)
-                {
-                    Console.Write(dp[i,j][0] + ":" + dp[i,j][1]+" ");
-                }
-                Console.WriteLine();
-            }
-            long[] res = dp[n - 1, k - 1];
-            Console.WriteLine(1.0 * res[1] / res[0]);
+            Console.WriteLine(bottom);
         }
 
         private static string Read() { return Console.ReadLine(); }

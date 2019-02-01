@@ -23,25 +23,38 @@ namespace AtTest.D_Challenge
             input = Console.ReadLine().Split(' ');
             int d = int.Parse(input[0]);
             int l = int.Parse(input[1]);
+            if (x * y > d + l && d + l == 0)
+            {
+                Console.WriteLine(0);
+                return;
+            }
 
             int roomPat = (r - x + 1) * (c - y + 1);
             long mask = 1000000007;
             long pat = Combination(x * y, d + l, mask);
-            if (y > d + l && x == 1)
-                pat -= Combination(y, d + l, mask);
-            else if (x > d + l && y == 1)
-                pat -= Combination(x, d + l, mask);
-            else if (x * y > d + l)
-                pat -= Combination((x - 1) * (y - 1), d + l, mask);
-            if (pat < 0) pat += mask;
-            long allPat = Combination(x * y, d, mask);
+            if (x * y > d + l)
+            {
+                pat -= Combination((x - 1) * y, d + l, mask) * 2;
+                pat -= Combination(x * (y - 1), d + l, mask) * 2;
+                pat += Combination((x - 1) * (y - 1), d + l, mask) * 4;
+                pat += Combination((x - 2) * y, d + l, mask);
+                pat += Combination(x * (y - 2), d + l, mask);
+                pat -= Combination((x - 2) * (y - 1), d + l, mask) * 2;
+                pat -= Combination((x - 1) * (y - 2), d + l, mask) * 2;
+                pat += Combination((x - 2) * (y - 2), d + l, mask);
+            }
+            while (pat < 0) pat += mask;
+            pat %= mask;
+            long allPat = Combination(d + l, d, mask);
             allPat = MultiMod(allPat, roomPat, mask);
             allPat = MultiMod(allPat, pat, mask);
             Console.WriteLine(allPat);
+            //Console.WriteLine(Combination(7, 9, mask));
         }
 
         static long Combination(long n, long m, long mask)
         {
+            if (n < m) return 0;
             if (n - m < m) m = n - m;
 
             long val = Permutation(n, m, mask);
