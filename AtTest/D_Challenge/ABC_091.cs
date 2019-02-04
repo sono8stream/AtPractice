@@ -17,51 +17,49 @@ namespace AtTest.D_Challenge
             int n = ReadInt();
             int[] array = ReadInts();
             int[] bArray = ReadInts();
+            var aMods = new int[30][];
             var bMods = new int[30][];
-            for(int i =0; i < 30; i++)
+            for (int i = 0; i < 30; i++)
             {
+                aMods[i] = new int[n];
                 bMods[i] = new int[n];
-                int div = 2;
-                for(int j = 0; j < n; j++)
+                int div = 2 << i;
+                for (int j = 0; j < n; j++)
                 {
+                    aMods[i][j] = array[j] % div;
                     bMods[i][j] = bArray[j] % div;
                 }
-                div *= 2;
             }
 
-            var cnts = new int[30];
-            for(int i = 0; i < n; i++)
+            var cnts = new long[30];
+            for (int i = 0; i < 30; i++)
             {
-                int t = 1;
-                for(int j = 0; j < 30; j++)
+                Array.Sort(aMods[i]);
+                Array.Reverse(aMods[i]);
+                Array.Sort(bMods[i]);
+                int t = 1 << i;
+                int[] itrs = new int[4];
+                for (int j = 0; j < n; j++)
                 {
-                    Array.Sort(bMods[j]);
-                    int aMargin = array[i] % (t * 2);
-
+                    for (int k = 0; k < 4; k++)
+                    {
+                        while (itrs[k] < n
+                            && bMods[i][itrs[k]] < t * (k + 1) - aMods[i][j])
+                            itrs[k]++;
+                    }
+                    cnts[i] += itrs[1] - itrs[0];
+                    cnts[i] += itrs[3] - itrs[2];
+                    //Console.Write(cnts[i] + " ");
                 }
-                t *= 2;
+                //Console.WriteLine();
             }
-        }
-
-        static int BinarySearch(int[] array,int val,bool upper)
-        {
-            int bottom = 0;
-            int top = array.Length;
-            while (bottom + 1 < top)
+            long res = 0;
+            for (int i = 0; i < 30; i++)
             {
-                int x = (bottom + top) / 2;
-                if (array[x] > val)
-                {
-                    top = x;
-                }
-                else
-                {
-                    bottom = x;
-                }
+                //Console.WriteLine(cnts[i]);
+                if (cnts[i] % 2 > 0) res += 1 << i;
             }
-            if (array[bottom] == val) return bottom;
-            if (upper) return bottom+1;
-            else return bottom;
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }
