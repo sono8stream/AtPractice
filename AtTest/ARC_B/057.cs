@@ -22,28 +22,36 @@ namespace AtTest.ARC_B
             {
                 array[i] = ReadInt();
             }
-            int[] remains = new int[n];
-            remains[n - 1] = 0;
-            for(int i = n - 2; i >= 0; i--)
+            long[,] dp = new long[n + 1, n + 1];
+            //i日目までにj回勝率を上げた場合の最小の勝利数
+            dp[1, 1] = 1;
+            long all = array[0];
+            for (int i = 2; i <= n; i++)
             {
-                remains[i] = remains[i + 1] + array[i + 1];
-            }
-            int won = 1;
-            int total = array[0];
-            int res = 1;
-            for (int i = 1; i < n; i++)
-            {
-                int win = won * array[i] / total + 1;
-                int min = Math.Max(k - won - remains[i], 0);
-                win = Math.Max(win, min);
-                if (win <= Math.Min(array[i], k - won))
+                for (int j = 1; j <= i; j++)
                 {
-                    res++;
-                    won += win;
+                    long next = dp[i - 1, j - 1]
+                        * (all + array[i - 1]) / all + 1;
+                    dp[i, j] = next;
+                    if (j <= i - 1)
+                        dp[i, j] = Math.Min(dp[i, j], dp[i - 1, j]);
                 }
-                total += array[i];
+                all += array[i - 1];
             }
-            Console.WriteLine(res);
+            if (all == k)
+            {
+                Console.WriteLine(1);
+                return;
+            }
+            for(int i = 0; i <= n; i++)
+            {
+                if (dp[n, i] > k)
+                {
+                    Console.WriteLine(i - 1);
+                    return;
+                }
+            }
+            Console.WriteLine(n);
         }
 
         private static string Read() { return Console.ReadLine(); }
