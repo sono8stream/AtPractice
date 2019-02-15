@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AtTest.TDPC
 {
-    class B
+    class G
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -14,34 +14,13 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int[] ab = ReadInts();
-            int a = ab[0];
-            int b = ab[1];
-            int[] aArray = ReadInts();
-            int[] bArray = ReadInts();
-            var dp = new int[a+1, b+1];
-            //aをi個目から,bをj個目から開始したときの先攻の得点
-            for (int i = 0; i < a + 1; i++)
-                for (int j = 0; j < b + 1; j++)
-                    dp[i, j] = -1;
-            int all = a + b;
-
-            Console.WriteLine(dp[a, b]);
-        }
-
-        static void DFS(ref int[,] dp,int aNow,int bNow)
-        {
-            if (aNow == dp.GetLength(0)
-                &&bNow==dp.GetLength(1))
-            {
-                dp[aNow, bNow] = 0;
-                return;
-            }
-            if (aNow == dp.GetLength(0))
+            string[] input = Console.ReadLine().Split(' ');
+            int n = int.Parse(input[0]);
+            for (int i = 0; i < n; i++)
             {
 
             }
-            
+            Console.WriteLine("text");
         }
 
         private static string Read() { return Console.ReadLine(); }

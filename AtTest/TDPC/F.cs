@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.ARC_B
+namespace AtTest.TDPC
 {
-    class _055
+    class F
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
             Console.ReadLine();
@@ -17,15 +17,31 @@ namespace AtTest.ARC_B
             int[] nk = ReadInts();
             int n = nk[0];
             int k = nk[1];
-            double[,] dp = new double[n + 1, k + 1];
-            dp[1, 0] = 1.0 / n;
-            for(int i = 2; i <= n; i++)
+            long mask = 1000000000 + 7;
+            long[] dp = new long[n];
+            dp[k - 1] = 1;
+            long[] all = new long[n];
+            all[0] = 1;
+            for (int i = 1; i < n-1; i++)
             {
-                for(int j = 1; j <= i; j++)
+                all[i] = all[i - 1] * 2;
+                all[i] %= mask;
+            }
+            all[n - 1] = all[n - 2];
+            for (int i = k; i < n; i++)
+            {
+                dp[i] = i == n - 1 ? dp[i - 1] : dp[i - 1] * 2;
+                dp[i] %= mask;
+                if (i > k)
                 {
-
+                    dp[i] += all[i - k - 1] - dp[i - k - 1];
+                    dp[i] %= mask;
+                    while (dp[i] < 0) dp[i] += mask;
                 }
             }
+            long res = all[n - 1] - dp[n - 1];
+            while (res < 0) res += mask;
+            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }
