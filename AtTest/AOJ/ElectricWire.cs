@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.AOJ
 {
-    class G
+    class ElectricWire
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,22 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            int[] xy = ReadInts();
+            int x = xy[0];
+            int y = xy[1];
+            int a = Math.Max(x, y);
+            int b = Math.Min(x, y);
+            while (b > 0)
             {
-
+                int tmp = b;
+                b = a % b;
+                a = tmp;
             }
-            Console.WriteLine("text");
+            int gcd = a;
+            int unitX = x / gcd;
+            int unitY = y / gcd;
+            int unitCnt = unitX - 1 + unitY - 1 + 1;
+            Console.WriteLine(unitCnt * gcd + 1);
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.yukicoder
 {
-    class G
+    class _736
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,31 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            int n = ReadInt();
+            long[] array = ReadLongs();
+            long gcd = array[0];
+            for(int i = 1; i < n; i++)
             {
-
+                gcd = GCD(gcd, array[i]);
             }
-            Console.WriteLine("text");
+            for(int i =0; i < n; i++)
+            {
+                Console.Write(array[i] / gcd);
+                if (i < n - 1) Console.Write(":");
+            }
+        }
+
+        static long GCD(long x,long y)
+        {
+            long a = Math.Max(x, y);
+            long b = Math.Min(x, y);
+            while (b > 0)
+            {
+                long tmp = b;
+                b = a % b;
+                a = tmp;
+            }
+            return a;
         }
 
         private static string Read() { return Console.ReadLine(); }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ABC118
 {
-    class G
+    class A
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,9 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
-            {
-
-            }
-            Console.WriteLine("text");
+            int[] ab = ReadInts();
+            Console.WriteLine(
+                ab[1] % ab[0] == 0 ? ab[0] + ab[1] : ab[1] - ab[0]);
         }
 
         private static string Read() { return Console.ReadLine(); }

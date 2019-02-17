@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.NikkeiMain
 {
-    class F
+    class B
     {
         static void ain(string[] args)
         {
@@ -14,34 +14,32 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            long mask = 1000000000 + 7;
-            long[] dp = new long[n];
-            dp[k - 1] = 1;
-            long[] all = new long[n];
-            all[0] = 1;
-            for (int i = 1; i < n-1; i++)
+            int[] nmk = ReadInts();
+            int n = nmk[0];
+            int m = nmk[1];
+
+            long[] array = ReadLongs();
+            long[] bArray = ReadLongs();
+
+            if (n > m)
             {
-                all[i] = all[i - 1] * 2;
-                all[i] %= mask;
+                Console.WriteLine("Y");
             }
-            all[n - 1] = all[n - 2];
-            for (int i = k; i < n; i++)
+            else if (n < m)
             {
-                dp[i] = i == n - 1 ? dp[i - 1] : dp[i - 1] * 2;
-                dp[i] %= mask;
-                if (i > k)
+                Console.WriteLine("X");
+            }
+            else
+            {
+                for (int i = 0; i < n; i++)
                 {
-                    dp[i] += all[i - k - 1] - dp[i - k - 1];
-                    dp[i] %= mask;
-                    while (dp[i] < 0) dp[i] += mask;
+                    if (array[i] == bArray[i]) continue;
+                    Console.WriteLine(array[i] < bArray[i] ?
+                        "X" : "Y");
+                    return;
                 }
+                Console.WriteLine("Same");
             }
-            long res = all[n - 1] - dp[n - 1];
-            while (res < 0) res += mask;
-            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }

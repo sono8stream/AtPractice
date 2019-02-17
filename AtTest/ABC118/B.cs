@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ABC118
 {
-    class F
+    class B
     {
         static void ain(string[] args)
         {
@@ -14,33 +14,23 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            long mask = 1000000000 + 7;
-            long[] dp = new long[n];
-            dp[k - 1] = 1;
-            long[] all = new long[n];
-            all[0] = 1;
-            for (int i = 1; i < n-1; i++)
+            int[] nm = ReadInts();
+            int n = nm[0];
+            int m = nm[1];
+            int[] ms = new int[m];
+            for (int i = 0; i < n; i++)
             {
-                all[i] = all[i - 1] * 2;
-                all[i] %= mask;
-            }
-            all[n - 1] = all[n - 2];
-            for (int i = k; i < n; i++)
-            {
-                dp[i] = i == n - 1 ? dp[i - 1] : dp[i - 1] * 2;
-                dp[i] %= mask;
-                if (i > k)
+                int[] ka = ReadInts();
+                for(int j = 0; j < ka[0]; j++)
                 {
-                    dp[i] += all[i - k - 1] - dp[i - k - 1];
-                    dp[i] %= mask;
-                    while (dp[i] < 0) dp[i] += mask;
+                    ms[ka[j + 1] - 1]++;
                 }
             }
-            long res = all[n - 1] - dp[n - 1];
-            while (res < 0) res += mask;
+            int res = 0;
+            for(int i = 0; i < m; i++)
+            {
+                if (ms[i] == n) res++;
+            }
             Console.WriteLine(res);
         }
 

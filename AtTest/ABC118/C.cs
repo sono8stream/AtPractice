@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ABC118
 {
-    class G
+    class C
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,32 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
+            int n = ReadInt();
+            int[] array = ReadInts();
+            long res = array[0];
+            for(int i = 1; i < n; i++)
             {
-
+                res = GCD(res, array[i]);
             }
-            Console.WriteLine("text");
+            Console.WriteLine(res);
+        }
+
+        static long GCD(long a, long b)
+        {
+            if (b > a)
+            {
+                long temp = b;
+                b = a;
+                a = temp;
+            }
+            long c = b;
+            do
+            {
+                c = a % b;
+                a = b;
+                b = c;
+            } while (c > 0);
+            return a;
         }
 
         private static string Read() { return Console.ReadLine(); }

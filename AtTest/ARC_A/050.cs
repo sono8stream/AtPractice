@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ARC_A
 {
-    class G
+    class _050
     {
         static void ain(string[] args)
         {
@@ -14,13 +14,10 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            for (int i = 0; i < n; i++)
-            {
-
-            }
-            Console.WriteLine("text");
+            string s = Read();
+            int C = s[0] - 'A';
+            int c = s[2] - 'a';
+            Console.WriteLine(C == c ? "Yes" : "No");
         }
 
         private static string Read() { return Console.ReadLine(); }

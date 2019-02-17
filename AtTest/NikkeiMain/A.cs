@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.NikkeiMain
 {
-    class F
+    class A
     {
         static void ain(string[] args)
         {
@@ -14,34 +14,25 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            long mask = 1000000000 + 7;
-            long[] dp = new long[n];
-            dp[k - 1] = 1;
-            long[] all = new long[n];
-            all[0] = 1;
-            for (int i = 1; i < n-1; i++)
+            int n = ReadInt();
+            long[] array = ReadLongs();
+            long[] sums = new long[n];
+            sums[0] = array[0];
+            for (int i = 1; i < n; i++)
             {
-                all[i] = all[i - 1] * 2;
-                all[i] %= mask;
+                sums[i] = sums[i - 1] + array[i];
             }
-            all[n - 1] = all[n - 2];
-            for (int i = k; i < n; i++)
+            for(int i = 0; i < n; i++)
             {
-                dp[i] = i == n - 1 ? dp[i - 1] : dp[i - 1] * 2;
-                dp[i] %= mask;
-                if (i > k)
+                long max = 0;
+                for(int j = i; j < n; j++)
                 {
-                    dp[i] += all[i - k - 1] - dp[i - k - 1];
-                    dp[i] %= mask;
-                    while (dp[i] < 0) dp[i] += mask;
+                    long val = sums[j];
+                    if (j - i - 1 >= 0) val -= sums[j - i - 1];
+                    max = Math.Max(max, val);
                 }
+                Console.WriteLine(max);
             }
-            long res = all[n - 1] - dp[n - 1];
-            while (res < 0) res += mask;
-            Console.WriteLine(res);
         }
 
         private static string Read() { return Console.ReadLine(); }

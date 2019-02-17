@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.TDPC
+namespace AtTest.ARC_A
 {
-    class F
+    class _049
     {
         static void ain(string[] args)
         {
@@ -14,34 +14,25 @@ namespace AtTest.TDPC
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            long mask = 1000000000 + 7;
-            long[] dp = new long[n];
-            dp[k - 1] = 1;
-            long[] all = new long[n];
-            all[0] = 1;
-            for (int i = 1; i < n-1; i++)
+            string s = Read();
+            int[] abcd = ReadInts();
+            var res = new List<char>();
+            int now = 0;
+            for (int i = 0; i < s.Length; i++)
             {
-                all[i] = all[i - 1] * 2;
-                all[i] %= mask;
-            }
-            all[n - 1] = all[n - 2];
-            for (int i = k; i < n; i++)
-            {
-                dp[i] = i == n - 1 ? dp[i - 1] : dp[i - 1] * 2;
-                dp[i] %= mask;
-                if (i > k)
+                if (now < 4 && i == abcd[now])
                 {
-                    dp[i] += all[i - k - 1] - dp[i - k - 1];
-                    dp[i] %= mask;
-                    while (dp[i] < 0) dp[i] += mask;
+                    res.Add('"');
+                    now++;
                 }
+                res.Add(s[i]);
             }
-            long res = all[n - 1] - dp[n - 1];
-            while (res < 0) res += mask;
-            Console.WriteLine(res);
+            if (now == 3 && s.Length == abcd[now])
+            {
+                res.Add('"');
+                now++;
+            }
+            Console.WriteLine(res.ToArray());
         }
 
         private static string Read() { return Console.ReadLine(); }

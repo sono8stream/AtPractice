@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AtTest.Library.UnionFind
+namespace AtTest.NikkeiMain
 {
-    class UnionFindTest
+    class D
     {
         static void ain(string[] args)
         {
@@ -14,29 +14,45 @@ namespace AtTest.Library.UnionFind
 
         static void Method(string[] args)
         {
-            int[] nq = ReadInts();
-            int n = nq[0];
-            int q = nq[1];
-            List<bool> res = new List<bool>();
-            UnionFind finder = new UnionFind(n);
-            for(int i = 0; i < q; i++)
+            int[] nm = ReadInts();
+            int n = nm[0];
+            int m = nm[1];
+            int[][] tlrs = new int[m][];
+            for (int i = 0; i < m; i++)
             {
-                int[] pab = ReadInts();
-                int a = pab[1];
-                int b = pab[2];
-                if (pab[0] == 0)
+                tlrs[i] = ReadInts();
+            }
+            long res = 0;
+            UnionFind unionFind = new UnionFind(n);
+            for (int i = m - 1; i >= 0; i--)
+            {
+                long t = tlrs[i][0];
+                int l = tlrs[i][1] - 1;
+                int r = tlrs[i][2] - 1;
+                for (int j = l; j <= r; j++)
                 {
-                    finder.Unite(a, b);
-                }
-                else
-                {
-                    res.Add(finder.IsSame(a, b));
+                    if (unionFind.size[j] > 0)
+                    {
+                        if (j > 0 && unionFind.size[j - 1] > 0)
+                        {
+                            unionFind.Unite(j - 1, j);
+                        }
+                        int root = unionFind.Root(j);
+                        j = root + unionFind.size[root] - 1;
+                    }
+                    else
+                    {
+                        unionFind.size[j] = 1;
+                        res += t;
+
+                        if (j > 0 && unionFind.size[j - 1] > 0)
+                        {
+                            unionFind.Unite(j - 1, j);
+                        }
+                    }
                 }
             }
-            for(int i = 0; i < res.Count; i++)
-            {
-                Console.WriteLine(res[i] ? "Yes" : "No");
-            }
+            Console.WriteLine(res);
         }
 
         class UnionFind
@@ -88,7 +104,7 @@ namespace AtTest.Library.UnionFind
             }
         }
 
-            private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return Console.ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
