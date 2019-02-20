@@ -15,37 +15,83 @@ namespace AtTest._400Problems_remain_
         static void Method(string[] args)
         {
             int[] hms = ReadInts();
-            int h = hms[0];
+            int h = hms[0] % 12;
             int m = hms[1];
             int s = hms[2];
             int[] cs = ReadInts();
             int c1 = cs[0];
             int c2 = cs[1];
-            int t1 = 0;
-            int t2 = 0;
-            if (c1 == 0)
+            int t1 = -1;
+            int t2 = -1;
+            int c1Cnt = 0;
+            int c2Cnt = 0;
+            bool c1OK = false;
+            bool c2OK = c2 == 0;
+            bool sBehind = s <= m;
+            bool mBehind = 660 * m + 11 * s <= 3600 * h;
+            for(int i =1; i < 650000; i++)
             {
-                if (c2 > 0)
+                s++;
+                if (s == 60)
                 {
-                    Console.WriteLine(-1);
-                    return;
+                    s = 0;
+                    m++;
+                    if (m == 60)
+                    {
+                        m = 0;
+                        h++;
+                        if (h == 12) h = 0;
+                    }
                 }
-                t2 = s <= m ? m - s : 60 + m - s + 1;
-            }
-            else
-            {
                 if (s <= m)
                 {
-                    t1 = m - s + 1;
-
+                    sBehind = true;
                 }
                 else
                 {
-                    t1= 60 + m - s + 2;
+                    if (sBehind)
+                    {
+                        c1Cnt++;
+                        if (c1Cnt == c1)
+                        {
+                            c1OK = true;
+                        }
+                        if (c1 < c1Cnt)
+                        {
+                            break;
+                        }
+                        sBehind = false;
+                    }
                 }
-                t1 += 61 * (c1 - 1);
+                if(660 * m + 11 * s <= 3600 * h)
+                {
+                    mBehind = true;
+                }
+                else
+                {
+                    if (mBehind)
+                    {
+                        c2Cnt++;
+                        if (c2Cnt == c2)
+                        {
+                            c2OK = true;
+                        }
+                        if (c2 < c2Cnt)
+                        {
+                            break;
+                        }
+                        mBehind = false;
+                    }
+                }
+                if (c1OK && c2OK)
+                {
+                    if (t1 == -1) t1 = i;
+                    if (!(s == 0 && m == 0 && h == 0)) t2 = i;
+                }
+                //Console.WriteLine(c1Cnt + " " + c2Cnt);
             }
-            Console.WriteLine(t1 + " " + t2);
+            if (t1 == -1) Console.WriteLine(-1);
+            else Console.WriteLine(t1 + " " + t2);
         }
 
         private static string Read() { return Console.ReadLine(); }
