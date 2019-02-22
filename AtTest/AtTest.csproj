@@ -12,6 +12,9 @@
     <Reference Include="System.Collections">
       <HintPath>System.Collections</HintPath>
     </Reference>
+    <Reference Include="System.Console">
+      <HintPath>System.Console</HintPath>
+    </Reference>
     <Reference Include="System.Linq">
       <HintPath>System.Linq</HintPath>
     </Reference>
