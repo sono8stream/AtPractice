@@ -30,6 +30,60 @@ namespace AtTest.AGC_Challenge
                 graph[a].Add(b);
                 graph[b].Add(a);
             }
+            bool[] visites = new bool[n];
+            List<int> startPaths = new List<int>();
+            List<int> endPaths = new List<int>();
+            int now = 0;
+            while (true)
+            {
+                startPaths.Add(now);
+                visites[now] = true;
+                bool proceedTemp = false;
+                for(int i = 0; i < graph[now].Count; i++)
+                {
+                    if (!visites[graph[now][i]])
+                    {
+                        proceedTemp = true;
+                        now = graph[now][i];
+                        break;
+                    }
+                }
+                if (!proceedTemp)
+                {
+                    break;
+                }
+            }
+            now = 0;
+            while (true)
+            {
+                endPaths.Add(now);
+                visites[now] = true;
+                bool proceedTemp = false;
+                for (int i = 0; i < graph[now].Count; i++)
+                {
+                    if (!visites[graph[now][i]])
+                    {
+                        proceedTemp = true;
+                        now = graph[now][i];
+                        break;
+                    }
+                }
+                if (!proceedTemp)
+                {
+                    break;
+                }
+            }
+
+            Console.WriteLine(startPaths.Count + endPaths.Count - 1);
+            for(int i = startPaths.Count-1; i>=0; i--)
+            {
+                Console.Write((startPaths[i] + 1) + " ");
+            }
+            for(int i = 1; i < endPaths.Count; i++)
+            {
+                Console.Write((endPaths[i] + 1) + " ");
+            }
+            Console.WriteLine();
         }
 
         private static string Read() { return Console.ReadLine(); }
