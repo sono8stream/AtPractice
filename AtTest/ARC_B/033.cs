@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace AtTest.ARC_B
 {
-    class _034
+    class _033
     {
         static void ain(string[] args)
         {
@@ -17,24 +17,22 @@ namespace AtTest.ARC_B
 
         static void Method(string[] args)
         {
-            long n = ReadLong();
-            List<long> res = new List<long>();
-            for (long val = Max(n - 200, 1); val <= n; val++)
+            int[] nab = ReadInts();
+            int na = nab[0];
+            int nb = nab[1];
+            int[] aArray = ReadInts();
+            int[] bArray = ReadInts();
+            var dict = new Dictionary<int, bool>();
+            for(int i = 0; i < na; i++)
             {
-                long digitSum = 0;
-                long vv = val;
-                while (vv > 0)
-                {
-                    digitSum += vv % 10;
-                    vv /= 10;
-                }
-                if (val + digitSum == n) res.Add(val);
+                dict.Add(aArray[i],true);
             }
-            WriteLine(res.Count);
-            for (int i = 0; i < res.Count; i++)
+            int andCnt = 0;
+            for(int i = 0; i < nb; i++)
             {
-                WriteLine(res[i]);
+                if (dict.ContainsKey(bArray[i])) andCnt++;
             }
+            WriteLine(1.0 * andCnt / (na + nb - andCnt));
         }
 
         private static string Read() { return ReadLine(); }
