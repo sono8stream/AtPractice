@@ -1,45 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.Library.Combination
+namespace AtTest.AGC_B
 {
-    class Combination_Permutation
+    class _025
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            int m = int.Parse(input[1]);
-            long mask = 1000000000 + 7;
-            long cnt = Combination(n, m, mask);
-
-            Console.WriteLine(cnt);
-        }
-
-        static long Combination(long n,long m)
-        {
-            if (n - m < m) m = n - m;
-
-            long val = Permutation(n, m);
-            long div = Permutation(m, m);
-            return val / div;
-        }
-
-        static long Permutation(long n, long m)
-        {
-            long val = 1;
-            for (long i = 0; i < m; i++)
+            long[] nabk = ReadLongs();
+            long n = nabk[0];
+            long a = nabk[1];
+            long b = nabk[2];
+            long k = nabk[3];
+            long mask = 998244353;
+            long[] permutations = AllPermutations(n, mask);
+            long[] combs = new long[n + 1];
+            long div = 1;
+            for (long i = 0; i <= n; i++)
             {
-                val *= (n - i);
+                div = MultiMod(div, i + 1, mask);
+                if (i == 0)
+                {
+                    combs[i] = 1;
+                }
+                else
+                {
+                    combs[i] = MultiMod(permutations[n],
+                        ReverseMod(permutations[i], mask - 2, mask), mask);
+                    combs[i] = MultiMod(combs[i],
+                        ReverseMod(permutations[n - i], mask - 2, mask), mask);
+                }
             }
-            return val;
+            long res = 0;
+            for (long cnt = 0; cnt * b <= k && cnt <= n; cnt++)
+            {
+                long margin = k - cnt * b;
+                if (margin % a > 0 || margin / a > n) continue;
+
+                long val = MultiMod(combs[cnt], combs[margin / a], mask);
+                res += val;
+                res %= mask;
+            }
+            WriteLine(res);
         }
 
         static long Combination(long n, long m, long mask)
@@ -68,9 +80,10 @@ namespace AtTest.Library.Combination
         {
             var perms = new long[n + 1];
             perms[0] = 1;
-            for (int i = 0; i <= n; i++)
+            for (int i = 1; i <= n; i++)
             {
-                perms[i] = MultiMod(perms[i - 1], i, mask);
+                perms[i] = perms[i - 1] * i;
+                perms[i] %= mask;
             }
             return perms;
         }
@@ -99,7 +112,7 @@ namespace AtTest.Library.Combination
             }
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
