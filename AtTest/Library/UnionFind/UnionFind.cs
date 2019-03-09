@@ -42,7 +42,7 @@ namespace AtTest.Library.UnionFind
         class UnionFind
         {
             int[] tree;
-            public int[] size;
+            int[] size;
 
             public UnionFind(int length)
             {
@@ -85,6 +85,11 @@ namespace AtTest.Library.UnionFind
                 }
                 tree[ry] = rx;
                 size[rx] += size[ry];
+            }
+
+            public int GetSize(int x)
+            {
+                return size[Root(x)];
             }
         }
 
