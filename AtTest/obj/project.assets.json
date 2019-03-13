@@ -670,11 +670,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\SourceTree\\AtPractice\\AtPractice\\AtTest\\AtTest.csproj",
+      "projectUniqueName": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
       "projectName": "AtTest",
-      "projectPath": "F:\\SourceTree\\AtPractice\\AtPractice\\AtTest\\AtTest.csproj",
+      "projectPath": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
       "packagesPath": "C:\\Users\\sono8\\.nuget\\packages\\",
-      "outputPath": "F:\\SourceTree\\AtPractice\\AtPractice\\AtTest\\obj\\",
+      "outputPath": "F:\\SourceTree\\AtTest\\AtTest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
