@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.NikkeiEx
+namespace AtTest._500problems
 {
-    class D
+    class CF2016FinalC
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static void Method(string[] args)
         {
             int n = ReadInt();
-            char[] res = new char[n];
-            res[0] = '1';
-            for(int i = 1; i < n; i++)
-            {
-                res[i] = '0';
-            }
-            Console.WriteLine(res);
+            int[] array = new int[n];
+            for (int i = 0; i < n; i++) array[i] = ReadInt();
+            Array.Sort(array);
+            Array.Reverse(array);
+            
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

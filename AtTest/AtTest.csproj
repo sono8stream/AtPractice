@@ -20,8 +20,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="500problems\" />
-  </ItemGroup>
-
 </Project>

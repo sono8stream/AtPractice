@@ -1,30 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
 namespace AtTest.NikkeiEx
 {
-    class D
+    class G
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            char[] res = new char[n];
-            res[0] = '1';
-            for(int i = 1; i < n; i++)
+            string s = Read();
+            var dict = new Dictionary<char, long>();
+            for (int i = 0; i < s.Length; i++)
             {
-                res[i] = '0';
+                if (!dict.ContainsKey(s[i])) dict.Add(s[i], 0);
+                dict[s[i]]++;
             }
-            Console.WriteLine(res);
+            long cnt = 0;
+            long others = 0;
+            foreach (long val in dict.Values)
+            {
+                cnt += val - val % 2;
+                if (val % 2 > 0) others++;
+            }
+            if (others > 0)
+            {
+                cnt++;
+                others--;
+            }
+            WriteLine(cnt * cnt + others);
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

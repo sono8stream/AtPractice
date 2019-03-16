@@ -1,30 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.NikkeiEx
+namespace AtTest.AGC_031
 {
-    class D
+    class A
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            char[] res = new char[n];
-            res[0] = '1';
-            for(int i = 1; i < n; i++)
+            long mask = 1000000000 + 7;
+            long n = ReadLong();
+            string s = Read();
+            long[] cnts = new long[26];
+            for (int i = 0; i < 26; i++) cnts[i] = 1;
+            for(int i = 0; i < n; i++)
             {
-                res[i] = '0';
+                cnts[s[i] - 'a']++;
             }
-            Console.WriteLine(res);
+            long res = 1;
+            for(int i = 0; i < 26; i++)
+            {
+                res *= cnts[i];
+                res %= mask;
+            }
+            WriteLine(res - 1);
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
 namespace AtTest.NikkeiEx
 {
-    class D
+    class F
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
+            ReadLine();
         }
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            char[] res = new char[n];
-            res[0] = '1';
-            for(int i = 1; i < n; i++)
+            int p = ReadInt();
+            long x = 1789997546303;
+            for(int i = 1000; i > p; i--)
             {
-                res[i] = '0';
+                if (x % 2 == 0) x /= 2;
+                else x = x * 3 + 1;
             }
-            Console.WriteLine(res);
+            WriteLine(x);
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
