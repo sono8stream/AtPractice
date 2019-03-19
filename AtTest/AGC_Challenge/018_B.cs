@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.AGC_031
+namespace AtTest.AGC_Challenge
 {
-    class C
+    class _018_B
     {
         static void ain(string[] args)
         {
@@ -17,38 +17,21 @@ namespace AtTest.AGC_031
 
         static void Method(string[] args)
         {
-            int[] nab = ReadInts();
-            int n = nab[0];
-            int a = nab[1];
-            int b = nab[2];
-            int delta = 0;
-            int div = 1;
+            int[] nm = ReadInts();
+            int n = nm[0];
+            int m = nm[1];
+            int[][] array = new int[n][];
             for(int i = 0; i < n; i++)
             {
-                if ((a & div) != (b & div)) delta++;
-                div *= 2;
+                array[i] = ReadInts();
             }
-            if (delta % 2 ==0)
-            {
-                WriteLine("NO");
-                return;
-            }
-            WriteLine("YES");
             var dict = new Dictionary<int, bool>();
-            dict.Add(a,true);
-            dict.Add(b,true);
-            int all = 1 << n;
-            int val = a;
-            int[] res = new int[all];
-            res[0] = Min(a, b);
-            res[all - 1] = Max(a, b);
-            if (b < a) Array.Reverse(res);
-            for(int i = 0; i < 1 << n; i++)
-            {
-                Write(res[i]);
-                if (i + 1 < 1 << n) Write(" ");
-            }
-            WriteLine();
+            for (int i = 0; i < m; i++) dict.Add(i, true);
+        }
+
+        static int DFS(int[][] array,Dictionary<int,bool> dict)
+        {
+            return 0;
         }
 
         private static string Read() { return ReadLine(); }
