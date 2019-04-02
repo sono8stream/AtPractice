@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.Virtual
 {
-    class CF2016FinalC
+    class ARC093_D
     {
         static void ain(string[] args)
         {
@@ -17,46 +17,47 @@ namespace AtTest._500problems
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
+            int[] ab = ReadInts();
+            int a = ab[0];
+            int b = ab[1];
+            bool[,] grid = new bool[100, 100];//white true
+            for(int i = 0; i < 100; i++)
             {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
+                for(int j = 0; j < 100; j++)
                 {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
-                }
-                changeBits[i] = minBit;
-            }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
-            int cnt = 0;
-            for(int i = 0; i < n; i++)
-            {
-                if (bits[changeBits[i]])
-                {
-                    for(int j = 0; j <= changeBits[i]; j++)
-                    {
-                        bits[j] = !bits[j];
-                    }
-                    cnt++;
+                    if (i < 50) grid[i, j] = false;
+                    else grid[i, j] = true;
                 }
             }
-            for(int i = 0; i < 32; i++)
+            for(int i = 1; i < 50; i+=2)
             {
-                if (bits[i])
+                for(int j = 1; j < 100; j+=2)
                 {
-                    WriteLine(-1);
-                    return;
+                    if (a == 1) break;
+                    grid[i, j] = true;
+                    a--;
                 }
             }
-            WriteLine(cnt);
+            for (int i = 51; i < 100; i+=2)
+            {
+                for (int j = 1; j < 100; j+=2)
+                {
+                    if (b == 1) break;
+
+                    grid[i, j] = false;
+                    b--;
+                }
+            }
+
+            WriteLine("100 100");
+            for (int i = 0; i < 100; i++)
+            {
+                for(int j = 0; j < 100; j++)
+                {
+                    Write(grid[i, j] ? '.' : '#');
+                }
+                WriteLine();
+            }
         }
 
         private static string Read() { return ReadLine(); }

@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.DP
 {
-    class CF2016FinalC
+    class CodeThanksFestival2017_F
     {
         static void ain(string[] args)
         {
@@ -17,46 +17,44 @@ namespace AtTest._500problems
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
-            {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
-                {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
-                }
-                changeBits[i] = minBit;
-            }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
-            int cnt = 0;
+            int[] nk = ReadInts();
+            int n = nk[0];
+            int k = nk[1];
+            int[] array = new int[n];
+            for (int i = 0; i < n; i++) array[i] = ReadInt();
+            var dict = new Dictionary<int,long>();
+            dict.Add(0, 1);
+            long mask = 1000000000 + 7;
             for(int i = 0; i < n; i++)
             {
-                if (bits[changeBits[i]])
+                var next = new Dictionary<int, long>();
+                foreach(int key in dict.Keys)
                 {
-                    for(int j = 0; j <= changeBits[i]; j++)
+                    if (!next.ContainsKey(key))
                     {
-                        bits[j] = !bits[j];
+                        next.Add(key, 0);
                     }
-                    cnt++;
+                    next[key] += dict[key];
+                    next[key] %= mask;
+
+                    int val = key ^ array[i];
+                    if (!next.ContainsKey(val))
+                    {
+                        next.Add(val, 0);
+                    }
+                    next[val] += dict[key];
+                    next[val] %= mask;
                 }
+                dict = next;
             }
-            for(int i = 0; i < 32; i++)
+            if (dict.ContainsKey(k))
             {
-                if (bits[i])
-                {
-                    WriteLine(-1);
-                    return;
-                }
+                WriteLine(dict[k]);
             }
-            WriteLine(cnt);
+            else
+            {
+                WriteLine(0);
+            }
         }
 
         private static string Read() { return ReadLine(); }

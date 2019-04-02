@@ -21,9 +21,9 @@ namespace AtTest.Aising2018
             int[][] xs = new int[q][];
             for(int i = 0; i < q; i++)
             {
-                xs[i] = new int[3] { ReadInt(), i, 0 };
+                xs[i] = new int[2] { ReadInt(), i };
             }
-            Array.Sort(xs, (a, b) => a[0] - b[0]);
+            Array.Sort(xs, (a, b) => b[0] - a[0]);
             var crossSums = new long[n];
             crossSums[0] = array[0];
             crossSums[1] = array[1];
@@ -35,7 +35,33 @@ namespace AtTest.Aising2018
                 crossSums[i] = crossSums[i - 2] + array[i];
                 allSums[i] = allSums[i - 1] + array[i];
             }
+            int boundary = n - 1;
+            long[] res = new long[q];
+            for (int i = 0; i < q; i++)
+            {
+                while (boundary >= 2)
+                {
+                    int next = boundary - 2;
+                    int mid = (n - 1 + next) / 2;
+                    if (xs[i][0] - array[next] <= array[mid] - xs[i][0])
+                    {
+                        boundary -= 2;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                //Console.WriteLine(boundary);
+                int nowMid = (n - 1 + boundary) / 2;
+                res[xs[i][1]] = allSums[n - 1] - allSums[nowMid - 1];
+                if (boundary >=2) res[xs[i][1]] += crossSums[boundary - 2];
+            }
 
+            for(int i = 0; i < q; i++)
+            {
+                Console.WriteLine(res[i]);
+            }
         }
 
         private static string Read() { return Console.ReadLine(); }

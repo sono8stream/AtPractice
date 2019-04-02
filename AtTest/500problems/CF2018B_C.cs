@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace AtTest._500problems
 {
-    class CF2016FinalC
+    class CF2018B_C
     {
         static void ain(string[] args)
         {
@@ -18,45 +18,32 @@ namespace AtTest._500problems
         static void Method(string[] args)
         {
             int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
-            {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
-                {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
-                }
-                changeBits[i] = minBit;
-            }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
+            bool[,] grid = new bool[n + 2, n + 2];
             int cnt = 0;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n + 2; i++)
             {
-                if (bits[changeBits[i]])
+                int first = (2 * i + 4) % 5;
+                for (int j = first; j < n + 2; j += 5)
                 {
-                    for(int j = 0; j <= changeBits[i]; j++)
-                    {
-                        bits[j] = !bits[j];
-                    }
+                    int y = i;
+                    if (i == 0) y++;
+                    if (i == n + 1) y--;
+                    int x = j;
+                    if (j == 0) x++;
+                    if (j == n + 1) x--;
+                    grid[y, x] = true;
                     cnt++;
                 }
             }
-            for(int i = 0; i < 32; i++)
+            for(int i = 1; i <= n; i++)
             {
-                if (bits[i])
+                for(int j = 1; j <= n; j++)
                 {
-                    WriteLine(-1);
-                    return;
+                    Write(grid[i, j] ? 'X' : '.');
                 }
+                WriteLine();
             }
-            WriteLine(cnt);
+            //WriteLine(cnt);
         }
 
         private static string Read() { return ReadLine(); }

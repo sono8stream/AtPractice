@@ -34,21 +34,71 @@ namespace AtTest.AGC_031
                 return;
             }
             WriteLine("YES");
-            var dict = new Dictionary<int, bool>();
-            dict.Add(a,true);
-            dict.Add(b,true);
+
             int all = 1 << n;
-            int val = a;
-            int[] res = new int[all];
-            res[0] = Min(a, b);
-            res[all - 1] = Max(a, b);
-            if (b < a) Array.Reverse(res);
-            for(int i = 0; i < 1 << n; i++)
+            int[][] array = new int[all][];
+            for(int i = 0; i < all; i++)
             {
-                Write(res[i]);
-                if (i + 1 < 1 << n) Write(" ");
+                array[i] = new int[n];
+                for (int j = 0; j < n; j++) array[i][j] = -1;
+            }
+            for(int i = 0; i < n; i++)
+            {
+                array[0][i] = (a & (1 << i)) > 0 ? 1 : 0;
+                array[all-1][i] = (b & (1 << i)) > 0 ? 1 : 0;
+            }
+            DFS(ref array, 0, all - 1);
+            for(int i = 0; i < all; i++)
+            {
+                int val = 0;
+                for(int j = 0; j < n; j++)
+                {
+                    if (array[i][j] == 1) val += 1 << j;
+                }
+                Write(val);
+                if (i + 1 < all) Write(" ");
             }
             WriteLine();
+        }
+
+        static void DFS(ref int[][] array,int l,int r)
+        {
+            if (l + 1 == r) return;
+
+            int digit = array[l].Length;
+            int mid = (l + r) / 2;
+            int difI = -1;
+            for(int i = 0; i < digit; i++)
+            {
+                if (difI == -1 && array[l][i] != array[r][i])
+                {
+                    difI = i;
+                }
+            }
+            for(int i = l; i < r; i++)
+            {
+                if (i <= mid) array[i][difI] = array[l][difI];
+                else array[i][difI] = array[r][difI];
+            }
+            bool changed = false;
+            for (int i = 0; i < digit; i++)
+            {
+                if (array[mid][i] >= 0) continue;
+
+                if (changed)
+                {
+                    array[mid][i] = array[l][i];
+                    array[mid + 1][i] = array[l][i];
+                }
+                else
+                {
+                    array[mid][i] = array[l][i] == 0 ? 1 : 0;
+                    array[mid + 1][i] = array[mid][i];
+                    changed = true;
+                }
+            }
+            DFS(ref array, l, mid);
+            DFS(ref array, mid + 1, r);
         }
 
         private static string Read() { return ReadLine(); }

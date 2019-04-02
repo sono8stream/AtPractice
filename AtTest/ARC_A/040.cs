@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.ARC_A
 {
-    class CF2016FinalC
+    class _040
     {
         static void ain(string[] args)
         {
@@ -18,45 +18,29 @@ namespace AtTest._500problems
         static void Method(string[] args)
         {
             int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
+            int rCnt = 0;
+            int bCnt = 0;
             for (int i = 0; i < n; i++)
             {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
+                string s = Read();
+                for (int j = 0; j < n; j++)
                 {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
+                    if (s[j] == 'R') rCnt++;
+                    if (s[j] == 'B') bCnt++;
                 }
-                changeBits[i] = minBit;
             }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
-            int cnt = 0;
-            for(int i = 0; i < n; i++)
+            if (rCnt > bCnt)
             {
-                if (bits[changeBits[i]])
-                {
-                    for(int j = 0; j <= changeBits[i]; j++)
-                    {
-                        bits[j] = !bits[j];
-                    }
-                    cnt++;
-                }
+                WriteLine("TAKAHASHI");
             }
-            for(int i = 0; i < 32; i++)
+            if (rCnt == bCnt)
             {
-                if (bits[i])
-                {
-                    WriteLine(-1);
-                    return;
-                }
+                WriteLine("DRAW");
             }
-            WriteLine(cnt);
+            if (rCnt < bCnt)
+            {
+                WriteLine("AOKI");
+            }
         }
 
         private static string Read() { return ReadLine(); }

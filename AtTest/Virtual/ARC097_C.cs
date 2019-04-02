@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.Virtual
 {
-    class CF2016FinalC
+    class ARC097_C
     {
         static void ain(string[] args)
         {
@@ -17,46 +17,40 @@ namespace AtTest._500problems
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
+            string s = Read();
+            int k = ReadInt();
+            List<long> vals = new List<long>();
+            for(int i = 0; i < s.Length; i++)
             {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
+                long val = 0;
+                for(int j = i; j < Min(i + 5, s.Length); j++)
                 {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
+                    val += (s[j] - 'a' + 1) * (long)Pow(100, 4 - (j - i));
+                    vals.Add(val);
                 }
-                changeBits[i] = minBit;
             }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
+            vals.Sort();
             int cnt = 0;
-            for(int i = 0; i < n; i++)
+            for(int i = 0; i < vals.Count; i++)
             {
-                if (bits[changeBits[i]])
+                if (i == 0 || vals[i - 1] != vals[i]) cnt++;
+                if (cnt == k)
                 {
-                    for(int j = 0; j <= changeBits[i]; j++)
+                    long val = vals[i];
+                    //WriteLine(val);
+                    for(int j = 4; j >= 0; j--)
                     {
-                        bits[j] = !bits[j];
+                        long div = (long)Pow(100, j);
+                        long v = (val / div) % 100;
+                        if (v > 0)
+                        {
+                            Write((char)(v + 'a' - 1));
+                        }
                     }
-                    cnt++;
-                }
-            }
-            for(int i = 0; i < 32; i++)
-            {
-                if (bits[i])
-                {
-                    WriteLine(-1);
+                    WriteLine();
                     return;
                 }
             }
-            WriteLine(cnt);
         }
 
         private static string Read() { return ReadLine(); }

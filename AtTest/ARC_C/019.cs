@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.ARC_C
 {
-    class CF2016FinalC
+    class _019
     {
         static void ain(string[] args)
         {
@@ -17,46 +17,44 @@ namespace AtTest._500problems
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
+            int[] rck = ReadInts();
+            int r = rck[0];
+            int c = rck[1];
+            int k = rck[2];
+            char[,] grid = new char[r, c];
+            int[] start = new int[2] { 0, 0 };
+            int[] goal = new int[2] { 0, 0 };
+            for(int i = 0; i < r; i++)
             {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
+                char[] str = Read().ToCharArray();
+                for(int j = 0; j < c; j++)
                 {
-                    if ((val & (1 << j)) > 0)
+                    grid[i, j] = str[j];
+                    if (str[j] == 'S')
                     {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
+                        start = new int[2] { i, j };
+                    }
+                    if (str[j] == 'G')
+                    {
+                        goal = new int[2] { i, j };
                     }
                 }
-                changeBits[i] = minBit;
             }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
-            int cnt = 0;
-            for(int i = 0; i < n; i++)
+
+            int[,,] dists = new int[r, c, k + 1];
+            for(int i = 0; i < r; i++)
             {
-                if (bits[changeBits[i]])
+                for(int j = 0; j < c; j++)
                 {
-                    for(int j = 0; j <= changeBits[i]; j++)
+                    for(int l = 0; l <= k; l++)
                     {
-                        bits[j] = !bits[j];
+                        dists[i, j, l] = -1;
                     }
-                    cnt++;
                 }
             }
-            for(int i = 0; i < 32; i++)
-            {
-                if (bits[i])
-                {
-                    WriteLine(-1);
-                    return;
-                }
-            }
-            WriteLine(cnt);
+
+            Queue<int[]> queue = new Queue<int[]>();
+            queue.Enqueue(start);
         }
 
         private static string Read() { return ReadLine(); }

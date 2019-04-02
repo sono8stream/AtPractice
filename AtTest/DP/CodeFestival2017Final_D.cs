@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.DP
 {
-    class CF2016FinalC
+    class CodeFestival2017Final_D
     {
         static void ain(string[] args)
         {
@@ -18,45 +18,34 @@ namespace AtTest._500problems
         static void Method(string[] args)
         {
             int n = ReadInt();
-            bool[] bits = new bool[32];
-            int[] changeBits = new int[n];
-            for (int i = 0; i < n; i++)
-            {
-                int val = ReadInt();
-                int minBit = -1;
-                for(int j = 0; j < 32; j++)
-                {
-                    if ((val & (1 << j)) > 0)
-                    {
-                        bits[j] = !bits[j];
-                        if (minBit == -1) minBit = j;
-                    }
-                }
-                changeBits[i] = minBit;
-            }
-            Array.Sort(changeBits);
-            Array.Reverse(changeBits);
-            int cnt = 0;
+            int[][] hps = new int[n][];
             for(int i = 0; i < n; i++)
             {
-                if (bits[changeBits[i]])
-                {
-                    for(int j = 0; j <= changeBits[i]; j++)
-                    {
-                        bits[j] = !bits[j];
-                    }
-                    cnt++;
-                }
+                hps[i] = ReadInts();
             }
-            for(int i = 0; i < 32; i++)
+            hps = hps.OrderBy(a => a[0]+a[1]).ToArray();
+            int[] dp = new int[n + 1];
+            for (int i = 0; i <= n; i++) dp[i] = int.MaxValue;
+            dp[0] = 0;
+            for (int i = 0; i < n; i++)
             {
-                if (bits[i])
+                for (int j = n - 1; j >= 0; j--)
                 {
-                    WriteLine(-1);
-                    return;
+                    if (dp[j] == int.MaxValue) continue;
+
+                    if (dp[j] <= hps[i][0])
+                    {
+                        dp[j + 1] = Min(dp[j + 1], dp[j] + hps[i][1]);
+                    }
                 }
             }
-            WriteLine(cnt);
+            for(int i = n; i >= 0; i--)
+            {
+                if (dp[i] == int.MaxValue) continue;
+
+                WriteLine(i);
+                return;
+            }
         }
 
         private static string Read() { return ReadLine(); }
