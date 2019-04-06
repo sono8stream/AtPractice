@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ARC_C
+namespace AtTest.ABC_123
 {
-    class _020
+    class C
     {
         static void ain(string[] args)
         {
@@ -17,36 +17,24 @@ namespace AtTest.ARC_C
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[][] als = new int[n][];
-            for(int i = 0; i < n; i++)
+            long n = ReadLong();
+            long[] transport = new long[5];
+            for(int i = 0; i < 5; i++)
             {
-                als[i] = ReadInts();
+                transport[i] = ReadLong();
             }
-            long b = ReadInt();
-            long res = 0;
-            for (int i = 0; i < n; i++)
+            long time = 0;
+            for(int i = 0; i < 5; i++)
             {
-                long pow = 1;
-                while (pow <= als[i][0]) pow *= 10;
-                List<bool> bit = new List<bool>();
-                long ll = als[i][1];
-                while (ll > 0)
+                long remain = n - (time - i) * transport[i];
+                if (remain <= 0) time++;
+                else
                 {
-                    bit.Add(ll % 2 == 1);
-                    ll /= 2;
-                }
-                bit.Reverse();
-
-                //doubling
-                long nowMod = als[i][0] % b;
-                long val = 0;
-                for(int j = 1; j < bit.Count; j++)
-                {
-
+                    time += remain / transport[i];
+                    if (n % transport[i] > 0) time++;
                 }
             }
-            WriteLine(res);
+            WriteLine(time);
         }
 
         private static string Read() { return ReadLine(); }

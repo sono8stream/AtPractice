@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ARC_C
+namespace AtTest.ARC_A
 {
-    class _020
+    class _039
     {
         static void ain(string[] args)
         {
@@ -17,36 +17,31 @@ namespace AtTest.ARC_C
 
         static void Method(string[] args)
         {
-            int n = ReadInt();
-            int[][] als = new int[n][];
-            for(int i = 0; i < n; i++)
+            string[] ab = Read().Split();
+            char[] a = ab[0].ToCharArray();
+            char[] b = ab[1].ToCharArray();
+            int max = -5000;
+            for(int i = 0; i < 3; i++)
             {
-                als[i] = ReadInts();
-            }
-            long b = ReadInt();
-            long res = 0;
-            for (int i = 0; i < n; i++)
-            {
-                long pow = 1;
-                while (pow <= als[i][0]) pow *= 10;
-                List<bool> bit = new List<bool>();
-                long ll = als[i][1];
-                while (ll > 0)
+                for(int j = 0; j <= 9; j++)
                 {
-                    bit.Add(ll % 2 == 1);
-                    ll /= 2;
-                }
-                bit.Reverse();
+                    if (i == 0 && j == 0) continue;
 
-                //doubling
-                long nowMod = als[i][0] % b;
-                long val = 0;
-                for(int j = 1; j < bit.Count; j++)
-                {
-
+                    char aNow = a[i];
+                    char bNow = b[i];
+                    
+                    a[i] = (char)('0' + j);
+                    int val = int.Parse(new string(a))
+                        - int.Parse(new string(b));
+                    a[i] = aNow;
+                    b[i] = (char)('0' + j);
+                    int val2 = int.Parse(new string(a))
+                        - int.Parse(new string(b));
+                    max = Max(max, Max(val, val2));
+                    b[i] = bNow;
                 }
             }
-            WriteLine(res);
+            WriteLine(max);
         }
 
         private static string Read() { return ReadLine(); }
