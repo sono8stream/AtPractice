@@ -106,6 +106,42 @@ namespace AtTest.Library.PrimeNumber
             return res;
         }
 
+
+        static List<int> PrimeFactors2(int n)
+        {
+            var res = new List<int>();
+            int tmp = n;
+
+            for (int i = 2; i * i <= n; i++)
+            {
+                while (tmp % i == 0)
+                {
+                    tmp /= i;
+                    res.Add(i);
+                }
+            }
+            if (tmp != 1) res.Add(tmp);//最後の素数も返す
+
+            return res;
+        }
+
+        static int CountDividers(List<int> primes)
+        {
+            int res = 1;
+            int seq = 2;
+            for (int i = 1; i < primes.Count; i++)
+            {
+                if (primes[i] == primes[i - 1]) seq++;
+                else
+                {
+                    res *= seq;
+                    seq = 2;
+                }
+            }
+            res *= seq;
+            return res;
+        }
+
         private static string Read() { return Console.ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }

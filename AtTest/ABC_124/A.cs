@@ -5,18 +5,19 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.ABC_124
 {
-    class AtTemplate
+    class A
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
-
+            int[] ab = ReadInts();
+            WriteLine(Max(Max(ab[0] * 2 - 1, ab[1] * 2 - 1), ab[0] + ab[1]));
         }
 
         private static string Read() { return ReadLine(); }

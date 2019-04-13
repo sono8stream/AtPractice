@@ -5,18 +5,30 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.ABC_124
 {
-    class AtTemplate
+    class B
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
-
+            int n = ReadInt();
+            int[] hs = ReadInts();
+            int max = hs[0];
+            int res = 1;
+            for(int i = 1; i < n; i++)
+            {
+                if (hs[i] >= max)
+                {
+                    res++;
+                    max = hs[i];
+                }
+            }
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }

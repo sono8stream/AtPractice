@@ -5,18 +5,39 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.yukicoder
 {
-    class AtTemplate
+    class _813
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
+            int n = ReadInt();
+            double p = ReadDouble();
+            double q = ReadDouble();
+            if (p == 1)
+            {
+                WriteLine(1);
+                return;
+            }
+            if (q == 1)
+            {
+                WriteLine(0);
+                return;
+            }
 
+            double back = p;
+            double go=q;
+            for(int i = 1; i < n; i++)
+            {
+                back += p * go * go / (1 - back * p);
+                go *= q / (1 - back * p);
+            }
+            WriteLine(back);
         }
 
         private static string Read() { return ReadLine(); }

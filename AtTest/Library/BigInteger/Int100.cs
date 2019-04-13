@@ -7,40 +7,37 @@ using static System.Math;
 
 namespace AtTest.Library.BigInteger
 {
-
-    struct BigInteger : IComparable<BigInteger>
+    /// <summary>
+    /// 100 digits integer
+    /// </summary>
+    struct Int100 : IComparable<Int100>
     {
+        const int length = 100;
+
+        bool minus;
         int[] value;
-        public int Length { get { return value.Length; } }
 
-        public BigInteger(int maxDigit)
+        public Int100(decimal initValue = 0)
         {
-            value = new int[maxDigit];
-        }
-
-        public BigInteger(int maxDigit, decimal initValue)
-        {
-            value = new int[maxDigit];
-            bool minus = initValue < 0;
+            value = new int[length];
+            minus = initValue < 0;
             initValue = Abs(initValue);
-            for (int i = 0; i < maxDigit; i++)
+            for (int i = 0; i < length && initValue > 0; i++)
             {
                 value[i] = (int)(initValue % 10);
-                if (minus) value[i] *= -1;
                 initValue /= 10;
             }
         }
 
-        public BigInteger(int maxDigit, string str)
+        public Int100(int maxDigit, string str)
         {
             value = new int[maxDigit];
-            bool minus = str[0] == '-';
+            minus = str[0] == '-';
             int valueLength = Min(maxDigit,
                 minus ? str.Length - 1 : str.Length);
             for (int i = 0; i < valueLength; i++)
             {
                 value[i] = str[str.Length - 1 - i] - '0';
-                if (minus) value[i] *= -1;
             }
         }
 
@@ -50,35 +47,28 @@ namespace AtTest.Library.BigInteger
             get { return value[i]; }
         }
 
-        public static BigInteger operator +(BigInteger x, BigInteger y)
+        public static Int100 operator +(Int100 x, Int100 y)
         {
-            int maxDigit = Max(x.Length, y.Length);
-            BigInteger result = new BigInteger(maxDigit);
-            int remain = 0;
-            for (int i = 0; i < maxDigit; i++)
+            Int100 result = new Int100();
+            if (x.AbsCompareTo(y) == 1)
             {
-                result[i] = remain;
-                if (i < x.Length) result[i] += x[i];
-                if (i < y.Length) result[i] += y[i];
-                remain = result[i] / 10;
-                result[i] %= 10;
+
             }
-            for (int i = maxDigit - 1; i > 0; i--)
+            else
             {
-                if (result[i] * result[i - 1] >= 0) continue;
 
-                if (result[i] > 0)
-                {
-
-                }
-                else
-                {
-
-                }
+            }
+            for (int i = 0; i < length; i++)
+            {
+                int xNow = x.minus ? -x[i] : x[i];
+                int yNow = y.minus ? -y[i] : y[i];
+                result[i] = xNow + yNow;
+                if(i+1<length)result[i+1] = result[i] / 10;
+                result[i] %= 10;
             }
             return result;
         }
-
+        /*
         public static BigInteger operator -(BigInteger x, BigInteger y)
         {
             for (int i = 0; i < y.Length; i++)
@@ -164,35 +154,15 @@ namespace AtTest.Library.BigInteger
             }
             return result;
         }
-
-        public int CompareTo(BigInteger another)
+        */
+        public int CompareTo(Int100 another)
         {
-            if (Length > another.Length)
+            for (int i = length - 1; i >= 0; i--)
             {
-                for (int i = Length - 1; i >= another.Length; i--)
-                {
-                    if (value[i] != 0)
-                    {
-                        if (value[i] < 0) return -1;
-                        if (value[i] > 0) return 1;
-                    }
-                }
-            }
-            if (another.Length > Length)
-            {
-                for (int i = another.Length - 1; i >= Length; i--)
-                {
-                    if (another[i] > 0)
-                    {
-                        if (another[i] < 0) return 1;
-                        if (another[i] > 0) return -1;
-                    }
-                }
-            }
-            for (int i = Min(Length, another.Length) - 1; i >= 0; i--)
-            {
-                if (value[i] > another[i]) return 1;
+                int a = minus ? -value[i] : value[i];
+                int b = another.minus ? -another.value[i] : another.value[i];
                 if (value[i] < another[i]) return -1;
+                if (value[i] > another[i]) return 1;
             }
             return 0;
         }
@@ -200,17 +170,26 @@ namespace AtTest.Library.BigInteger
         public override string ToString()
         {
             List<char> result = new List<char>();
-            for (int i = Length - 1; i >= 0; i--)
+            for (int i = length - 1; i >= 0; i--)
             {
                 if (i > 0 && value[i] == 0 && result.Count == 0)
                 {
                     continue;
                 }
-                if (value[i] < 0 && result.Count == 0) result.Add('-');
-
                 result.Add((char)(Abs(value[i]) + '0'));
             }
+            if (minus) result.Insert(0, '-');
             return new string(result.ToArray());
+        }
+
+        int AbsCompareTo(Int100 another)
+        {
+            for(int i = length - 1; i >= 0; i--)
+            {
+                if (value[i] < another.value[i]) return -1;
+                if (value[i] > another.value[i]) return 1;
+            }
+            return 0;
         }
     }
 }

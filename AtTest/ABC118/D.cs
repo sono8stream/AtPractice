@@ -34,7 +34,6 @@ namespace AtTest.ABC118
                 }
             }
             string res = "";
-            //for (int i = 0; i <= n; i++) Console.WriteLine(dp[i]);
             for (int i = n; i > 0;)
             {
                 for (int j = m - 1; j >= 0; j--)

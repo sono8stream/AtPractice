@@ -5,22 +5,36 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.GCJ1B
 {
-    class AtTemplate
+    class B
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
+            int t = ReadInt();
+            Action[] res = new Action[t];
+            for (int i = 0; i < t; i++)
+            {
+                res[i] = Solve();
+            }
+            for (int i = 0; i < t; i++)
+            {
+                Write("Case #" + (i + 1) + ": ");
+                res[i]();
+            }
+        }
 
+        static Action Solve()
+        {
+            return () => WriteLine("POSSIBLE");
         }
 
         private static string Read() { return ReadLine(); }
-        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

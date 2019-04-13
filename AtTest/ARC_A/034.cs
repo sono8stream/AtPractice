@@ -5,22 +5,30 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.ARC_A
 {
-    class AtTemplate
+    class _034
     {
-        static void main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
-
+            int n = ReadInt();
+            double res = 0;
+            for(int i = 0; i < n; i++)
+            {
+                double[] vals = ReadDoubles();
+                double tmp = vals[0] + vals[1] + vals[2]
+                    + vals[3] + vals[4] * 110 / 900;
+                res = Max(res, tmp);
+            }
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }
-        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
