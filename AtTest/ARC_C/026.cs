@@ -36,7 +36,7 @@ namespace AtTest.ARC_C
                 else
                 {
                     long val = lrcs[i][2]
-                        + tree.Run(lrcs[i][0] - 1, lrcs[i][1] - 1);
+                        + tree.Scan(lrcs[i][0] - 1, lrcs[i][1] - 1);
                     if (val < tree.Look(lrcs[i][1] - 1))
                     {
                         tree.Update(lrcs[i][1] - 1, val);
@@ -48,65 +48,77 @@ namespace AtTest.ARC_C
 
         class SegTree<T>
         {
-            int n;
+            int totalLength;
             T[] tree;
-            Func<T, T, T> function;
-            T exnum;
+            Func<T, T, T> integrate;
+            T exValue;
 
-            public SegTree(int length, Func<T, T, T> function, T exnum)
+            public SegTree(int length, Func<T, T, T> integrate, T exValue)
             {
-                this.function = function;
-                this.exnum = exnum;
-                n = 1;
-                while (n < length) n <<= 1;
+                this.integrate = integrate;
+                this.exValue = exValue;
+                totalLength = 1;
+                while (totalLength < length) totalLength *= 2;
 
-                tree = new T[2 * n - 1];
-                for (int i = 0; i < tree.Length; i++) tree[i] = exnum;
+                tree = new T[2 * totalLength - 1];
+                for (int i = 0; i < tree.Length; i++) tree[i] = exValue;
             }
 
-            public SegTree(int length, T init, Func<T, T, T> function, T exnum)
-                : this(length, function, exnum)
+            public SegTree(int length, T initialValue,
+                Func<T, T, T> integrate, T exValue)
+                : this(length, integrate, exValue)
             {
-                for (int i = 0; i < length; i++) tree[i + n - 1] = init;
+                for (int i = 0; i < length; i++)
+                {
+                    tree[i + totalLength - 1] = initialValue;
+                }
                 UpdateAll();
             }
 
             public void AssignWithoutUpdate(int i, T value)
             {
-                tree[i + n - 1] = value;
+                tree[i + totalLength - 1] = value;
             }
 
             public void Update(int i, T value)
             {
-                int j = i + n - 1;
-                tree[j] = value;
-                while (j > 0)
+                int now = i + totalLength - 1;
+                tree[now] = value;
+                while (now > 0)
                 {
-                    j = (j - 1) >> 1;
-                    tree[j] = function(tree[(j << 1) + 1], tree[(j << 1) + 2]);
+                    now = (now - 1) / 2;
+                    tree[now] = integrate(
+                        tree[now * 2 + 1], tree[now * 2 + 2]);
                 }
             }
 
             public void UpdateAll()
             {
-                for (int i = n - 2; i >= 0; i--)
+                for (int i = totalLength - 2; i >= 0; i--)
                 {
-                    tree[i] = function(tree[(i << 1) + 1], tree[(i << 1) + 2]);
+                    tree[i] = integrate(tree[i * 2 + 1], tree[i * 2 + 2]);
                 }
             }
 
-            public T Look(int i) { return tree[i + n - 1]; }
+            public T Look(int i) { return tree[i + totalLength - 1]; }
 
-            //[s,t)
-            public T Run(int s, int t) { return Query(s, t, 0, 0, n); }
-
-            T Query(int s, int t, int k, int l, int r)
+            //[top,last)
+            public T Scan(int top, int last)
             {
-                if (r <= s || t <= l) return exnum;
-                if (s <= l && r <= t) return tree[k];
+                return Query(top, last, 0, 0, totalLength);
+            }
 
-                return function(Query(s, t, (k << 1) + 1, l, (l + r) >> 1),
-                    Query(s, t, (k + 1) << 1, (l + r) >> 1, r));
+            T Query(int top, int last, int i, int left, int right)
+            {
+                if (right <= top || last <= left) return exValue;
+                if (top <= left && right <= last) return tree[i];
+
+                T leftValue = Query(top, last, i * 2 + 1,
+                    left, (left + right) / 2);
+                T rightValue = Query(top, last, (i + 1) * 2,
+                    (left + right) / 2, right);
+
+                return integrate(leftValue, rightValue);
             }
         }
 
