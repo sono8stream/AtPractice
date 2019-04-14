@@ -1,34 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.ARC_B
+namespace AtTest.CSA
 {
-    class _055
+    class Div3
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
         }
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            double[] dp = new double[k + 1];
-
-            for(int i = 2; i <= n; i++)
+            int x = ReadInt();
+            int cnt = 0;
+            while (x != 1)
             {
-                for(int j = 1; j <= i; j++)
-                {
-
-                }
+                if (x == 2) x--;
+                else if (x % 3 == 2) x++;
+                else if (x % 3 == 1) x--;
+                else if (x % 3 == 0) x /= 3;
+                cnt++;
             }
+            WriteLine(cnt);
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
+        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

@@ -9,7 +9,7 @@ namespace AtTest.yukicoder
 {
     class _814
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
