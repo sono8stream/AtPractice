@@ -5,35 +5,16 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ARC_C
+namespace AtTest._500problems
 {
-    class _030
+    class CF2017B_C
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
-        {
-            int[] nmk = ReadInts();
-            int n = nmk[0];
-            int m = nmk[1];
-            int k = nmk[2];
-            char[] cs = ReadChars();
-            List<int>[] graph = new List<int>[n];
-            for (int i =0; i < n; i++) graph[i] = new List<int>();
-            for(int i = 0; i < m; i++)
-            {
-                int[] ab = ReadInts();
-                int a = ab[0] - 1;
-                int b = ab[1] - 1;
-                graph[a].Add(b);
-            }
-
-        }
-
-        static void DFS()
         {
 
         }

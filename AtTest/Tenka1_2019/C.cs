@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ARC_C
+namespace AtTest.Tenka1_2019
 {
-    class _030
+    class C
     {
         static void ain(string[] args)
         {
@@ -16,26 +16,25 @@ namespace AtTest.ARC_C
 
         static void Method(string[] args)
         {
-            int[] nmk = ReadInts();
-            int n = nmk[0];
-            int m = nmk[1];
-            int k = nmk[2];
-            char[] cs = ReadChars();
-            List<int>[] graph = new List<int>[n];
-            for (int i =0; i < n; i++) graph[i] = new List<int>();
-            for(int i = 0; i < m; i++)
+            int n = ReadInt();
+            string s = Read();
+            int[] blackCnt = new int[n];
+            blackCnt[n - 1] = s[n - 1] == '#' ? 1 : 0;
+
+            for (int i = n-2; i>=0; i--)
             {
-                int[] ab = ReadInts();
-                int a = ab[0] - 1;
-                int b = ab[1] - 1;
-                graph[a].Add(b);
+                blackCnt[i] = blackCnt[i + 1];
+                if (s[i] == '#') blackCnt[i]++;
             }
-
-        }
-
-        static void DFS()
-        {
-
+            int res = int.MaxValue;
+            for(int i = n - 1; i >= 0; i--)
+            {
+                int tmp = blackCnt[0] - blackCnt[i];
+                tmp += n - i - blackCnt[i];
+                res = Min(res, tmp);
+            }
+            res = Min(res, blackCnt[0]);
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }

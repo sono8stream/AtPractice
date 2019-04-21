@@ -23,56 +23,37 @@ namespace AtTest.Exerwizerds2019
             long n = nx[0];
             long x = nx[1];
             long[] ss = ReadLongs();
-            var list = new List<long>();
-            for(int i =0; i < n; i++)
-            {
-                list.Add(ss[i]);
-            }
+            ss = ss.OrderBy(a => -a).ToArray();
+
             long mask = 1000000000 + 7;
-            perms = AllPermutations(n, mask);
-            WriteLine(Pats(ref list, x, mask));
-        }
+            var dict = new Dictionary<long, long>();
+            dict.Add(x, 1);
 
-        static long Pats(ref List<long> list,
-            long val, long mask)
-        {
-            long res = 0;
-            for(int i=0;i<list.Count;i++)
+            for(int i = 0; i < n; i++)
             {
-                long now = val % list[i];
-                var next = new List<long>();
-                for (int j=0;j<list.Count;j++)
+                var next = new Dictionary<long, long>();
+                foreach (long key in dict.Keys)
                 {
-                    if (list[j] <= now) next.Add(list[j]);
+                    long nextKey = key % ss[i];
+                    if (!next.ContainsKey(nextKey)) next.Add(nextKey, 0);
+                    next[nextKey] += dict[key];
+                    next[nextKey] %= mask;
+
+                    if (!next.ContainsKey(key)) next.Add(key, 0);
+                    next[key] += dict[key] * (n - 1 - i);
+                    next[key] %= mask;
                 }
-                if (next.Count == 0)
-                {
-                    res += MultiMod(now, perms[list.Count - 1], mask);
-                    res %= mask;
-                }
-                else if (next.Count == 1 && next[0] == list[i]) continue;
-                else
-                {
-                    res += MultiMod(Pats(ref next, now, mask)
-                        , Permutation(
-                            list.Count - 1,
-                            list.Count - 1 - next.Count, mask),
-                            mask);
-                    res %= mask;
-                }
+                dict = next;
             }
-            return res;
-        }
+            long res = 0;
+            foreach(long key in dict.Keys)
+            {
+                if (key >= ss[n - 1]) continue;
 
-        static long Combination(long n, long m, long mask)
-        {
-            if (n < m) return 0;
-
-            if (n - m < m) m = n - m;
-
-            long val = Permutation(n, m, mask);
-            long div = Permutation(m, m, mask);
-            return MultiMod(val, ReverseMod(div, mask - 2, mask), mask);
+                res += key * dict[key];
+                res %= mask;
+            }
+            WriteLine(res);
         }
 
         static long Permutation(long n, long m, long mask)
@@ -84,41 +65,6 @@ namespace AtTest.Exerwizerds2019
                 val %= mask;
             }
             return val;
-        }
-
-        static long[] AllPermutations(long n, long mask)
-        {
-            var perms = new long[n + 1];
-            perms[0] = 1;
-            for (int i = 1; i <= n; i++)
-            {
-                perms[i] = MultiMod(perms[i - 1], i, mask);
-            }
-            return perms;
-        }
-
-        static long MultiMod(long a, long b, long mask)
-        {
-            return ((a % mask) * (b % mask)) % mask;
-        }
-
-        static long ReverseMod(long a, long pow, long mask)
-        {
-            if (pow == 0) return 1;
-            else if (pow == 1) return a % mask;
-            else
-            {
-                long halfMod = ReverseMod(a, pow / 2, mask);
-                long nextMod = MultiMod(halfMod, halfMod, mask);
-                if (pow % 2 == 0)
-                {
-                    return nextMod;
-                }
-                else
-                {
-                    return MultiMod(nextMod, a, mask);
-                }
-            }
         }
 
         private static string Read() { return ReadLine(); }
