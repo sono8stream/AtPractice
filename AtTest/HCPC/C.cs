@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._500problems
+namespace AtTest.HCPC
 {
-    class CF2017B_C
+    class C
     {
         static void ain(string[] args)
         {
@@ -16,25 +16,31 @@ namespace AtTest._500problems
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            int n = nm[0];
-            int m = nm[1];
-
-            List<int>[] graph = new List<int>[n];
-            for(int i = 0; i < n; i++)
+            int n = ReadInt();
+            int[] array = ReadInts();
+            for(int i = 1; i <= n; i++)
             {
-                graph[i] = new List<int>();
-            }
-            for(int i = 0; i < m; i++)
-            {
-                int[] ab = ReadInts();
-                int a = ab[0] - 1;
-                int b = ab[1] - 1;
-                graph[a].Add(b);
-                graph[b].Add(a);
-            }
+                bool ok = true;
+                for(int j = 0; j < n; j++)
+                {
+                    int now = array[j];
+                    for(int k = j; k < n; k += i)
+                    {
+                        if (now == 0) now = array[k];
+                        if (array[k] == 0
+                            || array[k] == now) continue;
 
-
+                        ok = false;
+                        break;
+                    }
+                    if (!ok) break;
+                }
+                if (ok)
+                {
+                    WriteLine(i);
+                    return;
+                }
+            }
         }
 
         private static string Read() { return ReadLine(); }
