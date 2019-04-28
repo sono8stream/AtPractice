@@ -18,10 +18,10 @@ namespace AtTest.Dijkstra
             int n = int.Parse(input[0]);
             int m = int.Parse(input[1]);
 
-            Node[] nodes = new Node[n];
+            List<Edge>[] graph = new List<Edge>[n];
             for (int i = 0; i < n; i++)
             {
-                nodes[i] = new Node();
+                graph[i] = new List<Edge>();
             }
 
             for (int i = 0; i < m; i++)
@@ -30,14 +30,14 @@ namespace AtTest.Dijkstra
                 int n1 = int.Parse(nodeInput[0]) - 1;
                 int n2 = int.Parse(nodeInput[1]) - 1;
                 int t = int.Parse(nodeInput[2]);
-                nodes[n1].edges.Add(new Edge(n2, t));
-                nodes[n2].edges.Add(new Edge(n1, t));
+                graph[n1].Add(new Edge(n2, t));
+                graph[n2].Add(new Edge(n1, t));
             }
             long res = long.MaxValue;
             for(int i = 0; i < n; i++)
             {
                 long distance;
-                Dijkstra(i, nodes, out distance);
+                Dijkstra(i, graph, out distance);
                 res = Math.Min(res, distance);
             }
             Console.WriteLine(res);
@@ -47,12 +47,11 @@ namespace AtTest.Dijkstra
         //すべての距離を帰す
         //これが一番早いです
         static long[] Dijkstra(int startIndex,
-            Node[] nodes,out long maxDistance)
+            List<Edge>[] graph,out long maxDistance)
         {
-            Node startNode = nodes[startIndex];
             var pQueue = new PriorityQueue<int>();
-            var visitFlags = new bool[nodes.Length];
-            var distances = new long[nodes.Length];
+            var visitFlags = new bool[graph.Length];
+            var distances = new long[graph.Length];
             maxDistance = 0;
 
             //Initialize nodes
@@ -73,17 +72,16 @@ namespace AtTest.Dijkstra
                 if (visitFlags[index]) continue;
 
                 //Confirm distances
-                Node nowNode = nodes[index];
                 visitFlags[index] = true;
                 maxDistance = Math.Max(maxDistance, distance);
 
                 //Update priority queue
-                for (int i = 0; i < nowNode.edges.Count; i++)
+                for (int i = 0; i < graph[index].Count; i++)
                 {
-                    int nextIndex = nowNode.edges[i].toIndex;
+                    int nextIndex = graph[index][i].toIndex;
                     if (visitFlags[nextIndex]) continue;
 
-                    long nextDistance = distance + nowNode.edges[i].distance;
+                    long nextDistance = distance + graph[index][i].distance;
                     if (nextDistance < distances[nextIndex])
                     {
                         distances[nextIndex] = nextDistance;
@@ -92,15 +90,6 @@ namespace AtTest.Dijkstra
                 }
             }
             return distances;
-        }
-
-        class Node
-        {
-            public List<Edge> edges;
-            public Node()
-            {
-                edges = new List<Edge>();
-            }
         }
 
         class Edge
