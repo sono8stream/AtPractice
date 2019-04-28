@@ -9,7 +9,7 @@ namespace AtTest.HCPC
 {
     class E
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
