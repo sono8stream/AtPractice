@@ -18,7 +18,7 @@ namespace Dijkstra
             pQueue.Enqueue(120, 11);
             pQueue.Enqueue(15, 1);
             pQueue.Enqueue(6, 14);
-            while (pQueue.Exist())
+            while (pQueue.Count > 0)
             {
                 var queue = pQueue.Dequeue();
                 Console.WriteLine(queue.Key + ": " + queue.Value);
@@ -166,6 +166,8 @@ namespace Dijkstra
             private readonly List<KeyValuePair<long,T>> list;
             private int count;
 
+            public int Count { get { return count; } }
+
             public PriorityQueue()
             {
                 list = new List<KeyValuePair<long, T>>();
@@ -229,8 +231,6 @@ namespace Dijkstra
                 }
                 return pair;
             }
-
-            public bool Exist() { return count > 0; }
         }
     }
 }
