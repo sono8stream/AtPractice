@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace AtTest._600problems
 {
-    class APC001_D
+    class ARC079_E
     {
         static void ain(string[] args)
         {
@@ -16,84 +16,35 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            int n = nm[0];
-            int m = nm[1];
+            int n = ReadInt();
             long[] array = ReadLongs();
-            List<int>[] graph = new List<int>[n];
-            for (int i = 0; i < n; i++) graph[i] = new List<int>();
-            for (int i = 0; i < m; i++)
-            {
-                int[] xy = ReadInts();
-                int x = xy[0];
-                int y = xy[1];
-                graph[x].Add(y);
-                graph[y].Add(x);
-            }
-            var queueGroup = new List<PriorityQueue<int>>();
-            bool[] visited = new bool[n];
 
-            for (int i = 0; i < n; i++)
-            {
-                if (visited[i]) continue;
-
-                queueGroup.Add(new PriorityQueue<int>());
-                var queue = new Queue<int>();
-                queue.Enqueue(i);
-
-                while (queue.Count > 0)
-                {
-                    int now = queue.Dequeue();
-                    if (visited[now]) continue;
-
-                    visited[now] = true;
-                    queueGroup[queueGroup.Count - 1].Enqueue(array[now], now);
-
-                    for (int j = 0; j < graph[now].Count; j++)
-                    {
-                        if (visited[graph[now][j]]) continue;
-
-                        queue.Enqueue(graph[now][j]);
-                    }
-                }
+            PriorityQueue<bool> priorityQueue = new PriorityQueue<bool>();
+            for (int i = 0; i < n; i++) {
+                priorityQueue.Enqueue(-array[i], true);
             }
 
-            if (queueGroup.Count == 1)
+            long cnt = 0;
+            while (true)
             {
-                WriteLine(0);
-                return;
-            }
+                long val = -priorityQueue.Dequeue().Key + cnt;
+                if (val < n) break;
 
-            long cost = 0;
-            var secondQueue = new PriorityQueue<int>();
-            for (int i = 0; i < queueGroup.Count; i++)
-            {
-                cost +=queueGroup[i].Dequeue().Key;
-                while (queueGroup[i].Exist())
-                {
-                    var pair = queueGroup[i].Dequeue();
-                    secondQueue.Enqueue(pair.Key, pair.Value);
-                }
-            }
+                long tmpCnt = (val - (n - 1)) / n;
+                if ((val - (n - 1)) % n > 0) tmpCnt++;
 
-            if (secondQueue.Count < queueGroup.Count - 2)
-            {
-                WriteLine("Impossible");
+                cnt += tmpCnt;
+                val -= tmpCnt * n + cnt;
+                priorityQueue.Enqueue(-val, true);
             }
-            else
-            {
-                for(int i = 0; i < queueGroup.Count - 2; i++)
-                {
-                    cost += secondQueue.Dequeue().Key;
-                }
-                WriteLine(cost);
-            }
+            WriteLine(cnt);
         }
 
         class PriorityQueue<T>
         {
             private readonly List<KeyValuePair<long, T>> list;
             private int count;
+
             public int Count { get { return count; } }
 
             public PriorityQueue()
@@ -159,8 +110,6 @@ namespace AtTest._600problems
                 }
                 return pair;
             }
-
-            public bool Exist() { return count > 0; }
         }
 
         private static string Read() { return ReadLine(); }

@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._600problems
+namespace AtTest.Iroha_Day2
 {
-    class APC001_D
+    class G
     {
         static void ain(string[] args)
         {
@@ -16,77 +16,106 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            int n = nm[0];
-            int m = nm[1];
-            long[] array = ReadLongs();
-            List<int>[] graph = new List<int>[n];
-            for (int i = 0; i < n; i++) graph[i] = new List<int>();
-            for (int i = 0; i < m; i++)
+            int[] nmk = ReadInts();
+            int n = nmk[0];
+            int m = nmk[1];
+            int k = nmk[2];
+            var graph = new List<Edge>[n * (k + 1)];
+            for (int i = 0; i < graph.Length; i++) graph[i] = new List<Edge>();
+
+            for(int i = 0; i < m; i++)
+            {
+                int[] abc = ReadInts();
+                int a = abc[0] - 1;
+                int b = abc[1] - 1;
+                int c = abc[2];
+
+                for(int j = 0; j <= k; j++)
+                {
+                    graph[a + j * n].Add(new Edge(b + j * n, c));
+                    graph[b + j * n].Add(new Edge(a + j * n, c));
+                }
+            }
+
+            for(int i = 0; i < n; i++)
             {
                 int[] xy = ReadInts();
                 int x = xy[0];
                 int y = xy[1];
-                graph[x].Add(y);
-                graph[y].Add(x);
-            }
-            var queueGroup = new List<PriorityQueue<int>>();
-            bool[] visited = new bool[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                if (visited[i]) continue;
-
-                queueGroup.Add(new PriorityQueue<int>());
-                var queue = new Queue<int>();
-                queue.Enqueue(i);
-
-                while (queue.Count > 0)
+                for(int j = 0; j <= k; j++)
                 {
-                    int now = queue.Dequeue();
-                    if (visited[now]) continue;
-
-                    visited[now] = true;
-                    queueGroup[queueGroup.Count - 1].Enqueue(array[now], now);
-
-                    for (int j = 0; j < graph[now].Count; j++)
-                    {
-                        if (visited[graph[now][j]]) continue;
-
-                        queue.Enqueue(graph[now][j]);
-                    }
+                    int next = i + Min(n * (j + x), n * k);
+                    graph[i + n * j].Add(new Edge(next, y));
                 }
             }
 
-            if (queueGroup.Count == 1)
+            long maxDist = 0;
+            long[] distances = Dijkstra(0, graph, out maxDist);
+            if (distances[n * (k + 1) - 1] == long.MaxValue)
             {
-                WriteLine(0);
-                return;
-            }
-
-            long cost = 0;
-            var secondQueue = new PriorityQueue<int>();
-            for (int i = 0; i < queueGroup.Count; i++)
-            {
-                cost +=queueGroup[i].Dequeue().Key;
-                while (queueGroup[i].Exist())
-                {
-                    var pair = queueGroup[i].Dequeue();
-                    secondQueue.Enqueue(pair.Key, pair.Value);
-                }
-            }
-
-            if (secondQueue.Count < queueGroup.Count - 2)
-            {
-                WriteLine("Impossible");
+                WriteLine(-1);
             }
             else
             {
-                for(int i = 0; i < queueGroup.Count - 2; i++)
+                WriteLine(distances[n * (k + 1) - 1]);
+            }
+        }
+
+        static long[] Dijkstra(int startIndex,
+            List<Edge>[] graph, out long maxDistance)
+        {
+            var pQueue = new PriorityQueue<int>();
+            var visitFlags = new bool[graph.Length];
+            var distances = new long[graph.Length];
+            maxDistance = 0;
+
+            //Initialize nodes
+            for (int i = 0; i < distances.Length; i++)
+            {
+                distances[i] = long.MaxValue;
+                visitFlags[i] = false;
+            }
+            pQueue.Enqueue(0, startIndex);
+            distances[startIndex] = 0;
+
+            while (pQueue.Exist())
+            {
+                KeyValuePair<long, int> pair = pQueue.Dequeue();
+                long distance = pair.Key;
+                int index = pair.Value;
+
+                if (visitFlags[index]) continue;
+
+                //Confirm distances
+                visitFlags[index] = true;
+                maxDistance = Math.Max(maxDistance, distance);
+
+                //Update priority queue
+                for (int i = 0; i < graph[index].Count; i++)
                 {
-                    cost += secondQueue.Dequeue().Key;
+                    int nextIndex = graph[index][i].toIndex;
+                    if (visitFlags[nextIndex]) continue;
+
+                    long nextDistance = distance + graph[index][i].distance;
+                    if (nextDistance < distances[nextIndex])
+                    {
+                        distances[nextIndex] = nextDistance;
+                        pQueue.Enqueue(nextDistance, nextIndex);
+                    }
                 }
-                WriteLine(cost);
+            }
+            return distances;
+        }
+
+        class Edge
+        {
+            public int toIndex;
+            public long distance;
+
+            public Edge(int toIndex, long distance)
+            {
+                this.toIndex = toIndex;
+                this.distance = distance;
             }
         }
 
@@ -94,7 +123,6 @@ namespace AtTest._600problems
         {
             private readonly List<KeyValuePair<long, T>> list;
             private int count;
-            public int Count { get { return count; } }
 
             public PriorityQueue()
             {

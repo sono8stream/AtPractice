@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace AtTest.GCJ1B
 {
-    class B
+    class Bcopy
     {
         static void ain(string[] args)
         {
@@ -28,32 +28,41 @@ namespace AtTest.GCJ1B
 
         static Action Solve()
         {
-            /*
             long[] rs = new long[6];
-            WriteLine(300);
-            long val56 = ReadLong();
-            rs[4] = 
-            long v4 = ReadLong();
-            WriteLine(5);
-            long v5 = ReadLong();
-
-            for(int i1 = 0; i1 <= 100; i1++)
+            long[] vals = new long[6];
+            for(int i = 0; i < 6; i++)
             {
-                rs[0] = i1;
-                rs[5]=
-                for(int i2 = 0; i2 <= 100; i2++)
-                {
-                    rs[1] = i2;
-                    for(int i3 = 0; i3 <= 100; i3++)
-                    {
-                        rs[2] = i3;
-                        for(int i4 = 0; i4 <= 100; i4++)
-                        {
-                            rs[3] = i4;
+                WriteLine(i + 1);
+                vals[i] = ReadLong();
+            }
 
-                        }
+            for(int i = 0; i <= 100; i++)
+            {
+                rs[0] = i;
+                rs[1] = vals[1] - vals[0] - 2 * rs[0];
+                rs[2] = vals[2] - vals[1] - 4 * rs[0];
+                rs[3] = vals[3] - vals[2] - 8 * rs[0] - 2 * rs[1];
+                rs[4] = vals[4] - vals[3] - 16 * rs[0];
+                rs[5] = vals[5] - vals[4] - 32 * rs[0] - 4 * rs[1] - 2 * rs[2];
+
+                if (rs[0] == 0 && rs[1] == 0 && rs[2] == 0
+                    && rs[3] == 0 && rs[4] == 0 && rs[5] == 0) continue;
+
+                bool ok = true;
+                for(int j = 0; j < 6; j++)
+                {
+                    long val = 0;
+                    for(int k = 0; k < 6; k++)
+                    {
+                        val += rs[k] * (1 << ((j + 1) / (k + 1)));
+                    }
+                    if (val != vals[j])
+                    {
+                        ok = false;
+                        break;
                     }
                 }
+                if (ok) break;
             }
 
             for(int i = 0; i < 6; i++)
@@ -63,8 +72,8 @@ namespace AtTest.GCJ1B
             }
             WriteLine();
 
-            ReadLine();
-            */
+            ReadInt();
+
             return () => WriteLine("POSSIBLE");
         }
 

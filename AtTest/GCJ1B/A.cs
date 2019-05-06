@@ -18,11 +18,11 @@ namespace AtTest.GCJ1B
         {
             int t = ReadInt();
             Action[] res = new Action[t];
-            for(int i = 0; i < t; i++)
+            for (int i = 0; i < t; i++)
             {
                 res[i] = Solve();
             }
-            for(int i = 0; i < t; i++)
+            for (int i = 0; i < t; i++)
             {
                 Write("Case #" + (i + 1) + ": ");
                 res[i]();
@@ -31,95 +31,55 @@ namespace AtTest.GCJ1B
 
         static Action Solve()
         {
-            int[] rc = ReadInts();
-            bool rev = rc[0] > rc[1];
-            int h = Min(rc[0], rc[1]);
-            int w = Max(rc[0], rc[1]);
-            if (w == 2) return () => WriteLine("IMPOSSIBLE");
-            if (h == 2)
+            int[] pq = ReadInts();
+            int p = pq[0];
+            int q = pq[1];
+            int[][] poses = new int[p][];
+            char[] dirs = new char[p];
+            for (int i = 0; i < p; i++)
             {
-                if (w < 5) return () => WriteLine("IMPOSSIBLE");
-                else
-                {
-                    return () =>
-                    {
-                        WriteLine("POSSIBLE");
-                        for (int i = w - 2; i >= 1; i--)
-                        {
-                            if (rev)
-                            {
-                                WriteLine(i + " " + 1);
-                                WriteLine((i + 2) + " " + 2);
-                            }
-                            else
-                            {
-                                WriteLine(1 + " " + i);
-                                WriteLine(2 + " " + (i + 2));
-                            }
-                        }
-                        if (rev)
-                        {
-                            WriteLine(w + " " + 1);
-                            WriteLine(2 + " " + 2);
-                            WriteLine((w-1) + " " + 1);
-                            WriteLine(1 + " " + 2);
-                        }
-                        else
-                        {
-                            WriteLine(1 + " " + w);
-                            WriteLine(2 + " " + 2);
-                            WriteLine(1 + " " + (w - 1));
-                            WriteLine(2 + " " + 1);
-                        }
-                    };
-                }
+                string[] s = Read().Split();
+                poses[i] = new int[2] { int.Parse(s[0]), int.Parse(s[1]) };
+                dirs[i] = s[2][0];
             }
-            if (h == 3)
+
+            int[] xCnts = new int[q + 1];
+            int[] yCnts = new int[q + 1];
+            for (int i = 0; i <= q; i++)
             {
-                if (w < 4) return () => WriteLine("IMPOSSIBLE");
-                else return () =>
-                     {
-                         WriteLine("POSSIBLE");
-                         for (int i = 1; i <= w; i++)
-                         {
-                             for (int j = 1; j <= h; j++)
-                             {
-                                 int c = j % 2 == 0 ? (i + 2) % w : i;
-                                 if (c == 0) c = w;
-                                 if (rev)
-                                 {
-                                     WriteLine(c + " " + j);
-                                 }
-                                 else
-                                 {
-                                     WriteLine(j + " " + c);
-                                 }
-                             }
-                         }
-                     };
-            }
-            return () =>
-            {
-                WriteLine("POSSIBLE");
-                for (int i = 1; i <= w; i++)
+                for (int j = 0; j < p; j++)
                 {
-                    for (int j = 1; j <= h; j++)
+                    switch (dirs[j])
                     {
-                        int r = (w == h && i == w && w % 2 == 0) ? (j + 1) % h : j;
-                        if (r == 0) r = h;
-                        int c = r % 2 == 0 ? (i + 2) % w: i;
-                        if (c == 0) c = w;
-                        if (rev)
-                        {
-                            WriteLine(c + " " + r);
-                        }
-                        else
-                        {
-                            WriteLine(r + " " + c);
-                        }
+                        case 'N':
+                            if (i > poses[j][1]) yCnts[i]++;
+                            break;
+                        case 'E':
+                            if (i > poses[j][0]) xCnts[i]++;
+                            break;
+                        case 'S':
+                            if (i < poses[j][1]) yCnts[i]++;
+                            break;
+                        case 'W':
+                            if (i < poses[j][0]) xCnts[i]++;
+                            break;
                     }
                 }
-            };
+            }
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i <= q; i++)
+            {
+                if (xCnts[x] < xCnts[i])
+                {
+                    x = i;
+                }
+                if (yCnts[y] < yCnts[i])
+                {
+                    y = i;
+                }
+            }
+            return () => WriteLine(x + " " + y);
         }
 
         private static string Read() { return ReadLine(); }

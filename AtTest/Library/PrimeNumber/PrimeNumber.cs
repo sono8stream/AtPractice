@@ -106,7 +106,6 @@ namespace AtTest.Library.PrimeNumber
             return res;
         }
 
-
         static List<int> PrimeFactors2(int n)
         {
             var res = new List<int>();
