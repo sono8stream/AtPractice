@@ -25,26 +25,47 @@ namespace AtTest._600problems
 
             long mask = 1000000000 + 7;
             long[] perms = AllPermutations(n, mask);
+            long[] revs = new long[n + 1];
+            for (int i = 0; i <= n; i++) revs[i] = Reverse(perms[i], mask);
             //i-th, j people
             long[,] dp = new long[n + 5, n + 5];
-            dp[0, 0] = 1;
+            dp[a - 1, 0] = 1;
+
             for (int i = a; i <= b; i++)
             {
-                for (int j = 0; j <= n - a * c; j++)
+                for (int j = 0; j < n + 5; j++) dp[i, j] = dp[i - 1, j];
+
+                long div = 1;
+                for (int k = 0; k < c; k++)
                 {
+                    div = MultiMod(div, revs[i], mask);
+                }
+
+                for (int j = 0; j <= n - i * c; j++)
+                {
+                    long divTmp = div;
                     for (int k = c; k <= d; k++)
                     {
+                        if (j + i * k > n) break;
 
+                        long tmp = MultiMod(divTmp, revs[k], mask);
+                        dp[i, j + i * k] += MultiMod(dp[i - 1, j],
+                            tmp, mask);
+                        dp[i, j + i * k] %= mask;
+
+                        divTmp = MultiMod(divTmp, revs[i], mask);
                     }
                 }
             }
+
+            WriteLine(MultiMod(dp[b, n], perms[n],mask));
         }
 
         static long[] AllPermutations(long n, long mask)
         {
             var perms = new long[n + 1];
             perms[0] = 1;
-            for (int i = 0; i <= n; i++)
+            for (int i = 1; i <= n; i++)
             {
                 perms[i] = MultiMod(perms[i - 1], i, mask);
             }
@@ -54,6 +75,11 @@ namespace AtTest._600problems
         static long MultiMod(long a, long b, long mask)
         {
             return ((a % mask) * (b % mask)) % mask;
+        }
+
+        static long Reverse(long a,long mask)
+        {
+            return ReverseMod(a, mask - 2, mask);
         }
 
         static long ReverseMod(long a, long pow, long mask)
