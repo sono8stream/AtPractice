@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace AtTest._600problems
 {
-    class ARC081_E
+    class ARC098_E
     {
         static void ain(string[] args)
         {
@@ -16,40 +16,10 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            string a = Read();
+            int[] nkq = ReadInts();
+            int[] array = ReadInts();
 
-            int c = 26;
-            List<char>[] valids = new List<char>[c];
-            for(int i = 0; i < c; i++)
-            {
-                valids[i] = new List<char>();
-                valids[i].Add((char)('a' + i));
-            }
 
-            for(int i = a.Length - 1; i >= 0; i--)
-            {
-                int index = 0;
-                for(int j = 0; j < c; j++)
-                {
-                    if (valids[index].Count <= valids[j].Count) continue;
-
-                    index = j;
-                }
-
-                List<char> next = new List<char>();
-                next.Add(a[i]);
-                next.AddRange(valids[index]);
-                valids[a[i] - 'a'] = next;
-            }
-
-            int resIndex = 0;
-            for(int i = 0; i < c; i++)
-            {
-                if (valids[resIndex].Count <= valids[i].Count) continue;
-
-                resIndex = i;
-            }
-            WriteLine(valids[resIndex].ToArray());
         }
 
         private static string Read() { return ReadLine(); }

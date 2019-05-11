@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._600problems
+namespace AtTest._500problems
 {
-    class ARC081_E
+    class COLOPL2018D_D
     {
         static void ain(string[] args)
         {
@@ -16,40 +16,31 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            string a = Read();
+            int[] nx = ReadInts();
+            int n = nx[0];
+            int x = nx[1];
+            long[] ts = new long[n];
+            for (int i = 0; i < n; i++) ts[i] = ReadLong();
 
-            int c = 26;
-            List<char>[] valids = new List<char>[c];
-            for(int i = 0; i < c; i++)
-            {
-                valids[i] = new List<char>();
-                valids[i].Add((char)('a' + i));
-            }
+            var dp = new long[n, n];
+            for (int i = 0; i < n; i++) dp[0, i] = x;
 
-            for(int i = a.Length - 1; i >= 0; i--)
+            for(int i = 0; i < n-1; i++)
             {
-                int index = 0;
-                for(int j = 0; j < c; j++)
+                int baseI = i;
+                for (int j = i + 1; j < n; j++)
                 {
-                    if (valids[index].Count <= valids[j].Count) continue;
-
-                    index = j;
+                    while (baseI < j
+                        && dp[i, baseI] + Min(ts[j] - ts[baseI], x)
+                        <= dp[i, baseI + 1] + Min(ts[j] - ts[baseI + 1], x))
+                    {
+                        baseI++;
+                    }
+                    dp[i + 1, j] = dp[i, baseI] + Min(ts[j] - ts[baseI], x);
                 }
-
-                List<char> next = new List<char>();
-                next.Add(a[i]);
-                next.AddRange(valids[index]);
-                valids[a[i] - 'a'] = next;
             }
 
-            int resIndex = 0;
-            for(int i = 0; i < c; i++)
-            {
-                if (valids[resIndex].Count <= valids[i].Count) continue;
-
-                resIndex = i;
-            }
-            WriteLine(valids[resIndex].ToArray());
+            for (int i = 0; i < n; i++) WriteLine(dp[i, n - 1]);
         }
 
         private static string Read() { return ReadLine(); }

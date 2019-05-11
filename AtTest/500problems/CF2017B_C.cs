@@ -17,7 +17,7 @@ namespace AtTest._500problems
         static void Method(string[] args)
         {
             int[] nm = ReadInts();
-            int n = nm[0];
+            long n = nm[0];
             int m = nm[1];
 
             List<int>[] graph = new List<int>[n];
@@ -34,7 +34,41 @@ namespace AtTest._500problems
                 graph[b].Add(a);
             }
 
+            Queue<int[]> pos = new Queue<int[]>();
+            pos.Enqueue(new int[2] { 0, 0 });
+            int[] dist = new int[n];
+            for (int i = 0; i < n; i++) dist[i] = int.MaxValue;
+            while (pos.Count > 0)
+            {
+                int[] val = pos.Dequeue();
+                if (dist[val[0]] == int.MaxValue)
+                {
+                    dist[val[0]] = val[1];
+                }
+                else
+                {
+                    if (val[1] == dist[val[0]]) continue;
+                    else
+                    {
+                        WriteLine(n * (n - 1) / 2 - m);
+                        return;
+                    }
+                }
 
+                for(int i = 0; i < graph[val[0]].Count; i++)
+                {
+                    pos.Enqueue(new int[2]
+                    { graph[val[0]][i], (val[1] + 1)%2 });
+                }
+            }
+
+            long oddCnt = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if (dist[i] == 1) oddCnt++;
+            }
+
+            WriteLine((n - oddCnt) * oddCnt - m);
         }
 
         private static string Read() { return ReadLine(); }

@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._600problems
+namespace AtTest._500problems
 {
-    class ARC081_E
+    class Bitflyer2018Final_C
     {
         static void ain(string[] args)
         {
@@ -16,40 +16,26 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            string a = Read();
+            string s = Read();
+            int n = s.Length;
+            long[] cnts = new long[n];
+            Stack<int> posStack = new Stack<int>();
 
-            int c = 26;
-            List<char>[] valids = new List<char>[c];
-            for(int i = 0; i < c; i++)
+            for(int i = 0; i < n; i++)
             {
-                valids[i] = new List<char>();
-                valids[i].Add((char)('a' + i));
-            }
-
-            for(int i = a.Length - 1; i >= 0; i--)
-            {
-                int index = 0;
-                for(int j = 0; j < c; j++)
+                if (s[i] == '(') posStack.Push(i);
+                else if(posStack.Count>0)
                 {
-                    if (valids[index].Count <= valids[j].Count) continue;
-
-                    index = j;
+                    int start = posStack.Pop();
+                    cnts[i] = 1;
+                    if (start > 0) cnts[i] += cnts[start - 1];
                 }
-
-                List<char> next = new List<char>();
-                next.Add(a[i]);
-                next.AddRange(valids[index]);
-                valids[a[i] - 'a'] = next;
             }
 
-            int resIndex = 0;
-            for(int i = 0; i < c; i++)
-            {
-                if (valids[resIndex].Count <= valids[i].Count) continue;
+            long res = 0;
+            for (int i = 0; i < n; i++) res += cnts[i];
 
-                resIndex = i;
-            }
-            WriteLine(valids[resIndex].ToArray());
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }

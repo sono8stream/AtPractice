@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._600problems
+namespace AtTest.HCPC2019_10
 {
-    class ARC081_E
+    class A
     {
         static void ain(string[] args)
         {
@@ -16,40 +16,20 @@ namespace AtTest._600problems
 
         static void Method(string[] args)
         {
-            string a = Read();
-
-            int c = 26;
-            List<char>[] valids = new List<char>[c];
-            for(int i = 0; i < c; i++)
+            long n = ReadLong();
+            if(n==0)
             {
-                valids[i] = new List<char>();
-                valids[i].Add((char)('a' + i));
+                WriteLine(0);
+                return;
             }
-
-            for(int i = a.Length - 1; i >= 0; i--)
+            long div = 2;
+            long res = 1;
+            while (div <= n)
             {
-                int index = 0;
-                for(int j = 0; j < c; j++)
-                {
-                    if (valids[index].Count <= valids[j].Count) continue;
-
-                    index = j;
-                }
-
-                List<char> next = new List<char>();
-                next.Add(a[i]);
-                next.AddRange(valids[index]);
-                valids[a[i] - 'a'] = next;
+                div *= 2;
+                res++;
             }
-
-            int resIndex = 0;
-            for(int i = 0; i < c; i++)
-            {
-                if (valids[resIndex].Count <= valids[i].Count) continue;
-
-                resIndex = i;
-            }
-            WriteLine(valids[resIndex].ToArray());
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }
