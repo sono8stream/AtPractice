@@ -17,9 +17,45 @@ namespace AtTest._600problems
         static void Method(string[] args)
         {
             int[] nkq = ReadInts();
-            int[] array = ReadInts();
+            int n = nkq[0];
+            int k = nkq[1];
+            int q = nkq[2];
+            int[] array = new int[n + 1];
+            int[] readArray = ReadInts();
+            for (int i = 0; i < n; i++) array[i] = readArray[i];
+            array[n] = 0;
 
+            int res = int.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                var tempList = new List<int>();
+                var valList = new List<int>();
+                for (int j = 0; j <= n; j++)
+                {
+                    if (array[j] < array[i])
+                    {
+                        tempList.Sort();
+                        for (int l = 0; l < tempList.Count - k + 1; l++)
+                        {
+                            valList.Add(tempList[l]);
+                        }
 
+                        tempList = new List<int>();
+                    }
+                    else
+                    {
+                        tempList.Add(array[j]);
+                    }
+                }
+
+                valList.Sort();
+                if (valList.Count >= q)
+                {
+                    res = Min(res, valList[q - 1] - valList[0]);
+                }
+            }
+
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }
