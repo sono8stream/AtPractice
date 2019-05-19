@@ -164,27 +164,26 @@ namespace Dijkstra
         class PriorityQueue<T>
         {
             private readonly List<KeyValuePair<long,T>> list;
-            private int count;
 
-            public int Count { get { return count; } }
+            public int Count { get; private set; }
 
             public PriorityQueue()
             {
                 list = new List<KeyValuePair<long, T>>();
-                count = 0;
+                Count = 0;
             }
 
             private void Add(KeyValuePair<long,T> pair)
             {
-                if (count == list.Count)
+                if (Count == list.Count)
                 {
                     list.Add(pair);
                 }
                 else
                 {
-                    list[count] = pair;
+                    list[Count] = pair;
                 }
-                count++;
+                Count++;
             }
 
             private void Swap(int a, int b)
@@ -197,7 +196,7 @@ namespace Dijkstra
             public void Enqueue(long key,T value)
             {
                 Add(new KeyValuePair<long, T>(key, value));
-                int c = count - 1;
+                int c = Count - 1;
                 while (c > 0)
                 {
                     int p = (c - 1) / 2;
@@ -211,18 +210,18 @@ namespace Dijkstra
             public KeyValuePair<long,T> Dequeue()
             {
                 KeyValuePair<long,T> pair = list[0];
-                count--;
-                if (count == 0) return pair;
+                Count--;
+                if (Count == 0) return pair;
 
-                list[0] = list[count];
+                list[0] = list[Count];
                 int p = 0;
                 while (true)
                 {
                     int c1 = p * 2 + 1;
                     int c2 = p * 2 + 2;
-                    if (c1 >= count) break;
+                    if (c1 >= Count) break;
 
-                    int c = (c2 >= count || list[c1].Key < list[c2].Key)
+                    int c = (c2 >= Count || list[c1].Key < list[c2].Key)
                         ? c1 : c2;
                     if (list[c].Key >= list[p].Key) break;
 
