@@ -207,6 +207,11 @@ namespace Dijkstra
                 }
             }
 
+            public KeyValuePair<long, T> Top()
+            {
+                return list[0];
+            }
+
             public KeyValuePair<long,T> Dequeue()
             {
                 KeyValuePair<long,T> pair = list[0];
