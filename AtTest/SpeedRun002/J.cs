@@ -17,48 +17,49 @@ namespace AtTest.SpeedRun002
         static void Method(string[] args)
         {
             int n = ReadInt();
-            var set = new HashSet<long>();
+            long[][] abs = new long[n][];
             for(int i = 0; i < n; i++)
             {
-                long[] ab = ReadLongs();
-                if (i == 0)
+                abs[i] = ReadLongs();
+            }
+
+            var set = new SortedSet<long>();
+            long aMax = (long)Sqrt(abs[0][0]);
+            for (int j = 1; j <= aMax; j++)
+            {
+                if (abs[0][0] % j == 0)
                 {
-                    long aMax = (long)Sqrt(ab[0]);
-                    for(int j = 1; j <= aMax; j++)
-                    {
-                        if (ab[0] % j == 0)
-                        {
-                            set.Add(j);
-                            set.Add(ab[0] / j);
-                        }
-                    }
-                    long bMax = (long)Sqrt(ab[1]);
-                    for(int j = 1; j <= bMax; j++)
-                    {
-                        if (ab[1] % j == 0)
-                        {
-                            set.Add(j);
-                            set.Add(ab[1] / j);
-                        }
-                    }
+                    set.Add(-j);
+                    set.Add(-abs[0][0] / j);
                 }
-                else
+            }
+            long bMax = (long)Sqrt(abs[0][1]);
+            for (int j = 1; j <= bMax; j++)
+            {
+                if (abs[0][1] % j == 0)
                 {
-                    var setTemp = new HashSet<long>();
-                    foreach (long val in set)
-                    {
-                        if (ab[0] % val == 0 || ab[1] % val == 0)
-                        {
-                            setTemp.Add(val);
-                        }
-                    }
-                    set = setTemp;
+                    set.Add(-j);
+                    set.Add(-abs[0][1] / j);
                 }
             }
 
-            long res = 1;
-            foreach (long val in set) res = Max(res, val);
-            WriteLine(res);
+            foreach (long val in set)
+            {
+                bool ok = true;
+                for(int i = 0; i < n; i++)
+                {
+                    if (abs[i][0] % -val > 0 && abs[i][1] % -val > 0)
+                    {
+                        ok = false;
+                        break;
+                    }
+                }
+                if (ok)
+                {
+                    WriteLine(-val);
+                    return;
+                }
+            }
         }
 
         static long GCD(long a, long b)
