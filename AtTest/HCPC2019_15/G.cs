@@ -9,7 +9,7 @@ namespace AtTest.HCPC2019_15
 {
     class G
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
@@ -42,7 +42,7 @@ namespace AtTest.HCPC2019_15
             {
                 Queue<int[]> queue = new Queue<int[]>();
                 queue.Enqueue(new int[2] { i, 0 });
-                allGraph[i,k].Add()
+                //allGraph[i,k].Add()
                 while (queue.Count > 0)
                 {
                     int[] val = queue.Dequeue();
