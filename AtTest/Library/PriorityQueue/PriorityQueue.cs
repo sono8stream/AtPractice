@@ -236,5 +236,78 @@ namespace Dijkstra
                 return pair;
             }
         }
+
+        class GeneralPriorityQueue<T> where T : IComparable<T>
+        {
+            private readonly List<T> list;
+
+            public int Count { get; private set; }
+
+            public T Top { get { return list[0]; } }
+
+            public GeneralPriorityQueue()
+            {
+                list = new List<T>();
+                Count = 0;
+            }
+
+            private void Add(T value)
+            {
+                if (Count == list.Count)
+                {
+                    list.Add(value);
+                }
+                else
+                {
+                    list[Count] = value;
+                }
+                Count++;
+            }
+
+            private void Swap(int a, int b)
+            {
+                T tmp = list[a];
+                list[a] = list[b];
+                list[b] = tmp;
+            }
+
+            public void Enqueue(T value)
+            {
+                Add(value);
+                int c = Count - 1;
+                while (c > 0)
+                {
+                    int p = (c - 1) / 2;
+                    if (list[c].CompareTo(list[p]) >= 0) break;
+
+                    Swap(p, c);
+                    c = p;
+                }
+            }
+
+            public T Dequeue()
+            {
+                T value = list[0];
+                Count--;
+                if (Count == 0) return value;
+
+                list[0] = list[Count];
+                int p = 0;
+                while (true)
+                {
+                    int c1 = p * 2 + 1;
+                    int c2 = p * 2 + 2;
+                    if (c1 >= Count) break;
+
+                    int c = (c2 >= Count || list[c1].CompareTo(list[c2]) == -1)
+                        ? c1 : c2;
+                    if (list[c].CompareTo(list[p]) >= 0) break;
+
+                    Swap(p, c);
+                    p = c;
+                }
+                return value;
+            }
+        }
     }
 }

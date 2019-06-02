@@ -5,23 +5,18 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.Msolutions2019
 {
-    class AtTemplate
+    class E
     {
-        static void ain(string[] args)
+        static void main(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
-        { 
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
+        {
 
-            // Write output here
-
-            Out.Flush();
         }
 
         private static string Read() { return ReadLine(); }

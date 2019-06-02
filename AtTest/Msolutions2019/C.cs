@@ -1,67 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.Library.Combination
+namespace AtTest.Msolutions2019
 {
-    class Combination_Permutation
+    class C
     {
         static void ain(string[] args)
         {
             Method(args);
-            Console.ReadLine();
         }
 
         static void Method(string[] args)
         {
-            string[] input = Console.ReadLine().Split(' ');
-            int n = int.Parse(input[0]);
-            int m = int.Parse(input[1]);
+            long[] nabc = ReadLongs();
+            long n = nabc[0];
+            long a = nabc[1];
+            long b = nabc[2];
+            long c = nabc[3];
+
             long mask = 1000000000 + 7;
-            long cnt = Combination(n, m, mask);
 
-            Console.WriteLine(cnt);
-        }
+            long[] perms = AllPermutations(2 * n, mask);
 
-        static long Combination(long n,long m)
-        {
-            if (n - m < m) m = n - m;
-
-            long val = Permutation(n, m);
-            long div = Permutation(m, m);
-            return val / div;
-        }
-
-        static long Permutation(long n, long m)
-        {
-            long val = 1;
-            for (long i = 0; i < m; i++)
+            long[] aa = new long[2 * n + 1];
+            long[] bb = new long[2 * n + 1];
+            long[] aabb = new long[2 * n + 1];
+            aa[0] = 1;
+            bb[0] = 1;
+            aabb[0] = 1;
+            for (int i = 1; i <= 2 * n; i++)
             {
-                val *= (n - i);
+                aa[i] = MultiMod(aa[i - 1], a, mask);
+                bb[i] = MultiMod(bb[i - 1], b, mask);
+                aabb[i] = MultiMod(aabb[i - 1], a + b, mask);
             }
-            return val;
-        }
 
-        static long Combination(long n, long m, long mask)
-        {
-            if (n < m) return 0;
-
-            if (n - m < m) m = n - m;
-
-            long val = Permutation(n, m, mask);
-            long div = Permutation(m, m, mask);
-            return MultiMod(val, ReverseMod(div, mask - 2, mask), mask);
-        }
-
-        static long Permutation(long n, long m, long mask)
-        {
-            long val = 1;
-            for (long i = 0; i < m; i++)
+            long res = 0;
+            for (long i = n; i <= 2 * n - 1; i++)
             {
-                val *= ((n - i) % mask);
-                val %= mask;
+                long p = i;
+                p = MultiMod(p, MultiMod(perms[i - 1],
+                    ReverseMod(MultiMod(perms[n - 1], perms[i - n], mask),
+                        mask - 2, mask), mask), mask);
+                long pp = MultiMod(aa[i - n], bb[n], mask)
+                    + MultiMod(aa[n], bb[i - n], mask);
+                pp %= mask;
+                p = MultiMod(p, pp, mask);
+                p = MultiMod(p, 100, mask);
+                long q = aabb[i];
+                q = MultiMod(q, a + b, mask);
+                res += MultiMod(p, ReverseMod(q, mask - 2, mask), mask);
+                res %= mask;
             }
-            return val;
+            WriteLine(res);
         }
 
         static long[] AllPermutations(long n, long mask)
@@ -99,7 +94,8 @@ namespace AtTest.Library.Combination
             }
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
+        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }

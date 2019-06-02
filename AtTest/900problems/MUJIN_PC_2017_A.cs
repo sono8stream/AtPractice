@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest._900problems
 {
-    class AtTemplate
+    class MUJIN_PC_2017_A
     {
         static void ain(string[] args)
         {
@@ -15,13 +15,36 @@ namespace AtTest
         }
 
         static void Method(string[] args)
-        { 
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
+        {
+            long n = ReadLong();
+            long[] xs = ReadLongs();
+            long res = 1;
+            long tmp = 1;
+            long mask = 1000000000 + 7;
+            for(int i = 1; i < n; i++)
+            {
+                tmp++;
+                if (xs[i] <= 2 * (tmp-1))
+                {
+                    res *= tmp;
+                    res %= mask;
+                    tmp--;
+                }
+            }
+            res *= Permutation(tmp, tmp, mask);
+            res %= mask;
+            WriteLine(res);
+        }
 
-            // Write output here
-
-            Out.Flush();
+        static long Permutation(long n, long m, long mask)
+        {
+            long val = 1;
+            for (long i = 0; i < m; i++)
+            {
+                val *= ((n - i) % mask);
+                val %= mask;
+            }
+            return val;
         }
 
         private static string Read() { return ReadLine(); }

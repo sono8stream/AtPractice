@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.Msolutions2019
 {
-    class AtTemplate
+    class B
     {
         static void ain(string[] args)
         {
@@ -15,13 +15,15 @@ namespace AtTest
         }
 
         static void Method(string[] args)
-        { 
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
-
-            // Write output here
-
-            Out.Flush();
+        {
+            string s = Read();
+            int win = 0;
+            for(int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == 'o') win++;
+            }
+            win += 15 - s.Length;
+            WriteLine(win >= 8 ? "YES" : "NO");
         }
 
         private static string Read() { return ReadLine(); }

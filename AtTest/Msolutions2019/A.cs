@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.Msolutions2019
 {
-    class AtTemplate
+    class A
     {
         static void ain(string[] args)
         {
@@ -15,13 +15,9 @@ namespace AtTest
         }
 
         static void Method(string[] args)
-        { 
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
-
-            // Write output here
-
-            Out.Flush();
+        {
+            int n = ReadInt();
+            WriteLine((n - 2) * 180);
         }
 
         private static string Read() { return ReadLine(); }

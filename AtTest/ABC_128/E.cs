@@ -19,103 +19,76 @@ namespace AtTest.ABC_128
             int[] nq = ReadInts();
             int n = nq[0];
             int q = nq[1];
-            int[][] stxs = new int[n][];
-            for(int i = 0; i < n; i++)
-            {
-                stxs[i] = ReadInts();
-                stxs[i][0] -= stxs[i][2];
-                stxs[i][1] -= stxs[i][2] - 1;
-            }
-            stxs = stxs.OrderBy(a => a[2]).ToArray();
-            int now = 0;
-
-            List<int> ds = new List<int>();
-            ds.Add(-1);
-            int[] res = new int[q];
-            for (int i = 0; i < q; i++)
-            {
-                ds[i] = ReadInt();
-                res[i] = -1;
-            }
-            ds.Add(int.MaxValue);
-
+            var array = new Event[2 * n];
             for (int i = 0; i < n; i++)
             {
-                if (stxs[i][0] > ds[q] || stxs[i][1] < ds[1]) continue;
-
-                int bottom = 0;
-                int top = q + 2;
-                while (bottom + 1 < top)
-                {
-                    int mid = (bottom + top) / 2;
-                    if (stxs[i][0] <= ds[mid]) top = mid;
-                    else bottom = mid;
-                }
-
-                int l = bottom + 1;
-
-                bottom = 0;
-                top = q + 2;
-                while (bottom + 1 < top)
-                {
-                    int mid = (bottom + top) / 2;
-                    if (stxs[i][1] >= ds[mid]) bottom = mid;
-                    else top = mid;
-                }
-
-                int r = bottom;
-
+                int[] stxs = ReadInts();
+                stxs[0] -= stxs[2];
+                stxs[1] -= stxs[2];
+                array[i * 2] = new Event(stxs[0], 1, stxs[2]);
+                array[i * 2 + 1] = new Event(stxs[1], 0, stxs[2]);
             }
+            Array.Sort(array);
+
+            var qs = new int[q][];
+            for (int i = 0; i < q; i++)
+            {
+                qs[i] = new int[2] { ReadInt(), i };
+            }
+
+            int[] res = new int[q];
+            var dict = new SortedDictionary<int, bool>();
+            int now = 0;
+            for (int i = 0; i < q; i++)
+            {
+                while (now < 2 * n
+                    && array[now].time <= qs[i][0])
+                {
+                    switch (array[now].no)
+                    {
+                        case 1:
+                            dict.Add(array[now].pos, true);
+                            break;
+                        case 0:
+                            dict.Remove(array[now].pos);
+                            break;
+                    }
+                    now++;
+                }
+                if (dict.Count > 0) res[qs[i][1]] = dict.Keys.First();
+                else res[qs[i][1]] = -1;
+            }
+
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
 
             for (int i = 0; i < q; i++) WriteLine(res[i]);
+            Out.Flush();
         }
 
-        class UnionFind
+        struct Event : IComparable<Event>
         {
-            int[] tree;
-            public int[] size;
+            public int time;
+            public int no;
+            public int pos;
 
-            public UnionFind(int length)
+            public Event(int time, int no, int pos)
             {
-                tree = new int[length];
-                size = new int[length];
-                for (int i = 0; i < length; i++)
-                {
-                    tree[i] = i;
-                    size[i] = 0;
-                }
+                this.time = time;
+                this.no = no;
+                this.pos = pos;
             }
 
-            public int Root(int x)
+            public int CompareTo(Event other)
             {
-                int rx = x;
-                while (tree[rx] != rx)
+                if (time < other.time) return -1;
+                if (time == other.time)
                 {
-                    rx = tree[rx];
+                    if (no < other.no) return -1;
+                    if (no == other.no) return 0;
+                    else return 1;
                 }
-                tree[x] = rx;
-                return rx;
-            }
-
-            public bool IsSame(int x, int y)
-            {
-                return Root(x) == Root(y);
-            }
-
-            public void Unite(int x, int y)
-            {
-                int rx = Root(x);
-                int ry = Root(y);
-                if (rx == ry) return;
-
-                if (rx > ry)
-                {
-                    int temp = rx;
-                    rx = ry;
-                    ry = temp;
-                }
-                tree[ry] = rx;
-                size[rx] += size[ry];
+                else return 1;
             }
         }
 
