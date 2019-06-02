@@ -16,12 +16,23 @@ namespace AtTest.AGC_034
 
         static void Method(string[] args)
         {
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
-
-            // Write output here
-
-            Out.Flush();
+            string s = Read();
+            long nowAs = 0;
+            long res = 0;
+            for(int i = 0; i < s.Length - 1; i++)
+            {
+                if (s[i] == 'A') nowAs++;
+                else if (s[i] == 'B' && s[i + 1] == 'C')
+                {
+                    res += nowAs;
+                    i++;
+                }
+                else
+                {
+                    nowAs = 0;
+                }
+            }
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }

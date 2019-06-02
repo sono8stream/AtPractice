@@ -9,19 +9,78 @@ namespace AtTest.AGC_034
 {
     class C
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             Method(args);
         }
 
         static void Method(string[] args)
         {
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
+            int[] nx = ReadInts();
+            long n = nx[0];
+            long x = nx[1];
 
-            // Write output here
+            long[][] blus = new long[n][];
+            for (int i = 0; i < n; i++) blus[i] = ReadLongs();
+            blus = blus.OrderBy(a => -(x - a[0]) * a[2]).ToArray();
 
-            Out.Flush();
+            long mySum = 0;
+            long otherSum = 0;
+            for(int i = 0; i < n; i++)
+            {
+                otherSum += blus[i][0] * blus[i][1];
+            }
+
+            int unusedIndex = 0;
+            for (; unusedIndex < n; unusedIndex++)
+            {
+                if (mySum + x * blus[unusedIndex][2]
+                    > otherSum + blus[unusedIndex][0] *
+                    (blus[unusedIndex][2]-blus[unusedIndex][1]))
+                {
+                    break;
+                }
+
+                mySum += x * blus[unusedIndex][2];
+                otherSum += blus[unusedIndex][0]
+                    * (blus[unusedIndex][2] - blus[unusedIndex][1]);
+            }
+
+            long res = unusedIndex * 100;
+            List<long[]> remain = new List<long[]>();
+            for(int i = unusedIndex; i < n; i++)
+            {
+                remain.Add(blus[i]);
+            }
+
+            long bottom = -1;
+            long top = x;
+            while (bottom + 1 < top)
+            {
+                long mid = (bottom + top + 1) / 2;
+
+                long max = 0;
+                long delta = 0;
+                for(int i = 0; i < remain.Count; i++)
+                {
+                    if (max <= mid * remain[i][2])
+                    {
+                        max = Max(max, mid * remain[i][2]);
+                        delta = remain[i][0] * (remain[i][2] - remain[i][1]);
+                    }
+                }
+
+                if (mySum + max >= otherSum + delta)
+                {
+                    top = mid;
+                }
+                else
+                {
+                    bottom = mid;
+                }
+            }
+
+            WriteLine(res + top);
         }
 
         private static string Read() { return ReadLine(); }
