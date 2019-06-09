@@ -9,7 +9,7 @@ namespace AtTest.AGC_034
 {
     class C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
@@ -22,65 +22,54 @@ namespace AtTest.AGC_034
 
             long[][] blus = new long[n][];
             for (int i = 0; i < n; i++) blus[i] = ReadLongs();
-            blus = blus.OrderBy(a => -(x - a[0]) * a[2]).ToArray();
+            blus = blus.OrderBy(a => -(a[0] * a[1] + (x - a[0]) * a[2])).ToArray();
 
-            long mySum = 0;
-            long otherSum = 0;
-            for(int i = 0; i < n; i++)
+            long need = 0;
+            for (int i = 0; i < n; i++) need += blus[i][0] * blus[i][1];
+
+            long sum = 0;
+            int cnt = 0;
+            for (int i = 0; i < n; i++)
             {
-                otherSum += blus[i][0] * blus[i][1];
+                long now = blus[i][0] * blus[i][1] + (x - blus[i][0]) * blus[i][2];
+                if (sum + now > need) break;
+
+                sum += now;
+                cnt++;
             }
 
-            int unusedIndex = 0;
-            for (; unusedIndex < n; unusedIndex++)
+            long res = cnt * x;
+            long min = x;
+            long remain = need - sum;
+            if (remain == 0)
             {
-                if (mySum + x * blus[unusedIndex][2]
-                    > otherSum + blus[unusedIndex][0] *
-                    (blus[unusedIndex][2]-blus[unusedIndex][1]))
-                {
-                    break;
-                }
-
-                mySum += x * blus[unusedIndex][2];
-                otherSum += blus[unusedIndex][0]
-                    * (blus[unusedIndex][2] - blus[unusedIndex][1]);
+                WriteLine(res);
+                return;
             }
 
-            long res = unusedIndex * 100;
-            List<long[]> remain = new List<long[]>();
-            for(int i = unusedIndex; i < n; i++)
+            for(int i = cnt; i < n; i++)
             {
-                remain.Add(blus[i]);
-            }
-
-            long bottom = -1;
-            long top = x;
-            while (bottom + 1 < top)
-            {
-                long mid = (bottom + top + 1) / 2;
-
-                long max = 0;
-                long delta = 0;
-                for(int i = 0; i < remain.Count; i++)
+                long tmp = 0;
+                if (remain <= blus[i][0] * blus[i][1])
                 {
-                    if (max <= mid * remain[i][2])
-                    {
-                        max = Max(max, mid * remain[i][2]);
-                        delta = remain[i][0] * (remain[i][2] - remain[i][1]);
-                    }
-                }
-
-                if (mySum + max >= otherSum + delta)
-                {
-                    top = mid;
+                    tmp = remain / blus[i][1];
+                    if (remain % blus[i][1] > 0) tmp++;
                 }
                 else
                 {
-                    bottom = mid;
+                    long tmpRemain = remain - blus[i][0] * blus[i][1];
+                    tmp = blus[i][0];
+                    if (tmpRemain > (x - blus[i][0]) * blus[i][2])
+                    {
+                        continue;
+                    }
+                    tmp += tmpRemain / blus[i][2];
+                    if (tmpRemain % blus[i][2] > 0) tmp++;
                 }
+                min = Min(min, tmp);
             }
 
-            WriteLine(res + top);
+            WriteLine(res+min);
         }
 
         private static string Read() { return ReadLine(); }
