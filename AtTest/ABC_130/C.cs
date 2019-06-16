@@ -16,12 +16,19 @@ namespace AtTest.ABC_130
 
         static void Method(string[] args)
         {
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
+            long[] whxy = ReadLongs();
+            long w = whxy[0];
+            long h = whxy[1];
+            long x = whxy[2];
+            long y = whxy[3];
+            double size = 0.5 * w * h;
+            int dupli = 0;
+            if (w % 2 == 0 && w / 2 == x && h % 2 == 0 && h / 2 == y)
+            {
+                dupli = 1;
+            }
+            WriteLine(size + " " + dupli);
 
-            // Write output here
-
-            Out.Flush();
         }
 
         private static string Read() { return ReadLine(); }

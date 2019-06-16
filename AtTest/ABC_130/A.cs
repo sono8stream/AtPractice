@@ -16,12 +16,11 @@ namespace AtTest.ABC_130
 
         static void Method(string[] args)
         {
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
-
-            // Write output here
-
-            Out.Flush();
+            int[] xa = ReadInts();
+            int x = xa[0];
+            int a = xa[1];
+            if (x < a) WriteLine(0);
+            else WriteLine(10);
         }
 
         private static string Read() { return ReadLine(); }
