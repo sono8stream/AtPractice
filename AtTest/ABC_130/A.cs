@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_129
+namespace AtTest.ABC_130
 {
-    class F
+    class A
     {
         static void ain(string[] args)
         {
@@ -16,13 +16,12 @@ namespace AtTest.ABC_129
 
         static void Method(string[] args)
         {
-            long[] labm = ReadLongs();
-            long l = labm[0];
-            long a = labm[1];
-            long b = labm[2];
-            long m = labm[3];
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
 
+            // Write output here
 
+            Out.Flush();
         }
 
         private static string Read() { return ReadLine(); }

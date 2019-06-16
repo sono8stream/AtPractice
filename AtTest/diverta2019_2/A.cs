@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_129
+namespace AtTest.diverta2019_2
 {
-    class F
+    class A
     {
         static void ain(string[] args)
         {
@@ -16,13 +16,17 @@ namespace AtTest.ABC_129
 
         static void Method(string[] args)
         {
-            long[] labm = ReadLongs();
-            long l = labm[0];
-            long a = labm[1];
-            long b = labm[2];
-            long m = labm[3];
-
-
+            int[] nk = ReadInts();
+            int n = nk[0];
+            int k = nk[1];
+            if (k == 1)
+            {
+                WriteLine(0);
+            }
+            else
+            {
+                WriteLine(n - k);
+            }
         }
 
         private static string Read() { return ReadLine(); }
