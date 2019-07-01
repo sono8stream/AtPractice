@@ -9,7 +9,7 @@ namespace AtTest.ABC_132
 {
     class E
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             Method(args);
         }
