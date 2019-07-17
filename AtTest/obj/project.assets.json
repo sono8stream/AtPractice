@@ -664,23 +664,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sono8\\.nuget\\packages\\": {},
+    "C:\\Users\\Robotics\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
+      "projectUniqueName": "C:\\Users\\Robotics\\repositories\\AtPractice\\AtTest\\AtTest.csproj",
       "projectName": "AtTest",
-      "projectPath": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
-      "packagesPath": "C:\\Users\\sono8\\.nuget\\packages\\",
-      "outputPath": "F:\\SourceTree\\AtTest\\AtTest\\obj\\",
+      "projectPath": "C:\\Users\\Robotics\\repositories\\AtPractice\\AtTest\\AtTest.csproj",
+      "packagesPath": "C:\\Users\\Robotics\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Robotics\\repositories\\AtPractice\\AtTest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\sono8\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Robotics\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -688,13 +688,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {},
-        "https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
@@ -711,7 +705,6 @@
       "netcoreapp2.0": {
         "dependencies": {
           "Microsoft.NETCore.App": {
-            "suppressParent": "All",
             "target": "Package",
             "version": "[2.0.0, )",
             "autoReferenced": true

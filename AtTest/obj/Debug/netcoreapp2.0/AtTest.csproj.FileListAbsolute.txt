@@ -20,3 +20,14 @@ F:\SourceTree\AtPractice\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtim
 F:\SourceTree\AtPractice\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.dev.json
 F:\SourceTree\AtPractice\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.dll
 F:\SourceTree\AtPractice\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.pdb
+C:\Users\Robotics\repositories\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.deps.json
+C:\Users\Robotics\repositories\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.json
+C:\Users\Robotics\repositories\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.dev.json
+C:\Users\Robotics\repositories\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.dll
+C:\Users\Robotics\repositories\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.pdb
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csprojAssemblyReference.cache
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csproj.CoreCompileInputs.cache
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfoInputs.cache
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
+C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
