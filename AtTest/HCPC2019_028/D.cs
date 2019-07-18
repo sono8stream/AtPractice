@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.HCPC2019_028
 {
-    class AtTemplate
+    class D
     {
         static void ain(string[] args)
         {
@@ -20,7 +20,26 @@ namespace AtTest
         }
 
         static void Method(string[] args)
-        { 
+        {
+            WriteLine("? 2");
+            string evenOdd = Read();
+            int bottom = 1;
+            int top = 1000000000 + 1;
+            while (bottom + 1 < top)
+            {
+                int mid = (bottom + top) / 2;
+                WriteLine("? " + mid);
+                if (Read().Equals(evenOdd))
+                {
+                    top = mid;
+                }
+                else
+                {
+                    bottom = mid;
+                }
+            }
+
+            WriteLine(bottom);
         }
 
         private static string Read() { return ReadLine(); }

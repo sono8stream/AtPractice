@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.HCPC2019_028
 {
-    class AtTemplate
+    class C
     {
         static void ain(string[] args)
         {
@@ -20,7 +20,26 @@ namespace AtTest
         }
 
         static void Method(string[] args)
-        { 
+        {
+            int[] nt = ReadInts();
+            int n = nt[0];
+            int t = nt[1];
+            int all = 0;
+            int alicia_cnt = 0;
+            for(int i=0;i<n;i++)
+            {
+                string[] s = Read().Split();
+                string name = s[0];
+                char r = s[1][0];
+                int rate = int.Parse(s[2]);
+                if (name.Contains("Alicia") && r != 'N')
+                {
+                    alicia_cnt += rate;
+                }
+                all += rate;
+            }
+            t -= t / 10;
+            WriteLine(1.0 * t / all * alicia_cnt);
         }
 
         private static string Read() { return ReadLine(); }

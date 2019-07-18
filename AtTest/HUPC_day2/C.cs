@@ -5,22 +5,31 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest
+namespace AtTest.HUPC_day2
 {
-    class AtTemplate
+    class C
     {
+
         static void ain(string[] args)
         {
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
-
             Method(args);
-
-            Out.Flush();
         }
 
         static void Method(string[] args)
-        { 
+        {
+            int[] xyz = ReadInts();
+            int x = xyz[0];
+            int y = xyz[1];
+            int z = xyz[2];
+
+            if((x*y)%2==1|| (y * z) % 2 == 1||(z* x)% 2 == 1)
+            {
+                WriteLine("Hom");
+            }
+            else
+            {
+                WriteLine("Tem");
+            }
         }
 
         private static string Read() { return ReadLine(); }
