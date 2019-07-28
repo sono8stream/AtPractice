@@ -11,7 +11,12 @@ namespace AtTest._700problems
     {
         static void ain(string[] args)
         {
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
+
             Method(args);
+
+            Out.Flush();
         }
 
         static void Method(string[] args)
@@ -21,187 +26,115 @@ namespace AtTest._700problems
             long n = kn[1];
             long mask = 998244353;
 
-            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
-            SetOut(sw);
+            CaseCalculator calculator = new CaseCalculator(mask, n + k - 1);
 
-            //long[] perms = AllPermutations(k + n, mask);
-            //long all = MultiMod(perms[k + n - 1],
-            //    ReverseMod(MultiMod(perms[k - 1], perms[n], mask),
-            //    mask - 2, mask), mask);
-            for (long i = 2; i <= k * 2; i++)
+            long allPat = calculator.Combination(n + k - 1, n);
+
+            long[] res = new long[2 * k - 1];
+
+            long prevPats = 0;
+            for(long val = 2; val <= k+1; val++)
             {
-                long cnt = i / 2;
-                long val = 0;
-
-            }
-
-            Out.Flush();
-        }
-
-        /*
-        static ModLong Combination(ModLong n,ModLong m)
-        {
-            if (n.value < m.value) return new ModLong(0);
-
-            if (n - m < m) m = n - m;
-
-            long val = Permutation(n, m, mask);
-            long div = Permutation(m, m, mask);
-            return MultiMod(val, ReverseMod(div, mask - 2, mask), mask);
-        }
-
-        static long Permutation(ModLong n, ModLong m)
-        {
-            ModLong val = new ModLong(1);
-            for (long i = 0; i < m; i++)
-            {
-                val *= ((n - i) % mask);
-                val %= mask;
-            }
-            return val;
-        }
-
-        static long[] AllPermutations(long n, long mask)
-        {
-            var perms = new long[n + 1];
-            perms[0] = 1;
-            for (int i = 1; i <= n; i++)
-            {
-                perms[i] = MultiMod(perms[i - 1], i, mask);
-            }
-            return perms;
-        }
-
-        static long MultiMod(long a, long b, long mask)
-        {
-            return ((a % mask) * (b % mask)) % mask;
-        }
-
-        static long ReverseMod(long a, long pow, long mask)
-        {
-            if (pow == 0) return 1;
-            else if (pow == 1) return a % mask;
-            else
-            {
-                long halfMod = ReverseMod(a, pow / 2, mask);
-                long nextMod = MultiMod(halfMod, halfMod, mask);
-                if (pow % 2 == 0)
+                long pats = Min(val - 2, 2 * k - val) / 2 + 1;
+                if (pats == prevPats)
                 {
-                    return nextMod;
+                    res[val - 2] = res[val - 3];
+                    res[2 * k - val] = res[val - 3];
+                    continue;
                 }
-                else
+
+                long seqCnt = Min(pats, n / 2);
+                long resTmp = allPat;
+                for (long i = 1; i <= seqCnt; i++)
                 {
-                    return MultiMod(nextMod, a, mask);
+                    long tmp = calculator.Combination(pats, i);
+                    tmp = calculator.Multi(tmp,
+                        calculator.Combination(k - 1 + n - i * 2, k - 1));
+                    if (i % 2 == 1)
+                    {
+                        resTmp += mask - tmp;
+                    }
+                    else
+                    {
+                        resTmp += tmp;
+                    }
+                    resTmp %= mask;
                 }
+
+                res[val - 2] = resTmp;
+                res[2 * k - val] = resTmp;
+                prevPats = pats;
             }
+
+            for (int i = 0; i < 2 * k - 1; i++) WriteLine(res[i]);
         }
 
-        struct ModLong
+        class CaseCalculator
         {
-            public static long mask = 1000000000 + 7;//default
+            long mask;
+            long[] allPermutations;
 
-            public long value;
-
-            public ModLong(long value)
+            public CaseCalculator(long mask, long permutationCnt)
             {
-                this.value = value;
+                this.mask = mask;
+                allPermutations = AllPermutations(permutationCnt);
             }
 
-            public static ModLong operator +(ModLong a, ModLong b)
+            public long Combination(long n, long m)
             {
-                long val = (a.value + b.value) % mask;
-                return new ModLong(val);
+                if (n < m) return 0;
+
+                if (n - m < m) m = n - m;
+
+                return Multi(allPermutations[n],
+                    Reverse(
+                        Multi(allPermutations[n - m], allPermutations[m]),
+                        mask - 2));
             }
 
-            public static ModLong operator +(ModLong a, long b)
+            public long Permutation(long n, long m)
             {
-                long val = (a.value + b) % mask;
-                return new ModLong(val);
+                if (n < m) return 0;
+
+                return Multi(allPermutations[n],
+                    Reverse(allPermutations[n - m], mask - 2));
             }
 
-            public static ModLong operator +(long a, ModLong b)
+            long[] AllPermutations(long n)
             {
-                long val = (a + b.value) % mask;
-                return new ModLong(val);
+                var perms = new long[n + 1];
+                perms[0] = 1;
+                for (int i = 1; i <= n; i++)
+                {
+                    perms[i] = Multi(perms[i - 1], i);
+                }
+                return perms;
             }
 
-            public static ModLong operator -(ModLong a, ModLong b)
+            public long Multi(long a, long b)
             {
-                long val = a.value - b.value;
-                while (val < 0) val += mask;
-                return new ModLong(val);
+                return ((a % mask) * (b % mask)) % mask;
             }
 
-            public static ModLong operator -(ModLong a, long b)
-            {
-                long val = a.value - b;
-                while (val < 0) val += mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator -(long a, ModLong b)
-            {
-                long val = a - b.value;
-                while (val < 0) val += mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator *(ModLong a, ModLong b)
-            {
-                long val=(a.value*b.value)% mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator *(ModLong a, long b)
-            {
-                long val = (a.value * b) % mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator *(long a, ModLong b)
-            {
-                long val = (a * b.value) % mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator /(ModLong a, ModLong b)
-            {
-                long val = (a.value * Reverse(b.value, mask - 2)) % mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator /(ModLong a, long b)
-            {
-                long val = (a.value * Reverse(b, mask - 2)) % mask;
-                return new ModLong(val);
-            }
-
-            public static ModLong operator /(long a, ModLong b)
-            {
-                long val = (a * Reverse(b.value, mask - 2)) % mask;
-                return new ModLong(val);
-            }
-
-            static long Reverse(long val,long pow)
+            long Reverse(long a, long pow)
             {
                 if (pow == 0) return 1;
-                else if (pow == 1) return val % mask;
+                else if (pow == 1) return a % mask;
                 else
                 {
-                    long halfMod = Reverse(val, pow / 2);
-                    long nextMod = (halfMod * halfMod) % mask;
+                    long halfMod = Reverse(a, pow / 2);
+                    long nextMod = Multi(halfMod, halfMod);
                     if (pow % 2 == 0)
                     {
                         return nextMod;
                     }
                     else
                     {
-                        return (nextMod * val) % mask;
+                        return Multi(nextMod, a);
                     }
                 }
             }
         }
-        */
 
         private static string Read() { return ReadLine(); }
         private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }

@@ -36,22 +36,15 @@ namespace AtTest._800problems
                     if (array[i][j] == 'S')
                     {
                         s = i * w + j;
-                        capacity = int.MaxValue;
                     }
                     if (array[i][j] == 'T')
                     {
                         t = i * w + j;
-                        capacity = int.MaxValue;
                     }
 
                     for (int k = i + 1; k < h; k++)
                     {
                         if (array[k][j] == '.') continue;
-
-                        if (array[k][j] == 'S' || array[k][j] == 'T')
-                        {
-                            capacity = int.MaxValue;
-                        }
 
                         graph[i * w + j].Add(new Edge(k * w + j,
                             capacity, graph[k * w + j].Count));
@@ -62,17 +55,18 @@ namespace AtTest._800problems
                     {
                         if (array[i][k] == '.') continue;
 
-                        if (array[i][k] == 'S' || array[i][k] == 'T')
-                        {
-                            capacity = int.MaxValue;
-                        }
-
                         graph[i * w + j].Add(new Edge(i * w + k,
                             capacity, graph[i * w + k].Count));
                         graph[i * w + k].Add(new Edge(i * w + j,
                             capacity, graph[i * w + j].Count - 1));
                     }
                 }
+            }
+
+            if (s % w == t % w || s / w == t / w)
+            {
+                WriteLine(-1);
+                return;
             }
 
             int[] levels;
@@ -132,17 +126,22 @@ namespace AtTest._800problems
                 if (edge.capacity > 0 && levels[now] < levels[edge.to])
                 {
                     int cnt = DFS(ref iterator, ref graph, levels,
-                        edge.to, goal, Math.Min(flow, edge.capacity));
+                        edge.to, goal, Min(flow, edge.capacity));
                     if (cnt > 0)
                     {
-                        edge.capacity -= cnt;
-                        graph[edge.to][edge.reverse].capacity += cnt;
+                        for(int i = 0; i < graph[now].Count; i++)
+                        {
+                            graph[now][i].capacity -= cnt;
+                            graph[graph[now][i].to]
+                                [graph[now][i].reverse].capacity += cnt;
+                        }
                         return cnt;
                     }
                 }
             }
             return 0;
         }
+
         class Edge
         {
             public int to;
