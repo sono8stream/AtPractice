@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.Library.RollingHash
+namespace AtTest.ABC_135
 {
-    class AOJ_Round_trip_String
+    class F
     {
         static void ain(string[] args)
         {
@@ -21,32 +21,54 @@ namespace AtTest.Library.RollingHash
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            int n = nm[0];
-            int m = nm[1];
             string s = Read();
-            RollingHash rollingHash = new RollingHash(s);
-            HashSet<string> exists = new HashSet<string>();
-            int l = 0;
-            int r = 0;
-            for(int i = 0; i < m; i++)
+            string t = Read();
+            StringBuilder ss = new StringBuilder(s);
+
+            while (ss.Length < s.Length + t.Length - 1)
             {
-                string q = Read();
-                if (q[0] == 'R')
+                ss.Append(s);
+            }
+            RollingHash rollingHash = new RollingHash(ss.ToString());
+            long[] hash = rollingHash.GetStringHash(t);
+            int[] graph = new int[s.Length];
+            for (int i = 0; i < s.Length; i++) graph[i] = -1;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (rollingHash.ValidateRange(i, t.Length, hash))
                 {
-                    if (q[1] == '+') r++;
-                    else r--;
+                    graph[i] = (i + t.Length) % s.Length;
                 }
-                else
+            }
+            int[] lengthes = new int[s.Length];
+            for (int i = 0; i < s.Length; i++) lengthes[i] = -1;
+            for(int i = 0; i < s.Length; i++)// from leaf
+            {
+                if (graph[i] >= 0) continue;
+
+                int cnt = 0;
+                lengthes[i] = cnt;
+                int now = (i - t.Length % s.Length + s.Length) % s.Length;
+                while (graph[now]>=0)
                 {
-                    if (q[1] == '+') l++;
-                    else l--;
+                    cnt++;
+                    lengthes[now] = cnt;
+                    now= (now - t.Length % s.Length + s.Length) % s.Length;
                 }
-                long[] hash = rollingHash.GetRangeHash(l, r);
-                exists.Add(rollingHash.ToHashString(hash));
             }
 
-            WriteLine(exists.Count);
+            int res = 0;
+            for(int i = 0; i < s.Length; i++)
+            {
+                if (lengthes[i] == -1)
+                {
+                    WriteLine(-1);
+                    return;
+                }
+
+                res = Max(res, lengthes[i]);
+            }
+            WriteLine(res);
         }
 
         class RollingHash
