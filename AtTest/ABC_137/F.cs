@@ -9,7 +9,7 @@ namespace AtTest.ABC_137
 {
     class F
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
@@ -24,6 +24,11 @@ namespace AtTest.ABC_137
             int p = ReadInt();
             int[] array = ReadInts();
             CaseCalculator caseCalculator = new CaseCalculator(p, p - 1);
+            long[] combinations = new long[p];
+            for(int i = 0; i < p; i++)
+            {
+                combinations[i] = caseCalculator.Combination(p - 1, i);
+            }
             long[] res = new long[p];
             for(int i = 0; i < p; i++)
             {
@@ -31,19 +36,23 @@ namespace AtTest.ABC_137
 
                 res[p - 1]++;
                 long tmp = 1;
+                bool minus = false;
                 for(int j = 0; j < p; j++)
                 {
-                    res[j] += p - (caseCalculator.Combination(p - 1, j) * tmp) % p;
+                    long delta = (combinations[j] * tmp) % p;
+                    if (minus) delta *= -1;
+                    res[j] += p - delta;
                     res[j] %= p;
-                    tmp *= -i;
+                    tmp *= i;
                     tmp %= p;
+                    minus = !minus;
                 }
             }
 
-            for(int i = 0; i < p; i++)
+            for(int i = p-1; i >=0; i--)
             {
                 Write(res[i]);
-                if (i < p - 1) Write(" ");
+                if (i>0) Write(" ");
             }
         }
 
