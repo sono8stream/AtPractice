@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_134
+namespace AtTest.ABC_137
 {
-    class F
+    class C
     {
         static void ain(string[] args)
         {
@@ -21,36 +21,24 @@ namespace AtTest.ABC_134
 
         static void Method(string[] args)
         {
-            int[] nk = ReadInts();
-            int n = nk[0];
-            int k = nk[1];
-            long mask = 1000000000 + 7;
-            long[,,] dp = new long[n + 5, n + 5, k + 5];
-            dp[0, 0, 0] = 1;
-            for(int i = 0; i <= n; i++)
+            int n = ReadInt();
+            Dictionary<string, long> dict = new Dictionary<string, long>();
+            for(int i = 0; i < n; i++)
             {
-                for(int j = 0; j <= n; j++)
-                {
-                    for(int l = 0; l <= k; l++)
-                    {
-                        if (l + 2 * j >= k + 5) continue;
-
-                        dp[i + 1, j, l + 2 * j] += dp[i, j, l] * (1 + 2 * j);
-                        dp[i + 1, j, l + 2 * j] %= mask;
-
-                        dp[i + 1, j + 1, l + 2 * j] += dp[i, j, l];
-                        dp[i + 1, j + 1, l + 2 * j] %= mask;
-
-                        if (j > 0)
-                        {
-                            dp[i + 1, j - 1, l + 2 * j] += dp[i, j, l] * j * j;
-                            dp[i + 1, j - 1, l + 2*j] %= mask;
-                        }
-                    }
-                }
+                string s = Read();
+                char[] cs = s.ToCharArray();
+                Array.Sort(cs);
+                string ss = new string(cs);
+                if (!dict.ContainsKey(ss)) dict.Add(ss, 0);
+                dict[ss]++;
             }
 
-            WriteLine(dp[n, 0, k]);
+            long res = 0;
+            foreach(string s in dict.Keys)
+            {
+                res += (dict[s] * (dict[s] - 1)) / 2;
+            }
+            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }
