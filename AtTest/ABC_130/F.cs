@@ -25,63 +25,114 @@ namespace AtTest.ABC_130
                 xys[i] = new long[2] { int.Parse(ss[0]), int.Parse(ss[1]) };
                 dirs[i] = ss[2][0];
             }
-            long[] rludMax = new long[4];
-            long[] rludMin = new long[4];
-            long[] rludFix = new long[4];
-            for(int i = 0; i < 4; i++)
-            {
-                rludMax[i] = long.MinValue;
-                rludMin[i] = long.MaxValue;
-            }
-            rludFix[0] = long.MinValue;
-            rludFix[1] = long.MaxValue;
-            rludFix[2] = long.MinValue;
-            rludFix[3] = long.MaxValue;
+
+            List<long>[] poses = new List<long>[6];
+            for (int i = 0; i < 6; i++) poses[i] = new List<long>();
             for(int i = 0; i < n; i++)
             {
                 switch (dirs[i])
                 {
-                    case 'R':
-                        rludMax[0] = Max(rludMax[0], xys[i][0]);
-                        rludMin[0] = Min(rludMin[0], xys[i][0]);
-                        rludFix[2] = Max(rludFix[2], xys[i][1]);
-                        rludFix[3] = Min(rludFix[3], xys[i][1]);
-                        break;
                     case 'L':
-                        rludMax[1] = Max(rludMax[1], xys[i][0]);
-                        rludMin[1] = Min(rludMin[1], xys[i][0]);
-                        rludFix[2] = Max(rludFix[2], xys[i][1]);
-                        rludFix[3] = Min(rludFix[3], xys[i][1]);
+                        poses[0].Add(xys[i][0]);
+                        poses[5].Add(xys[i][1]);
+                        break;
+                    case 'R':
+                        poses[1].Add(xys[i][0]);
+                        poses[5].Add(xys[i][1]);
                         break;
                     case 'U':
-                        rludMax[2] = Max(rludMax[2], xys[i][1]);
-                        rludMin[2] = Min(rludMin[2], xys[i][1]);
-                        rludFix[0] = Max(rludFix[0], xys[i][0]);
-                        rludFix[1] = Min(rludFix[1], xys[i][0]);
+                        poses[4].Add(xys[i][1]);
+                        poses[2].Add(xys[i][0]);
                         break;
                     case 'D':
-                        rludMax[3] = Max(rludMax[3], xys[i][1]);
-                        rludMin[3] = Min(rludMin[3], xys[i][1]);
-                        rludFix[0] = Max(rludFix[0], xys[i][0]);
-                        rludFix[1] = Min(rludFix[1], xys[i][0]);
+                        poses[3].Add(xys[i][1]);
+                        poses[2].Add(xys[i][0]);
                         break;
                 }
             }
-
-            double[][] rludTimes = new double[4][];//dec, stable, inc
-            for(int i = 0; i < 4; i++)
+            for(int i = 0; i < 6; i++)
             {
-                rludTimes[i] = new double[3];
+                poses[i].Sort();
             }
-            rludTimes[0][0] = Max(0.5 * (rludMax[1] - rludMax[1]),
-                rludMax[1] - rludFix[0]);
-            rludTimes[0][0] = Max(rludTimes[0][0], 0);
-
+            List<double> times = new List<double>();
+            times.Add(0);
+            for (int i = 0; i < 6; i += 3) {
+                if (poses[i].Count > 0 && poses[i + 1].Count > 0)
+                {
+                    if (poses[i][poses[i].Count - 1] 
+                        > poses[i + 1][poses[i+1].Count-1])
+                    {
+                        times.Add((poses[i][poses[i].Count - 1]
+                            - poses[i + 1][poses[i + 1].Count - 1]) * 0.5);
+                    }
+                    if (poses[i][0] > poses[i+1][0])
+                    {
+                        times.Add((poses[i][0]
+                            - poses[i + 1][0]) * 0.5);
+                    }
+                }
+                if (poses[i].Count > 0 && poses[i + 2].Count > 0)
+                {
+                    if (poses[i][poses[i].Count - 1]
+                        > poses[i + 2][poses[i + 2].Count - 1])
+                    {
+                        times.Add(poses[i][poses[i].Count - 1]
+                            - poses[i + 2][poses[i + 2].Count - 1]);
+                    }
+                    if (poses[i][0] > poses[i + 2][0])
+                    {
+                        times.Add(poses[i][0] - poses[i + 2][0]);
+                    }
+                }
+                if (poses[i + 1].Count > 0 && poses[i + 2].Count > 0)
+                {
+                    if(poses[i+1][poses[i+1].Count-1]
+                        < poses[i + 2][poses[i + 2].Count - 1])
+                    {
+                        times.Add(poses[i + 2][poses[i + 2].Count - 1]
+                            - poses[i + 1][poses[i + 1].Count - 1]);
+                    }
+                    if (poses[i + 1][0] < poses[i + 2][0])
+                    {
+                        times.Add(poses[i + 2][0] - poses[i + 1][0]);
+                    }
+                }
+            }
+            double res = long.MaxValue;
+            for(int i = 0; i < times.Count; i++)
+            {
+                double tmp = 1;
+                for(int j = 0; j < 6; j += 3)
+                {
+                    double min = long.MaxValue;
+                    double max = long.MinValue;
+                    if (poses[j].Count > 0)
+                    {
+                        min = Min(min,poses[j][0] - times[i]);
+                        max = Max(max,
+                            poses[j][poses[j].Count - 1] - times[i]);
+                    }
+                    if (poses[j+1].Count > 0)
+                    {
+                        min = Min(min, poses[j+1][0] + times[i]);
+                        max = Max(max,
+                            poses[j+1][poses[j+1].Count - 1] + times[i]);
+                    }
+                    if (poses[j+2].Count > 0)
+                    {
+                        min = Min(min, poses[j+2][0]);
+                        max = Max(max, poses[j+2][poses[j+2].Count - 1]);
+                    }
+                    tmp *= (max - min);
+                }
+                res = Min(res, tmp);
+            }
 
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
 
             // Write output here
+            WriteLine(res);
 
             Out.Flush();
         }
