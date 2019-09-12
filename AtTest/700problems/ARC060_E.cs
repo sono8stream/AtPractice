@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_139
+namespace AtTest._700problems
 {
-    class F
+    class ARC060_E
     {
         static void ain(string[] args)
         {
@@ -22,35 +22,15 @@ namespace AtTest.ABC_139
         static void Method(string[] args)
         {
             int n = ReadInt();
-            List<double[]> xyAngles = new List<double[]>();
-            for (int i = 0; i < n; i++)
+            int[] xs = ReadInts();
+            int l = ReadInt();
+            int q = ReadInt();
+            int[][] abs = new int[q][];
+            for(int i = 0; i < q; i++)
             {
-                long[] xy = ReadLongs();
-                xyAngles.Add(new double[3] { xy[0], xy[1], Atan2(xy[1], xy[0]) });
-            }
-            xyAngles = xyAngles.OrderBy(a => a[2]).ToList();
-            for (int i = 0; i < n; i++)
-            {
-                xyAngles.Add(new double[3]
-                { xyAngles[i][0], xyAngles[i][1], xyAngles[i][2] });
+                abs[i] = ReadInts();
             }
 
-            double res = 0;
-            for (int i = 0; i < 2 * n; i++)
-            {
-                for (int j = i; j < Min(2 * n, i + n); j++)
-                {
-                    double x = 0;
-                    double y = 0;
-                    for (int k = i; k <= j; k++)
-                    {
-                        x += xyAngles[k][0];
-                        y += xyAngles[k][1];
-                    }
-                    res = Max(res, Sqrt(x * x + y * y));
-                }
-            }
-            WriteLine(res);
         }
 
         private static string Read() { return ReadLine(); }
