@@ -20,7 +20,38 @@ namespace AtTest.Dwango5
             int q = ReadInt();
             int[] ks = ReadInts();
 
-            var resCnts = new long[n];
+            long[] mCnts = new long[n];
+            long[] cCnts = new long[n];
+            long[] mcCnts = new long[n];
+            for (int i = 0; i < n; i++)
+            {
+                if (i > 0)
+                {
+                    mCnts[i] = mCnts[i - 1];
+                    cCnts[i] = cCnts[i - 1];
+                    mcCnts[i] = mcCnts[i - 1];
+                }
+                if (s[i] == 'M') mCnts[i]++;
+                if (s[i] == 'C')
+                {
+                    cCnts[i]++;
+                    mcCnts[i] += mCnts[i];
+                }
+            }
+
+            for (int i = 0; i < q; i++)
+            {
+                long res = 0;
+                for (int j = 0; j < n; j++)
+                {
+                    if (s[j] != 'D') continue;
+
+                    int maxI = Math.Min(j + ks[i] - 1, n - 1);
+                    res += mcCnts[maxI] - mcCnts[j]
+                        - (cCnts[maxI] - cCnts[j]) * mCnts[j];
+                }
+                Console.WriteLine(res);
+            }
         }
 
         private static string Read() { return Console.ReadLine(); }
