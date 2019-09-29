@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._700problems
+namespace AtTest.ABC_142
 {
-    class AGC014_C
+    class F
     {
         static void ain(string[] args)
         {
@@ -21,79 +21,82 @@ namespace AtTest._700problems
 
         static void Method(string[] args)
         {
-            int[] hwk = ReadInts();
-            int h = hwk[0];
-            int w = hwk[1];
-            int k = hwk[2];
-            bool[,] map = new bool[h, w];
-            int sX = 0, sY = 0;
-            for (int i = 0; i < h; i++)
+            int[] nm = ReadInts();
+            int n = nm[0];
+            int m = nm[1];
+            List<int>[] graph = new List<int>[n];
+            List<int>[] reverse = new List<int>[n];
+            for(int i = 0; i < n; i++)
             {
-                string s = Read();
-                for (int j = 0; j < w; j++)
-                {
-                    if (s[j] == '#') continue;
-                    if (s[j] == 'S')
-                    {
-                        sX = j;
-                        sY = i;
-                    }
-                    map[i, j] = true;
-                }
+                graph[i] = new List<int>();
+                reverse[i] = new List<int>();
             }
-            long[,] distances = new long[h, w];
-            for (int i = 0; i < h; i++)
+            for(int i = 0; i < m; i++)
             {
-                for (int j = 0; j < w; j++)
-                {
-                    distances[i, j] = long.MaxValue / 4;
-
-                }
+                int[] ab = ReadInts();
+                int a = ab[0]-1;
+                int b = ab[1]-1;
+                graph[a].Add(b);
+                reverse[b].Add(a);
             }
-            int[] dx = new int[4] { 1, -1, 0, 0 };
-            int[] dy = new int[4] { 0, 0, 1, -1 };
-            PriorityQueue<int[]> queue = new PriorityQueue<int[]>();
-            queue.Enqueue(0, new int[2] { sX, sY });
-            while (queue.Count > 0)
+
+            List<int> poses = new List<int>();
+            for(int i = 0; i < n; i++)
             {
-                var pair = queue.Dequeue();
-                long distance = pair.Key;
-                int x = pair.Value[0];
-                int y = pair.Value[1];
-
-                if (distance >= distances[y, x]) continue;
-
-                distances[y, x] = distance;
-                for (int i = 0; i < 4; i++)
+                PriorityQueue<int> queue = new PriorityQueue<int>();
+                queue.Enqueue(0, i);
+                long[] distances = new long[n];
+                for (int j = 0; j < n; j++) distances[j] = long.MaxValue / 4;
+                while (queue.Count > 0)
                 {
-                    int nx = x + dx[i];
-                    int ny = y + dy[i];
-                    if (nx < 0 || w <= nx || ny < 0 || h <= ny)
+                    var pair = queue.Dequeue();
+                    long distance = pair.Key;
+                    int index = pair.Value;
+                    if (distances[index] <= distance)
                     {
+                        if (index == i)
+                        {
+                            List<int> tempPoses = new List<int>();
+                            do
+                            {
+                                tempPoses.Add(index);
+                                for (int j = 0; j<reverse[index].Count; j++)
+                                {
+                                    int next = reverse[index][j];
+                                    if (distances[next] != distance - 1) continue;
+                                    index = next;
+                                    distance--;
+                                    break;
+                                }
+                            } while (index != i);
+                            if (poses.Count == 0 || tempPoses.Count < poses.Count)
+                            {
+                                poses = tempPoses;
+                            }
+                            break;
+                        }
                         continue;
                     }
-                    long newDistance = distance + 1;
-                    if (!map[ny, nx] && distance <= k) newDistance = k + 1;
+                    distances[index] = distance;
 
-                    if (newDistance >= distances[ny, nx]) continue;
-                    queue.Enqueue(newDistance, new int[2] { nx, ny });
-                }
-            }
-
-            long res = long.MaxValue;
-            for (int i = 0; i < h; i++)
-            {
-                for(int j = 0; j < w; j++)
-                {
-                    if (i == 0 || i == h - 1 || j == 0 || j == w - 1)
+                    for(int j = 0; j < graph[index].Count; j++)
                     {
-                        long tmp = distances[i, j] / k;
-                        if (distances[i, j] % k>0) tmp++;
-                        res = Min(res, tmp);
+                        int next = graph[index][j];
+                        long nextDistance = distance + 1;
+
+                        queue.Enqueue(nextDistance, next);
                     }
                 }
             }
-            WriteLine(res);
+            if(poses.Count==0)            WriteLine(-1);
+            else
+            {
+                WriteLine(poses.Count);
+                for(int i = 0; i < poses.Count; i++)
+                {
+                    WriteLine(poses[i]+1);
+                }
+            }
         }
 
         class PriorityQueue<T>

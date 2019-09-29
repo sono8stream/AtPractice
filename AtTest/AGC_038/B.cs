@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest._700problems
+namespace AtTest.AGC_038
 {
-    class AGC014_C
+    class B
     {
         static void ain(string[] args)
         {
@@ -21,77 +21,49 @@ namespace AtTest._700problems
 
         static void Method(string[] args)
         {
-            int[] hwk = ReadInts();
-            int h = hwk[0];
-            int w = hwk[1];
-            int k = hwk[2];
-            bool[,] map = new bool[h, w];
-            int sX = 0, sY = 0;
-            for (int i = 0; i < h; i++)
+            int[] nk = ReadInts();
+            int n = nk[0];
+            int k = nk[1];
+            int[] ps = ReadInts();
+
+            HashSet<long> hashSet = new HashSet<long>();
+            PriorityQueue<bool> ascQueue = new PriorityQueue<bool>();
+            PriorityQueue<bool> descQueue = new PriorityQueue<bool>();
+            int incCnt = 0;
+            for(int i = 0; i < k; i++)
             {
-                string s = Read();
-                for (int j = 0; j < w; j++)
-                {
-                    if (s[j] == '#') continue;
-                    if (s[j] == 'S')
-                    {
-                        sX = j;
-                        sY = i;
-                    }
-                    map[i, j] = true;
-                }
+                hashSet.Add(ps[i]);
+                ascQueue.Enqueue(ps[i], true);
+                descQueue.Enqueue(-ps[i], true);
+                if (i > 0 && ps[i] > ps[i - 1]) incCnt++;
+                else incCnt = 0;
             }
-            long[,] distances = new long[h, w];
-            for (int i = 0; i < h; i++)
+            bool ordered = incCnt == k - 1;
+            int res = 1;
+            for (int i = 1; i + k <= n; i++)
             {
-                for (int j = 0; j < w; j++)
+                if (ps[i + k - 1] > ps[i + k - 2]) incCnt++;
+                else incCnt = 0;
+                if (ascQueue.Top().Key == ps[i - 1]
+                    && -descQueue.Top().Key < ps[i + k - 1]) { }
+                else if (ordered && incCnt == k - 1) { }
+                else
                 {
-                    distances[i, j] = long.MaxValue / 4;
-
+                    res++;
                 }
-            }
-            int[] dx = new int[4] { 1, -1, 0, 0 };
-            int[] dy = new int[4] { 0, 0, 1, -1 };
-            PriorityQueue<int[]> queue = new PriorityQueue<int[]>();
-            queue.Enqueue(0, new int[2] { sX, sY });
-            while (queue.Count > 0)
-            {
-                var pair = queue.Dequeue();
-                long distance = pair.Key;
-                int x = pair.Value[0];
-                int y = pair.Value[1];
-
-                if (distance >= distances[y, x]) continue;
-
-                distances[y, x] = distance;
-                for (int i = 0; i < 4; i++)
+                hashSet.Remove(ps[i - 1]);
+                hashSet.Add(ps[i + k - 1]);
+                ascQueue.Enqueue(ps[i + k - 1], true);
+                descQueue.Enqueue(-ps[i + k - 1], true);
+                while (!hashSet.Contains(ascQueue.Top().Key))
                 {
-                    int nx = x + dx[i];
-                    int ny = y + dy[i];
-                    if (nx < 0 || w <= nx || ny < 0 || h <= ny)
-                    {
-                        continue;
-                    }
-                    long newDistance = distance + 1;
-                    if (!map[ny, nx] && distance <= k) newDistance = k + 1;
-
-                    if (newDistance >= distances[ny, nx]) continue;
-                    queue.Enqueue(newDistance, new int[2] { nx, ny });
+                    ascQueue.Dequeue();
                 }
-            }
-
-            long res = long.MaxValue;
-            for (int i = 0; i < h; i++)
-            {
-                for(int j = 0; j < w; j++)
+                while (!hashSet.Contains(-descQueue.Top().Key))
                 {
-                    if (i == 0 || i == h - 1 || j == 0 || j == w - 1)
-                    {
-                        long tmp = distances[i, j] / k;
-                        if (distances[i, j] % k>0) tmp++;
-                        res = Min(res, tmp);
-                    }
+                    descQueue.Dequeue();
                 }
+                if (incCnt == k - 1) ordered = true;
             }
             WriteLine(res);
         }
