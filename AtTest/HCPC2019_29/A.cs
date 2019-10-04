@@ -5,7 +5,7 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.JSC2019_Fnal
+namespace AtTest.HCPC2019_29
 {
     class A
     {
@@ -21,30 +21,34 @@ namespace AtTest.JSC2019_Fnal
 
         static void Method(string[] args)
         {
-            int[] nm = ReadInts();
-            int n = nm[0];
-            int m = nm[1];
-            int[] aArray = ReadInts();
-            int[] bArray = ReadInts();
-            var dict = new Dictionary<int,int[]>();
-            for(int i = 0; i < n; i++)
+            List<int[]> vals = new List<int[]>();
+            for(int i = 1; i <= 150;i++)
             {
-                for(int j = 0; j < m; j++)
+                for(int j = i+1; j <= 150;j++)
                 {
-                    int val = aArray[i] + bArray[j];
-                    if (dict.ContainsKey(val))
+                    int val = i * i + j * j;
+                    vals.Add(new int[3] { val, i, j });
+                }
+            }
+            vals = vals.OrderBy(a => a[1]).ToList();
+            vals = vals.OrderBy(a => a[0]).ToList();
+            while (true)
+            {
+                int[] hw = ReadInts();
+                int h = hw[0];
+                int w = hw[1];
+                if (h == 0) break;
+                int tar = h * h + w * w;
+                for(int i = 0; i < vals.Count; i++)
+                {
+                    if ((tar == vals[i][0] && h < vals[i][1])
+                        || tar < vals[i][0])
                     {
-                        WriteLine(dict[val][0] + " " + dict[val][1]
-                            + " " + i + " " + j);
-                        return;
-                    }
-                    else
-                    {
-                        dict.Add(val, new int[2] { i, j });
+                        WriteLine(vals[i][1] + " " + vals[i][2]);
+                        break;
                     }
                 }
             }
-            WriteLine(-1);
         }
 
         private static string Read() { return ReadLine(); }
