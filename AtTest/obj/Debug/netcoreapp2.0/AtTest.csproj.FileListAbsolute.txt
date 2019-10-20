@@ -31,3 +31,13 @@ C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.
 C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
 C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
 C:\Users\Robotics\repositories\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
+D:\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.deps.json
+D:\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.json
+D:\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.dev.json
+D:\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.dll
+D:\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.pdb
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csprojAssemblyReference.cache
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfoInputs.cache
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
