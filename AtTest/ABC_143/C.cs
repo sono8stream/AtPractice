@@ -5,7 +5,7 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.KUPC2019
+namespace AtTest.ABC_143
 {
     class C
     {
@@ -21,17 +21,16 @@ namespace AtTest.KUPC2019
 
         static void Method(string[] args)
         {
-            long[] mk = ReadLongs();
-            long m = mk[0];
-            long k = mk[1];
-            long current = k;
-            long cnt = 1;
-            while (current < m)
+            int n = ReadInt();
+            string s = Read();
+            List<int> cs = new List<int>();
+            cs.Add(s[0]);
+            for(int i = 1; i < n; i++)
             {
-                current += (current * 2 + 1) * k;
-                cnt++;
+                if (cs[cs.Count - 1] == s[i]) continue;
+                cs.Add(s[i]);
             }
-            WriteLine(cnt);
+            WriteLine(cs.Count);
         }
 
         private static string Read() { return ReadLine(); }

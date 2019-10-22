@@ -1,25 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj": {}
+    "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj": {}
   },
   "projects": {
-    "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj": {
+    "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
+        "projectUniqueName": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
         "projectName": "AtTest",
-        "projectPath": "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
+        "projectPath": "F:\\SourceTree\\AtTest\\AtTest\\AtTest.csproj",
         "packagesPath": "C:\\Users\\sono8\\.nuget\\packages\\",
-        "outputPath": "D:\\csharp\\AtPractice\\AtTest\\obj\\",
+        "outputPath": "F:\\SourceTree\\AtTest\\AtTest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\sono8\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.0"
@@ -43,23 +42,16 @@
         "netcoreapp2.0": {
           "dependencies": {
             "Microsoft.NETCore.App": {
-              "suppressParent": "All",
               "target": "Package",
               "version": "[2.0.0, )",
               "autoReferenced": true
             }
           },
           "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
+            "net461"
           ],
           "assetTargetFallback": true,
-          "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "warn": true
         }
       }
     }
