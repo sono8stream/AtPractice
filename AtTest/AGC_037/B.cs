@@ -52,14 +52,14 @@ namespace AtTest.AGC_037
             long res = 1;
             long[] minCnts = new long[3] { 0, 0, 0 };
             long[] maxCnts = new long[3] { 0, 0, 0 };
-            for(int i = 0; i < 3 * n; i++)
+            for (int i = 0; i < 3 * n; i++)
             {
                 if (maxs.Contains(i))
                 {
                     maxCnts[index[s[i]]]++;
                 }
             }
-            for(int i = 0; i < 3*n; i++)
+            for (int i = 0; i < 3 * n; i++)
             {
                 if (mins.Contains(i))
                 {
@@ -67,7 +67,7 @@ namespace AtTest.AGC_037
                 }
                 else if (mids.Contains(i))
                 {
-
+                    
                 }
                 else
                 {

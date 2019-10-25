@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.KUPC2019
+namespace AtTest.NothingToLearn
 {
-    class C
+    class ABC099_B
     {
         static void ain(string[] args)
         {
@@ -21,17 +21,11 @@ namespace AtTest.KUPC2019
 
         static void Method(string[] args)
         {
-            long[] mk = ReadLongs();
-            long m = mk[0];
-            long k = mk[1];
-            long current = k;
-            long cnt = 1;
-            while (current < m)
-            {
-                current += (current * 2 + 1) * k;
-                cnt++;
-            }
-            WriteLine(cnt);
+            int[] ab = ReadInts();
+            int a = ab[0];
+            int b = ab[1];
+            int delta = b - a;
+            WriteLine((delta - 1) * delta / 2 - a);
         }
 
         private static string Read() { return ReadLine(); }
