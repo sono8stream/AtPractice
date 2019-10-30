@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_143
+namespace AtTest._400Problems_remain_
 {
-    class F
+    class ARC040_C
     {
         static void ain(string[] args)
         {
@@ -22,44 +22,28 @@ namespace AtTest.ABC_143
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] array = ReadInts();
-            Array.Sort(array);
-            List<int> cnts = new List<int>();
-            cnts.Add(1);
-            for(int i = 1; i < n; i++)
+            bool[,] grid = new bool[n, n];
+            for(int i = 0; i < n; i++)
             {
-                if (array[i] == array[i - 1])
+                string s = Read();
+                for(int j = 0; j < n; j++)
                 {
-                    cnts[cnts.Count-1]++;
+                    grid[i, j] = s[j] == 'o';
                 }
+            }
+            int cnt = 0;
+            int right = n - 1;
+            for(int i = 0; i < n; i++)
+            {
+                while (0 <= right && grid[i, right]) right--;
+                if (right == -1) right = n - 1;
                 else
                 {
-                    cnts.Add(1);
+                    right--;
+                    cnt++;
                 }
             }
-            cnts.Sort();
-            int[] cans = new int[n+1];
-            cans[0] = n;
-            int now = 0;
-            int sum = 0;
-            for(int i = 1; i <=n; i++)
-            {
-                while (now < cnts.Count && cnts[now] == i-1)
-                {
-                    now++;
-                }
-                if (now < cnts.Count)
-                {
-                    sum += cnts.Count - now;
-                }
-                cans[i] = sum / i;
-            }
-            now = n;
-            for(int i = 1; i <= n; i++)
-            {
-                while (cans[now] < i) now--;
-                WriteLine(now);
-            }
+            WriteLine(cnt);
         }
 
         private static string Read() { return ReadLine(); }
