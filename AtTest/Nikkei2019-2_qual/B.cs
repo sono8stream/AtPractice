@@ -5,7 +5,7 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.AGC_040
+namespace AtTest.Nikkei2019_2_qual
 {
     class B
     {
@@ -22,34 +22,27 @@ namespace AtTest.AGC_040
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[][] lrs = new int[n][];
-            for(int i = 0; i < n; i++)
+            int[] ds = ReadInts();
+            if (ds[0] != 0)
             {
-                lrs[i] = ReadInts();
+                WriteLine(0);
+                return;
             }
-            int maxRange = 0;
-            int lMax = 0;
-            int rMin = int.MaxValue / 2;
-            for(int i = 0; i < n; i++)
-            {
-                maxRange = Max(maxRange, lrs[i][1] - lrs[i][0]);
-                lMax = Max(lMax, lrs[i][0]);
-                rMin = Min(rMin, lrs[i][1]);
-            }
-            int res = Max(rMin - lMax + 1, 0) + maxRange + 1;
-
-            int[][] abs = new int[n][];
-            for(int i = 0; i < n; i++)
-            {
-                abs[i] = new int[2] { Max(lrs[i][1] - lMax + 1, 0), Max(rMin - lrs[i][0] + 1, 0) };
-            }
-            abs = abs.OrderBy(p => -p[1]).OrderBy(p => p[0]).ToArray();
-            int bMax = abs[0][1];
+            Array.Sort(ds);
+            long[] cnts = new long[n];
+            cnts[0] = 1;
+            long mask = 998244353;
+            long res = 1;
             for(int i = 1; i < n; i++)
             {
-                int tmp = abs[i][0] + bMax;
-                res = Max(res, tmp);
-                bMax = Min(bMax, abs[i][1]);
+                if (ds[i] == 0 || cnts[ds[i] - 1] == 0)
+                {
+                    WriteLine(0);
+                    return;
+                }
+                res *= cnts[ds[i] - 1];
+                res %= mask;
+                cnts[ds[i]]++;
             }
             WriteLine(res);
         }
