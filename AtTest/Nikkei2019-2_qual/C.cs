@@ -9,7 +9,7 @@ namespace AtTest.Nikkei2019_2_qual
 {
     class C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
@@ -56,7 +56,7 @@ namespace AtTest.Nikkei2019_2_qual
                     else bottom = mid;
                 }
                 int cnt = segTree.Scan(dict[bArray[top]], n);
-                if(bArray[aPoses[i][1]])
+                //if(bArray[aPoses[i][1]])
             }
             if (res <= n - 2) WriteLine("Yes");
             else WriteLine("No");
