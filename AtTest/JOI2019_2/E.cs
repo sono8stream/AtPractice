@@ -9,7 +9,7 @@ namespace AtTest.JOI2019_2
 {
     class E
     {
-        static Dictionary<char, int> dict;
+        static Dictionary<char, long[]> dict;
         static long mask = 1000000000 + 7;
 
         static void ain(string[] args)
@@ -27,42 +27,92 @@ namespace AtTest.JOI2019_2
             int n = ReadInt();
             string s = Read();
             char res = Read()[0];
-            long[] cnts = DFS(s);
-            dict = new Dictionary<char, int>();
-            dict.Add('R', 0);
-            dict.Add('S', 1);
-            dict.Add('P', 2);
-            WriteLine(cnts[dict[res]]);
-        }
-
-        static long[] DFS(string str)
-        {
-
-            long[] ret = new long[3];
-            if (str.Length == 1)
+            dict = new Dictionary<char, long[]>();
+            dict.Add('R', new long[3] { 1, 0, 0 });
+            dict.Add('S', new long[3] { 0, 1, 0 });
+            dict.Add('P', new long[3] { 0, 0, 1 });
+            dict.Add('?', new long[3] { 1, 1, 1 });
+            Queue<char> queue = new Queue<char>();
+            Stack<char> sub = new Stack<char>();
+            for (int i = 0; i < n; i++)
             {
-                if (str[0] == '?')
+                if (dict.ContainsKey(s[i]))
                 {
-                    ret[0] = 1;
-                    ret[1] = 1;
-                    ret[2] = 1;
+                    queue.Enqueue(s[i]);
                 }
                 else
                 {
-                    ret[dict[str[0]]]++;
+                    if (s[i] == ')')
+                    {
+                        while (sub.Peek() != '(') queue.Enqueue(sub.Pop());
+                        sub.Pop();
+                    }
+                    else if (s[i] == '+' || s[i] == '-')
+                    {
+                        while (sub.Count > 0&&sub.Peek()!='(')
+                        {
+                            queue.Enqueue(sub.Pop());
+                        }
+                        sub.Push(s[i]);
+                    }
+                    else
+                    {
+                        sub.Push(s[i]);
+                    }
                 }
-                return ret;
             }
-
-            int nest = 0;
-            char opr = '0';
-            string child = "";
-            for(int i = 0; i < str.Length; i++)
+            while (sub.Count > 0) queue.Enqueue(sub.Pop());
+            Stack<long[]> stack = new Stack<long[]>();
+            long mask = 1000000000 + 7;
+            while (queue.Count > 0)
             {
-                //if()
+                char val = queue.Dequeue();
+                if (val == '+' || val == '-' || val == '*')
+                {
+                    long[] first = stack.Pop();
+                    long[] second = stack.Pop();
+                    long[] next = new long[3];
+                    for (int i = 0; i < 3; i++)
+                    {
+                        int other = (i + 1) % 3;
+                        int other2 = (i + 2) % 3;
+                        switch(val)
+                        {
+                            case '+':
+                                next[i] = first[i] * second[other]
+                                    + first[other] * second[i];
+                                break;
+                            case '-':
+                                next[i] = first[i] * second[other2]
+                                    + first[other2] * second[i];
+                                break;
+                            case '*':
+                                next[i] += first[other] * second[other2]
+                                    + first[other2] * second[other];
+                                break;
+                        }
+                        next[i] += first[i] * second[i];
+                        next[i] %= mask;
+                    }
+                    stack.Push(next);
+                }
+                else
+                {
+                    stack.Push(dict[val]);
+                }
             }
-
-            return ret;
+            switch (res)
+            {
+                case 'R':
+                    WriteLine(stack.Peek()[0]);
+                    break;
+                case 'S':
+                    WriteLine(stack.Peek()[1]);
+                    break;
+                case 'P':
+                    WriteLine(stack.Peek()[2]);
+                    break;
+            }
         }
 
         private static string Read() { return ReadLine(); }
