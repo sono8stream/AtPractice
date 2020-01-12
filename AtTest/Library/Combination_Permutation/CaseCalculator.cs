@@ -25,9 +25,7 @@ namespace AtTest.Library.Combination_Permutation
             if (n - m < m) m = n - m;
 
             return Multi(allPermutations[n],
-                Reverse(
-                    Multi(allPermutations[n - m], allPermutations[m]),
-                    mask - 2));
+                Reverse(Multi(allPermutations[n - m], allPermutations[m])));
         }
 
         public long Permutation(long n, long m)
@@ -35,7 +33,7 @@ namespace AtTest.Library.Combination_Permutation
             if (n < m) return 0;
 
             return Multi(allPermutations[n],
-                Reverse(allPermutations[n - m], mask - 2));
+                Reverse(allPermutations[n - m]));
         }
 
         long[] AllPermutations(long n)
@@ -54,15 +52,20 @@ namespace AtTest.Library.Combination_Permutation
             return ((a % mask) * (b % mask)) % mask;
         }
 
-        long Reverse(long a, long pow)
+        public long Reverse(long val)
         {
-            if (pow == 0) return 1;
-            else if (pow == 1) return a % mask;
+            return Pow(val, mask - 2);
+        }
+
+        long Pow(long a, long exp)
+        {
+            if (exp == 0) return 1;
+            else if (exp == 1) return a % mask;
             else
             {
-                long halfMod = Reverse(a, pow / 2);
+                long halfMod = Pow(a, exp / 2);
                 long nextMod = Multi(halfMod, halfMod);
-                if (pow % 2 == 0)
+                if (exp % 2 == 0)
                 {
                     return nextMod;
                 }

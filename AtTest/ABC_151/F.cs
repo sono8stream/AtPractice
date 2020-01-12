@@ -71,7 +71,7 @@ namespace AtTest.ABC_151
                         double a2 = a[0] * a[0] + a[1] * a[1];
                         double b2 = b[0] * b[0] + b[1] * b[1];
                         double ab = a[0] * b[0] + a[1] * b[1];
-                        double s = 0.5 * (1 - ab * (ab - b2) / (ab * ab - a2 * b2));
+                        double s = 0.5 * b2 * (ab - a2) / (ab * ab - a2 * b2);
                         double t = 0.5 * a2 * (ab - b2) / (ab * ab - a2 * b2);
                         double x = xys[i][0] + a[0] * s + b[0] * t;
                         double y = xys[i][1] + a[1] * s + b[1] * t;
