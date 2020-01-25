@@ -99,6 +99,51 @@ namespace AtTest.Library.Combination
             }
         }
 
+        static int[][] Permutations(int n)
+        {
+            int all = 1;
+            for (int i = 1; i <= n; i++)
+            {
+                all *= i;
+            }
+            int[][] res = new int[all][];
+            for (int i = 0; i < all; i++)
+            {
+                res[i] = new int[n];
+            }
+            int delta = all;
+            for (int i = 0; i < n; i++)
+            {
+                int nextDelta = delta / (n - i);
+                for (int j = 0; j < all; j += delta)
+                {
+                    bool[] used = new bool[n];
+                    for (int k = 0; k < i; k++)
+                    {
+                        used[res[j][k]] = true;
+                    }
+                    List<int> remain = new List<int>();
+                    for (int k = 0; k < n; k++)
+                    {
+                        if (!used[k])
+                        {
+                            remain.Add(k);
+                        }
+                    }
+                    for (int k = 0; k < delta; k += nextDelta)
+                    {
+                        int num = k / nextDelta;
+                        for (int l = 0; l < nextDelta; l++)
+                        {
+                            res[j + k + l][i] = remain[num];
+                        }
+                    }
+                }
+                delta = nextDelta;
+            }
+            return res;
+        }
+
         private static string Read() { return Console.ReadLine(); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
