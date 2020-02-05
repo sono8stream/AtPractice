@@ -1,47 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.AGC_029
+namespace AtTest.Sumitrust_2019
 {
-    class C
+    class B
     {
         static void ain(string[] args)
         {
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
+
             Method(args);
+
+            Out.Flush();
         }
 
         static void Method(string[] args)
         {
             int n = ReadInt();
-            int[] array = ReadInts();
-            long bottom=0;
-            long top = int.MaxValue;
-            while (bottom + 1 < top)
+            for(int i = 1; i <= n; i++)
             {
-                long mid = (bottom + top) / 2;
-                var que = new Queue<int[]>();
-                int len = 0;
-                for(int i = 0; i < n; i++)
+                int tmp = (int)(i * (1.08));
+                if (tmp == n)
                 {
-                    if (len < array[i])
-                    {
-                        que.Enqueue(new int[2] { 1, array[i] - len });
-                        len = array[i];
-                    }
-                    else
-                    {
-                        while (array[i] < len)
-                        {
-
-                        }
-                    }
+                    WriteLine(i);
+                    return;
                 }
             }
+            WriteLine(":(");
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
+        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
