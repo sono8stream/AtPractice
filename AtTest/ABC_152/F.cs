@@ -22,7 +22,16 @@ namespace AtTest.ABC_152
         static void Method(string[] args)
         {
             int n = ReadInt();
+
+            long[] pows = new long[56];
+            pows[0] = 1;
+            for (int i = 1; i < 56; i++)
+            {
+                pows[i] = pows[i - 1] * 2;
+            }
+
             List<int>[] graph = new List<int>[n];
+            var pathDict = new Dictionary<int, long>();
             for (int i = 0; i < n; i++) graph[i] = new List<int>();
             for (int i = 0; i < n - 1; i++)
             {
@@ -31,9 +40,11 @@ namespace AtTest.ABC_152
                 int b = ab[1] - 1;
                 graph[a].Add(b);
                 graph[b].Add(a);
+                pathDict.Add(Max(a, b) * 100 + Min(a, b), pows[i]);
             }
+
             int m = ReadInt();
-            List<int>[] paths = new List<int>[m];
+            long[] paths = new long[m];
             for (int i = 0; i < m; i++)
             {
                 int[] uv = ReadInts();
@@ -60,54 +71,51 @@ namespace AtTest.ABC_152
                         }
                     }
                 }
-                paths[i] = new List<int>();
                 int tmp = v;
                 while (tmp != u)
                 {
-                    paths[i].Add(tmp);
                     for (int j = 0; j < graph[tmp].Count; j++)
                     {
                         int to = graph[tmp][j];
                         if (costs[to] < costs[tmp])
                         {
+                            paths[i] += pathDict[Max(tmp, to) * 100 + Min(tmp, to)];
                             tmp = to;
                             break;
                         }
                     }
                 }
-                paths[i].Add(u);
             }
 
-            long[] pows = new long[56];
-            pows[0] = 1;
-            for (int i = 1; i < 56; i++)
-            {
-                pows[i] = pows[i - 1] * 2;
-            }
             long res = 0;
             int all = 1 << m;
             for (int i = 0; i < all; i++)
             {
                 int select = 0;
-                var hashSet = new HashSet<int>();
+                long pat = 0;
                 for (int j = 0; j < m; j++)
                 {
                     if ((i & (1 << j)) == 0) continue;
 
                     select++;
-                    for (int k = 1; k < paths[j].Count; k++)
+                    pat |= paths[j];
+                }
+                int cnt = 0;
+                for(int j = 0; j < n - 1; j++)
+                {
+                    if ((pat & pows[j]) > 0)
                     {
-                        hashSet.Add(paths[j][k] * 100 + paths[j][k - 1]);
-                        hashSet.Add(paths[j][k - 1] * 100 + paths[j][k]);
+                        cnt++;
                     }
                 }
+
                 if (select % 2 == 0)
                 {
-                    res += pows[n - 1 - hashSet.Count / 2];
+                    res += pows[n - 1 - cnt];
                 }
                 else
                 {
-                    res -= pows[n - 1 - hashSet.Count / 2];
+                    res -= pows[n - 1 - cnt];
                 }
             }
             WriteLine(res);
