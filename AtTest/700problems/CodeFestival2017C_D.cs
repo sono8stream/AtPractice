@@ -23,68 +23,51 @@ namespace AtTest._700problems
         {
             string s = Read();
 
-            var dict = new Dictionary<string, List<int>>();
-            dict.Add("", new List<int>());
-            dict[""].Add(0);
-            bool[] now = new bool[26];
-            string[] codes = new string[s.Length + 1];
-            codes[0] = "";
-            for (int i = 0; i < s.Length; i++)
-            {
-                now[s[i] - 'a'] = !now[s[i] - 'a'];
-                codes[i + 1] = "";
-                for (int j = 0; j < 26; j++)
-                {
-                    if (now[j])
-                    {
-                        codes[i+1] += (char)('a' + j);
-                        if (i % 2 == 0 && s[i] == 'a' + j)
-                        {
-                            continue;
-                        }
-                    }
-                }
-                if (!dict.ContainsKey(codes[i+1]))
-                {
-                    dict.Add(codes[i+1], new List<int>());
-                }
-                dict[codes[i+1]].Add(i + 1);
-
-                    if (!dict.ContainsKey(codes[i]))
-                    {
-                        dict.Add(codes[i], new List<int>());
-                    }
-                dict[codes[i]].Add(i + 1);
-                 }
-               
+            var dict = new Dictionary<int, int>();
+            dict.Add(0, 0);
             int[] dp = new int[s.Length + 1];
-            for(int i = 0; i <= s.Length; i++)
+            for (int i = 0; i <= s.Length; i++)
             {
                 dp[i] = int.MaxValue / 2;
             }
             dp[0] = 0;
-
-            now = new bool[26];
+            int now = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                string code = "";
+                int tmp = 1 << (s[i] - 'a');
+                int next = now ^ tmp;
+                if (dict.ContainsKey(next))
+                {
+                    if (dict[next] == 0)
+                    {
+                        dp[i + 1] = 1;
+                    }
+                    else
+                    {
+                        dp[i + 1] = dp[dict[next]];
+                    }
+                }
                 for (int j = 0; j < 26; j++)
                 {
-                    if (now[j])
+                    int target = (1 << j) ^ next;
+                    if (dict.ContainsKey(target))
                     {
-                        code += (char)('a' + j);
+                        dp[i + 1] = Min(dp[i + 1], dp[dict[target]] + 1);
                     }
                 }
-                dp[i + 1] = Min(dp[i + 1], dp[i]);
-                if (i==dict[code][0])
+
+                now = next;
+                if (dict.ContainsKey(now))
                 {
-                    for(int j = 0; j < dict[code].Count; j++)
+                    if (dp[dict[now]] > dp[i + 1])
                     {
-                        int to = dict[code][j];
-                        dp[to] = Min(dp[to], dp[i]);
+                        dict[now] = i + 1;
                     }
                 }
-                now[s[i] - 'a'] = !now[s[i] - 'a'];
+                else
+                {
+                    dict.Add(now, i + 1);
+                }
             }
             WriteLine(dp[s.Length]);
         }

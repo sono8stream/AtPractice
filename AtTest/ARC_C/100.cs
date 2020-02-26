@@ -24,24 +24,38 @@ namespace AtTest.ARC_C
             int n = ReadInt();
             int[] array = ReadInts();
             int all = 1 << n;
-            int[,,] dp = new int[all, n, 2];
-            for(int i = 0; i < all; i++)
+            int[,][] dp = new int[all, 2][];
+            for (int i = 0; i < all; i++)
             {
-                dp[i, 0, 0] = array[i];
+                dp[i, 0] = new int[2] { array[i], i };
+                dp[i, 1] = new int[2] { 0, -1 };
             }
-            for(int i = 0; i < all; i++)
+            for (int i = 0; i < all; i++)
             {
-                for(int j = 0; j < n; j++)
+                for (int j = 0; j < n; j++)
                 {
-                    if ((i & (1 << j)) > 0)
+                    int next = i | (1 << j);
+                    if ( next > i)
                     {
-
-                    }
-                    else
-                    {
-
+                        int[][] vals = new int[4][] { dp[next, 0], dp[next, 1], dp[i, 0], dp[i, 1] };
+                        Array.Sort(vals, (a, b) => a[0] - b[0]);
+                        dp[next, 0] = vals[3];
+                        if (vals[3][1] == vals[2][1])
+                        {
+                            dp[next, 1] = vals[1];
+                        }
+                        else
+                        {
+                            dp[next, 1] = vals[2];
+                        }
                     }
                 }
+            }
+            int max = 0;
+            for(int i = 1; i < all; i++)
+            {
+                max = Max(max, dp[i, 0][0] + dp[i, 1][0]);
+                WriteLine(max);
             }
         }
 
