@@ -51,7 +51,6 @@ namespace AtTest.ABC_157
                         double dist = Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
                         if (dist > Abs(r1 - r2) && dist < r1 + r2)
                         {
-
                         }
                     }
                 }

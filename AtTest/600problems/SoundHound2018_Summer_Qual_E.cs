@@ -89,6 +89,10 @@ namespace AtTest._600problems
                     {
                         max = Min(max, (int)conds[to][0] - 1);
                     }
+                    if (conds[to][1] != null)
+                    {
+                        min = Max(min, -(int)conds[to][1] + 1);
+                    }
                     if (max < min)
                     {
                         WriteLine(0);
