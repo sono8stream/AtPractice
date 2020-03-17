@@ -9,7 +9,7 @@ namespace AtTest.ForYellow
 {
     class Tenka1_2012_B
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
@@ -22,15 +22,121 @@ namespace AtTest.ForYellow
         static void Method(string[] args)
         {
             string s = Read();
-            bool prefix = true;
-            string res = "";
+            int prefix = 0;
+            int sufix = 0;
+            List<char> res = new List<char>();
             for(int i = 0; i < s.Length; i++)
             {
                 if (s[i] != '_')
                 {
-                    prefix = false;
+                    break;
+                }
+                prefix++;
+                res.Add('_');
+            }
+            for(int i = s.Length - 1; i >= 0; i--)
+            {
+                if (s[i] != '_')
+                {
+                    break;
+                }
+                sufix++;
+            }
+
+            if (prefix == s.Length)
+            {
+                WriteLine(s);
+                return;
+            }
+
+            if (!IsLower(s[prefix]))
+            {
+                WriteLine(s);
+                return;
+            }
+
+            if (IsSnake(s.Substring(prefix,s.Length-prefix-sufix)))
+            {
+                for(int i = prefix; i < s.Length - sufix; i++)
+                {
+                    if (s[i] == '_')
+                    {
+                        i++;
+                        res.Add((char)(s[i] - 'a' + 'A'));
+                    }
+                    else
+                    {
+                        res.Add(s[i]);
+                    }
+                }
+                for(int i = 0; i < sufix; i++)
+                {
+                    res.Add('_');
+                }
+                WriteLine(res.ToArray());
+            }
+            else if (IsCamel(s.Substring(prefix, s.Length - prefix - sufix)))
+            {
+                for(int i = prefix; i < s.Length - sufix; i++)
+                {
+                    if (IsUpper(s[i]))
+                    {
+                        res.Add('_');
+                        res.Add((char)(s[i] - 'A' + 'a'));
+                    }
+                    else
+                    {
+                        res.Add(s[i]);
+                    }
+                }
+                for(int i = 0; i < sufix; i++)
+                {
+                    res.Add('_');
+                }
+                WriteLine(res.ToArray());
+            }
+            else
+            {
+                WriteLine(s);
+            }
+        }
+
+        static bool IsSnake(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '_' && !IsLower(s[i + 1]))
+                {
+                    return false;
+                }
+                if (IsUpper(s[i]))
+                {
+                    return false;
                 }
             }
+            return true;
+        }
+
+        static bool IsCamel(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '_')
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static bool IsUpper(char c)
+        {
+            return 'A' <= c && c <= 'Z';
+        }
+
+        static bool IsLower(char c)
+        {
+            return 'a' <= c && c <= 'z';
         }
 
         private static string Read() { return ReadLine(); }
