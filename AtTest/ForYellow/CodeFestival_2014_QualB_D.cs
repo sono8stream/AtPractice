@@ -9,7 +9,7 @@ namespace AtTest.ForYellow
 {
     class CodeFestival_2014_QualB_D
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
