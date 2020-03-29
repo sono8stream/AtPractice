@@ -1,42 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using static System.Console;
+using static System.Math;
 
-namespace AtTest.Library.UnionFind
+namespace AtTest.ForYellow
 {
-    class UnionFindTest
+    class Discovery2016Final_B
     {
         static void ain(string[] args)
         {
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
+
             Method(args);
-            Console.ReadLine();
+
+            Out.Flush();
         }
 
         static void Method(string[] args)
         {
-            int[] nq = ReadInts();
-            int n = nq[0];
-            int q = nq[1];
-            List<bool> res = new List<bool>();
-            UnionFind finder = new UnionFind(n);
-            for(int i = 0; i < q; i++)
+            int[] nx = ReadInts();
+            int n = nx[0];
+            int x = nx[1];
+            int[] ts = ReadInts();
+            int[] array = ReadInts();
+            int[][] tas = new int[n][];
+            int tMax = 0;
+            for(int i = 0; i < n; i++)
             {
-                int[] pab = ReadInts();
-                int a = pab[1];
-                int b = pab[2];
-                if (pab[0] == 0)
+                tas[i] = new int[2] { ts[i], array[i] };
+                tMax = Max(tMax, ts[i]);
+            }
+            Array.Sort(tas, (a, b) => b[1] - a[1]);
+
+            UnionFind unionFind = new UnionFind(tMax + 1);
+            int now = 0;
+            int cnt = 0;
+            for(int i = 0; i < n; i++)
+            {
+                int pos = unionFind.Root(tas[i][0]);
+                if (pos == 0)
                 {
-                    finder.Unite(a, b);
+                    continue;
                 }
                 else
                 {
-                    res.Add(finder.IsSame(a, b));
+                    unionFind.Unite(pos - 1, pos);
+                    now += tas[i][1];
+                    cnt++;
+                }
+
+                if (now >= x)
+                {
+                    WriteLine(cnt);
+                    return;
                 }
             }
-            for(int i = 0; i < res.Count; i++)
-            {
-                Console.WriteLine(res[i] ? "Yes" : "No");
-            }
+
+            WriteLine(-1);
         }
 
         class UnionFind
@@ -51,7 +74,7 @@ namespace AtTest.Library.UnionFind
                 for (int i = 0; i < length; i++)
                 {
                     tree[i] = i;
-                    size[i] = 0;
+                    size[i] = 1;
                 }
             }
 
@@ -93,7 +116,8 @@ namespace AtTest.Library.UnionFind
             }
         }
 
-        private static string Read() { return Console.ReadLine(); }
+        private static string Read() { return ReadLine(); }
+        private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }
         private static int ReadInt() { return int.Parse(Read()); }
         private static long ReadLong() { return long.Parse(Read()); }
         private static double ReadDouble() { return double.Parse(Read()); }
