@@ -41,3 +41,5 @@ D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfoInputs.ca
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csproj.CoreCompileInputs.cache
+D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.genruntimeconfig.cache
