@@ -90,8 +90,8 @@ namespace AtTest.Library.Combination_Permutation
             {
                 long q = a / b;
                 long r = a % b;
-                long x2 = (mask + x - q * x1) % mask;
-                long y2 = (mask + y - q * y1) % mask;
+                long x2 = (mask + x - (q * x1) % mask) % mask;
+                long y2 = (mask + y - (q * y1) % mask) % mask;
                 a = b;
                 b = r;
                 x = x1;
