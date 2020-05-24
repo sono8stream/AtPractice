@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_168
+namespace AtTest.ForYellow
 {
-    class F
+    class ARC016_C
     {
         static void ain(string[] args)
         {
@@ -24,49 +24,56 @@ namespace AtTest.ABC_168
             int[] nm = ReadInts();
             int n = nm[0];
             int m = nm[1];
-            int[][] horizon = new int[n][];
-            for(int i = 0; i < n; i++)
-            {
-                horizon[i] = ReadInts();
-            }
-            Array.Sort(horizon, (a, b) => a[2] - b[2]);
-            int[][] vertical = new int[n][];
+            int[] costs = new int[m];
+            List<int[]>[] ps = new List<int[]>[m];
             for(int i = 0; i < m; i++)
             {
-                vertical[i] = ReadInts();
+                int[] cs = ReadInts();
+                int c = cs[0];
+                costs[i] = cs[1];
+                ps[i] = new List<int[]>();
+                for(int j = 0; j < c; j++)
+                {
+                    int[] ip = ReadInts();
+                    ip[0]--;
+                    ps[i].Add(ip);
+                }
             }
-            Array.Sort(vertical, (a, b) => a[2] - b[2]);
 
-            List<int>[] hCrosses = new List<int>[n];
-            for(int i = 0; i < n; i++)
+            int all = 1 << n;
+            double[] dp = new double[all];
+            for (int i = all - 2; i >= 0; i--)
             {
-                hCrosses[i] = new List<int>();
+                double tmp = double.MaxValue / 10;
                 for(int j = 0; j < m; j++)
                 {
-                    if(horizon[i][2]>= vertical[j][1]
-                        && horizon[i][2]<= vertical[j][2]
-                        && horizon[i][0]<=vertical[j][0]
-                        && horizon[i][1] >= vertical[j][0])
+                    int have = 0;
+                    for (int k = 0; k < ps[j].Count; k++)
                     {
-                        hCrosses[i].Add(vertical[j][0]);
+                        if ((i & (1 << ps[j][k][0])) > 0)
+                        {
+                            have += ps[j][k][1];
+                        }
                     }
-                }
-            }
-            List<int>[] vCrosses = new List<int>[m];
-            for (int i = 0; i < m; i++)
-            {
-                hCrosses[i] = new List<int>();
-                for (int j = 0; j < n; j++)
-                {
-                    if(vertical[i][1]<=horizon[j][2]
-                        &&vertical[i][2]>=horizon[j][2]
-                        &&vertical[i][0]>=horizon[j][0]
-                        && vertical[i][0] <= horizon[j][1])
+                    if (have == 100)
                     {
-                        vCrosses[i].Add(horizon[j][2]);
+                        continue;
                     }
+                    double tmp2 = costs[j] * 100.0 / (100 - have);
+                    for(int k = 0; k < ps[j].Count; k++)
+                    {
+                        int next = i | (1 << ps[j][k][0]);
+                        if (next > i)
+                        {
+                            tmp2 += dp[next] * ps[j][k][1] / (100 - have);
+                        }
+                    }
+                    tmp = Min(tmp, tmp2);
                 }
+                dp[i] = tmp;
             }
+
+            WriteLine(dp[0]);
         }
 
         private static string Read() { return ReadLine(); }
