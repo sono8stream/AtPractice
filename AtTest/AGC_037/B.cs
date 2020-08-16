@@ -23,7 +23,105 @@ namespace AtTest.AGC_037
         {
             long n = ReadLong();
             string s = Read();
+
             long mask = 998244353;
+            long[] cnts = new long[8];
+            cnts[0] = 1;
+            long res = 1;
+            for (int i = 0; i < 3 * n; i++)
+            {
+                if (s[i] == 'R')
+                {
+                    if (cnts[3] > 0)
+                    {
+                        res *= cnts[3];
+                        cnts[3]--;
+                        cnts[3 + 4]++;
+                    }
+                    else if (cnts[2] > 0)
+                    {
+                        res *= cnts[2];
+                        cnts[2]--;
+                        cnts[2 + 4]++;
+
+                    }
+                    else if (cnts[1] > 0)
+                    {
+                        res *= cnts[1];
+                        cnts[1]--;
+                        cnts[1 + 4]++;
+                    }
+                    else
+                    {
+                        res *= cnts[0];
+                        cnts[0 + 4]++;
+                    }
+                }
+                if (s[i] == 'G')
+                {
+                    if (cnts[5] > 0)
+                    {
+                        res *= cnts[5];
+                        cnts[5]--;
+                        cnts[5 + 2]++;
+                    }
+                    else if (cnts[4] > 0)
+                    {
+                        res *= cnts[4];
+                        cnts[4]--;
+                        cnts[4 + 2]++;
+
+                    }
+                    else if (cnts[1] > 0)
+                    {
+                        res *= cnts[1];
+                        cnts[1]--;
+                        cnts[1 + 2]++;
+                    }
+                    else
+                    {
+                        res *= cnts[0];
+                        cnts[0 + 2]++;
+                    }
+                }
+                if (s[i] == 'B')
+                {
+                    if (cnts[6] > 0)
+                    {
+                        res *= cnts[6];
+                        cnts[6]--;
+                        cnts[6 + 1]++;
+                    }
+                    else if (cnts[4] > 0)
+                    {
+                        res *= cnts[4];
+                        cnts[4]--;
+                        cnts[4 + 1]++;
+
+                    }
+                    else if (cnts[2] > 0)
+                    {
+                        res *= cnts[2];
+                        cnts[2]--;
+                        cnts[2 + 1]++;
+                    }
+                    else
+                    {
+                        res *= cnts[0];
+                        cnts[0 + 1]++;
+                    }
+                }
+                res %= mask;
+            }
+
+            for(int i = 1; i <= n; i++)
+            {
+                res *= i;
+                res %= mask;
+            }
+            WriteLine(res);
+
+            /*
             var index = new Dictionary<char, int>();
             index.Add('R', 0);
             index.Add('G', 1);
@@ -81,6 +179,7 @@ namespace AtTest.AGC_037
                 res %= mask;
             }
             WriteLine(res);
+            */
         }
 
         private static string Read() { return ReadLine(); }

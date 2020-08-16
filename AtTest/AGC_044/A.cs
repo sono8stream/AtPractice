@@ -31,6 +31,55 @@ namespace AtTest.AGC_044
                 long c = nabcd[3];
                 long d = nabcd[4];
 
+                var dict = new Dictionary<long, long>();
+                var que = new Queue<long[]>();
+                que.Enqueue(new long[2] { n, 0 });
+                while (que.Count > 0)
+                {
+                    long[] val = que.Dequeue();
+                    long now = val[0];
+                    long cnt = val[1];
+                    if (dict.ContainsKey(now) && dict[now] <= cnt)
+                    {
+                        continue;
+                    }
+
+                    if (dict.ContainsKey(now))
+                    {
+                        dict[now] = cnt;
+                    }
+                    else
+                    {
+                        dict.Add(now, cnt);
+                    }
+
+                    if (now == 0)
+                    {
+                        continue;
+                    }
+
+                    if (now >= 2)
+                    {
+                        que.Enqueue(new long[2] { now / 2, cnt + a + now % 2 * d });
+                        que.Enqueue(new long[2] { now / 2 + 1, cnt + a + (2 - now % 2) * d });
+                    }
+                    if (now >= 3)
+                    {
+                        que.Enqueue(new long[2] { now / 3, cnt + b + now % 3 * d });
+                        que.Enqueue(new long[2] { now / 3 + 1, cnt + b + (3 - now % 3) * d });
+                    }
+                    if (now >= 5)
+                    {
+                        que.Enqueue(new long[2] { now / 5, cnt + c + now % 5 * d });
+                        que.Enqueue(new long[2] { now / 5 + 1, cnt + c + (5 - now % 5) * d });
+                    }
+                    if ((double)now * d < long.MaxValue)
+                    {
+                        que.Enqueue(new long[2] { 0, cnt + now * d });
+                    }
+                }
+
+                WriteLine(dict[0]);
             }
         }
 

@@ -20,10 +20,17 @@ namespace AtTest._800problems
             int h = hw[0];
             int w = hw[1];
             string[] array = new string[h];
-            for (int i = 0; i < h; i++) array[i] = Read();
+            for (int i = 0; i < h; i++)
+            {
+                array[i] = Read();
+            }
 
-            List<Edge>[] graph = new List<Edge>[h * w];
-            for (int i = 0; i < h * w; i++) graph[i] = new List<Edge>();
+            List<Edge>[] graph = new List<Edge>[h + w + 2];
+            for (int i = 0; i < graph.Length; i++)
+            {
+                graph[i] = new List<Edge>();
+            }
+
             int s = 0;
             int t = 0;
             for(int i = 0; i < h; i++)
@@ -32,33 +39,26 @@ namespace AtTest._800problems
                 {
                     if (array[i][j] == '.') continue;
 
-                    int capacity = 1;
                     if (array[i][j] == 'S')
                     {
                         s = i * w + j;
+                        graph[0].Add(new Edge(i + 2, 100000, graph[i + 2].Count));
+                        graph[i + 2].Add(new Edge(0, 0, graph[0].Count - 1));
+                        graph[0].Add(new Edge(h + 2 + j, 100000, graph[h + 2 + j].Count));
+                        graph[h + 2 + j].Add(new Edge(0, 0, graph[0].Count - 1));
                     }
-                    if (array[i][j] == 'T')
+                    else if (array[i][j] == 'T')
                     {
                         t = i * w + j;
+                        graph[1].Add(new Edge(i + 2, 0, graph[i + 2].Count));
+                        graph[i + 2].Add(new Edge(1, 100000, graph[1].Count - 1));
+                        graph[1].Add(new Edge(h + 2 + j, 0, graph[h + 2 + j].Count));
+                        graph[h + 2 + j].Add(new Edge(1, 100000, graph[1].Count - 1));
                     }
-
-                    for (int k = i + 1; k < h; k++)
+                    else
                     {
-                        if (array[k][j] == '.') continue;
-
-                        graph[i * w + j].Add(new Edge(k * w + j,
-                            capacity, graph[k * w + j].Count));
-                        graph[k * w + j].Add(new Edge(i * w + j,
-                            capacity, graph[i * w + j].Count - 1));
-                    }
-                    for (int k = j + 1; k < w; k++)
-                    {
-                        if (array[i][k] == '.') continue;
-
-                        graph[i * w + j].Add(new Edge(i * w + k,
-                            capacity, graph[i * w + k].Count));
-                        graph[i * w + k].Add(new Edge(i * w + j,
-                            capacity, graph[i * w + j].Count - 1));
+                        graph[i + 2].Add(new Edge(h + 2 + j, 1, graph[h + 2 + j].Count));
+                        graph[h + 2 + j].Add(new Edge(i + 2, 1, graph[i + 2].Count - 1));
                     }
                 }
             }
@@ -73,16 +73,16 @@ namespace AtTest._800problems
             int res = 0;
             do
             {
-                levels = BFS(graph, s);
-                int[] iterator = new int[h * w];
+                levels = BFS(graph, 0);
+                int[] iterator = new int[h + w + 2];
                 int flow = 0;
                 do
                 {
                     flow = DFS(ref iterator, ref graph, levels,
-                        s, t, int.MaxValue);
+                        0, 1, 100000);
                     res += flow;
                 } while (flow > 0);
-            } while (levels[t] > 0);
+            } while (levels[1] > 0);
             WriteLine(res);
         }
 
@@ -129,12 +129,8 @@ namespace AtTest._800problems
                         edge.to, goal, Min(flow, edge.capacity));
                     if (cnt > 0)
                     {
-                        for(int i = 0; i < graph[now].Count; i++)
-                        {
-                            graph[now][i].capacity -= cnt;
-                            graph[graph[now][i].to]
-                                [graph[now][i].reverse].capacity += cnt;
-                        }
+                        edge.capacity -= cnt;
+                        graph[edge.to][edge.reverse].capacity += cnt;
                         return cnt;
                     }
                 }

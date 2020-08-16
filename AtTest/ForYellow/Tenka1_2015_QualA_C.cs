@@ -1,5 +1,4 @@
-﻿using AtTest.EducationalDP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,10 +26,10 @@ namespace AtTest.ForYellow
             int n = mn[1];
             bool[,] aGrid = new bool[m, n];
             bool[,] bGrid = new bool[m, n];
-            for(int i = 0; i < m; i++)
+            for (int i = 0; i < m; i++)
             {
                 int[] row = ReadInts();
-                for(int j = 0; j < n; j++)
+                for (int j = 0; j < n; j++)
                 {
                     aGrid[i, j] = row[j] == 1;
                 }
@@ -45,91 +44,105 @@ namespace AtTest.ForYellow
             }
 
             bool[,] diffs = new bool[m, n];
-            for(int i = 0; i < m; i++)
+            for (int i = 0; i < m; i++)
             {
-                for(int j = 0; j < n; j++)
+                for (int j = 0; j < n; j++)
                 {
                     diffs[i, j] = aGrid[i, j] != bGrid[i, j];
                 }
             }
 
-            int res = 0;
-            bool[,] used = new bool[m, n];
-            int[] dx = new int[4] { 1, -1, 0, 0 };
-            int[] dy = new int[4] { 0, 0, 1, -1 };
-            for(int i = 0; i < m; i++)
+            int[] dx = new int[2] { 1, 0, };
+            int[] dy = new int[2] { 0, 1 };
+            List<HashSet<int>> graph = new List<HashSet<int>>();
+            for (int i = 0; i < m * n + 2; i++)
             {
-                for(int j = 0; j < n; j++)
+                graph.Add(new HashSet<int>());
+            }
+            int diffCnt = 0;
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
                 {
-                    if (!diffs[i, j] || used[i, j])
+                    if (!diffs[i, j])
                     {
                         continue;
                     }
 
-                    Queue<int[]> que = new Queue<int[]>();
-                    que.Enqueue(new int[2] { i, j });
-                    while (que.Count > 0)
+                    diffCnt++;
+                    if ((i + j) % 2 == 0)
                     {
-                        int[] pos = que.Dequeue();
-                        int y = pos[0];
-                        int x = pos[1];
-                        if (used[y, x])
+                        graph[0].Add(i * n + j + 2);
+                    }
+                    else
+                    {
+                        graph[i * n + j + 2].Add(1);
+                    }
+
+                    for (int k = 0; k < 2; k++)
+                    {
+                        int toY = i + dy[k];
+                        int toX = j + dx[k];
+
+                        if (0 <= toY && toY < m
+                                && 0 <= toX && toX < n
+                                && diffs[toY, toX]
+                                && aGrid[i, j] != aGrid[toY, toX])
                         {
-                            continue;
+                            if ((i + j) % 2 == 0)
+                            {
+                                graph[i * n + j + 2].Add(toY * n + toX + 2);
+                            }
+                            else
+                            {
+                                graph[toY * n + toX + 2].Add(i * n + j + 2);
+                            }
                         }
-
-                        used[y, x] = true;
                     }
                 }
             }
+
+            int matches = MaxFlow(graph, 0, 1);
+            int res = matches + (diffCnt - matches * 2);
+            WriteLine(res);
         }
 
-        static int[] BFS(HashSet<int>[] graph, int start)
+        static int MaxFlow(List<HashSet<int>> graph, int start, int goal)
         {
-            int[] levels = new int[graph.Length];
-            for (int i = 0; i < graph.Length; i++)
+            int res = 0;
+            int flow;
+            do
             {
-                levels[i] = -1;
-            }
+                bool[] used = new bool[graph.Count];
+                flow = DFS(graph, used, start, goal);
+                res += flow;
+            } while (flow > 0);
 
-            levels[start] = 0;
-            Queue<int> que = new Queue<int>();
-            que.Enqueue(start);
-            while (que.Count > 0)
-            {
-                int now = que.Dequeue();
-                foreach (int to in graph[now])
-                {
-                    if (levels[to] >= 0)
-                    {
-                        continue;
-                    }
-
-                    levels[to] = levels[now] + 1;
-                    que.Enqueue(to);
-                }
-            }
-            return levels;
+            return res;
         }
 
-        static int DFS(HashSet<int>[] graph, int[] levels, int now, int goal)
+        static int DFS(List<HashSet<int>> graph, bool[] used, int now, int goal)
         {
             if (now == goal)
             {
                 return 1;
             }
 
+            used[now] = true;
+
             foreach (int to in graph[now])
             {
-                if (levels[now] < levels[to])
+                if (used[to])
                 {
-                    int cnt = DFS(graph, levels, to, goal);
-                    if (cnt > 0)
-                    {
-                        graph[now].Remove(to);
-                        graph[to].Add(now);
-                        return cnt;
-                    }
+                    continue;
+                }
+
+                int cnt = DFS(graph, used, to, goal);
+                if (cnt > 0)
+                {
+                    graph[now].Remove(to);
+                    graph[to].Add(now);
+                    return cnt;
                 }
             }
             return 0;
