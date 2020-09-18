@@ -23,7 +23,7 @@ namespace AtTest.M_Solutions_2020
         {
             int n = ReadInt();
             int[][] xyus = new int[n][];
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 string[] input = Read().Split();
                 xyus[i] = new int[3] { int.Parse(input[0]), int.Parse(input[1]), 0 };
@@ -41,137 +41,80 @@ namespace AtTest.M_Solutions_2020
                 }
             }
 
-            List<int[]> uxs = new List<int[]>();
-            List<int[]> dxs = new List<int[]>();
-            List<int[]> rys = new List<int[]>();
-            List<int[]> lys = new List<int[]>();
-
-            List<int[]> uxxs = new List<int[]>();
-            List<int[]> dxxs = new List<int[]>();
-            List<int[]> ryys = new List<int[]>();
-            List<int[]> lyys = new List<int[]>();
-            for (int i = 0; i < n; i++)
+            Array.Sort(xyus, (a, b) =>
             {
-                if (xyus[i][2] == 0)
+                if (a[0] == b[0])
                 {
-                    rys.Add(new int[2] { xyus[i][0] + xyus[i][1], i });
-                    lys.Add(new int[2] { 200000 - xyus[i][0] + xyus[i][1], i });
-                    uxxs.Add(new int[2] { xyus[i][0], i });
+                    return a[1] - b[1];
                 }
-                if (xyus[i][2] == 1)
+                else
                 {
-                    uxs.Add(new int[2] { xyus[i][1] + xyus[i][0], i });
-                    dxs.Add(new int[2] { 200000 - xyus[i][1] + xyus[i][0], i });
-                    ryys.Add(new int[2] { xyus[i][1], i });
+                    return a[0] - b[0];
                 }
-                if (xyus[i][2] == 2)
+            });
+
+            int lineLength = 200000 + 10;
+            int[,] horizon = new int[lineLength * 2, 4];
+            int[,] vertical = new int[lineLength * 2, 4];
+            int[,] tilt1 = new int[lineLength * 2, 4]; // 45
+            int[,] tilt2 = new int[lineLength * 2, 4]; // -45
+            for (int i = 0; i < lineLength * 2; i++)
+            {
+                for (int j = 0; j < 4; j++)
                 {
-                    rys.Add(new int[2] { xyus[i][0] - xyus[i][1], i });
-                    lys.Add(new int[2] { 200000 - xyus[i][0] - xyus[i][1], i });
-                    dxxs.Add(new int[2] { xyus[i][0], i });
-                }
-                if (xyus[i][2] == 3)
-                {
-                    uxs.Add(new int[2] { xyus[i][1] - xyus[i][0], i });
-                    dxs.Add(new int[2] { 200000 - xyus[i][1] - xyus[i][0], i });
-                    lyys.Add(new int[2] { xyus[i][1], i });
+                    horizon[i, j] = -1;
+                    vertical[i, j] = -1;
+                    tilt1[i, j] = -1;
+                    tilt2[i, j] = -1;
                 }
             }
 
-            uxs = uxs.OrderBy(a => a[0]).ToList();
-            dxs = dxs.OrderBy(a => a[0]).ToList();
-            rys = rys.OrderBy(a => a[0]).ToList();
-            lys = lys.OrderBy(a => a[0]).ToList();
-
-            uxxs = uxxs.OrderBy(a => a[0]).ToList();
-            dxxs = dxxs.OrderBy(a => a[0]).ToList();
-            ryys = ryys.OrderBy(a => a[0]).ToList();
-            lyys = lyys.OrderBy(a => a[0]).ToList();
-
             int res = int.MaxValue;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
+                int horizonId = xyus[i][1];
+                int verticalId = xyus[i][0];
+                int tilt1Id = xyus[i][0] + lineLength - xyus[i][1];
+                int tilt2Id = xyus[i][0] + xyus[i][1];
+
                 if (xyus[i][2] == 0)
                 {
-                    int idx = BinarySearch(dxxs, xyus[i][0]);
-                    if (idx >= 0 && xyus[i][1] < xyus[dxxs[idx][1]][1])
+                    if (tilt2[tilt2Id, 1] >= 0)
                     {
-                        int hoge = xyus[dxxs[idx][1]][1];
-                        res = Min(res, (xyus[dxxs[idx][1]][1] - xyus[i][1]) * 5);
-                    }
-                    idx = BinarySearch(uxs, xyus[i][1] + xyus[i][0]);
-                    if (idx >= 0)
-                    {
-                        while (idx >= 0 && uxs[idx][0] == xyus[i][1] + xyus[i][0])
-                        {
-                            if (xyus[i][1] < xyus[uxs[idx][1]][1])
-                            {
-                                res = Min(res, (xyus[uxs[idx][1]][1] - xyus[i][1]) * 10);
-                            }
-                            idx--;
-                        }
-                    }
-                }
-                if (xyus[i][2] == 1)
-                {
-                    int idx = BinarySearch(lyys, xyus[i][1]);
-                    if (idx >= 0 && xyus[i][0] < xyus[lyys[idx][1]][0])
-                    {
-                        res = Min(res, (xyus[lyys[idx][1]][0] - xyus[i][0]) * 5);
-                    }
-                    idx = BinarySearch(rys, xyus[i][0] + xyus[i][1]);
-                    if (idx >= 0)
-                    {
-                        while (idx >= 0 && rys[idx][0] == xyus[i][0] + xyus[i][1])
-                        {
-                            if (xyus[i][0] < xyus[rys[idx][1]][0])
-                            {
-                                res = Min(res, (xyus[rys[idx][1]][0] - xyus[i][0]) * 10);
-                            }
-                            idx--;
-                        }
+                        res = Min(res, 10 * (xyus[i][0] - tilt2[tilt2Id, 1]));
                     }
                 }
                 if (xyus[i][2] == 2)
                 {
-                    int idx = BinarySearch(uxxs, xyus[i][0]);
-                    if (idx >= 0 && xyus[i][1] > xyus[uxxs[idx][1]][1])
+                    if (vertical[verticalId, 0] >= 0)
                     {
-                        res = Min(res, (xyus[i][1] - xyus[uxxs[idx][1]][1]) * 5);
+                        res = Min(res, 5 * (xyus[i][1] - vertical[verticalId, 0]));
                     }
-                    idx = BinarySearch(dxs, 200000-xyus[i][1] + xyus[i][0]);
-                    if (idx >= 0)
+                    if (tilt1[tilt1Id, 1] >= 0)
                     {
-                        while (idx >= 0 && dxs[idx][0] == 200000-xyus[i][1] + xyus[i][0])
-                        {
-                            if (xyus[i][1] > xyus[uxs[idx][1]][1])
-                            {
-                                res = Min(res, (xyus[i][1] - xyus[dxs[idx][1]][1]) * 10);
-                            }
-                            idx--;
-                        }
+                        res = Min(res, 10 * (xyus[i][0] - tilt1[tilt1Id, 1]));
                     }
                 }
                 if (xyus[i][2] == 3)
                 {
-                    int idx = BinarySearch(ryys, xyus[i][1]);
-                    if (idx >= 0 && xyus[i][0] > xyus[ryys[idx][1]][0])
+                    if (horizon[horizonId, 1] >= 0)
                     {
-                        res = Min(res, (xyus[i][0] - xyus[ryys[idx][1]][0]) * 5);
+                        res = Min(res, 5 * (xyus[i][0] - horizon[horizonId, 1]));
                     }
-                    idx = BinarySearch(lys, 200000 - xyus[i][0] + xyus[i][1]);
-                    if (idx >= 0)
+                    if (tilt1[tilt1Id, 0] >= 0)
                     {
-                        while (idx >= 0 && lys[idx][0] == xyus[i][0] + xyus[i][1])
-                        {
-                            if (xyus[i][0] > xyus[rys[idx][1]][0])
-                            {
-                                res = Min(res, (xyus[i][0] - xyus[lys[idx][1]][0]) * 10);
-                            }
-                            idx--;
-                        }
+                        res = Min(res, 10 * (xyus[i][0] - tilt1[tilt1Id, 0]));
+                    }
+                    if (tilt2[tilt2Id, 2] >= 0)
+                    {
+                        res = Min(res, 10 * (xyus[i][0] - tilt2[tilt2Id, 2]));
                     }
                 }
+
+                horizon[horizonId, xyus[i][2]] = xyus[i][0];
+                vertical[verticalId, xyus[i][2]] = xyus[i][1];
+                tilt1[tilt1Id, xyus[i][2]] = xyus[i][0];
+                tilt2[tilt2Id, xyus[i][2]] = xyus[i][0];
             }
 
             if (res == int.MaxValue)
@@ -181,43 +124,6 @@ namespace AtTest.M_Solutions_2020
             else
             {
                 WriteLine(res);
-            }
-        }
-
-        static int BinarySearch(List<int[]> list,int val)
-        {
-            if (list.Count == 0)
-            {
-                return -1;
-            }
-
-            if (val < list[0][0] && val > list[list.Count - 1][0])
-            {
-                return -1;
-            }
-
-            int bottom = 0;
-            int top = list.Count;
-            while (bottom + 1 < top)
-            {
-                int mid = (bottom + top) / 2;
-                if (list[mid][0] <= val)
-                {
-                    bottom = mid;
-                }
-                else
-                {
-                    top = mid;
-                }
-            }
-
-            if (list[bottom][0] == val)
-            {
-                return bottom;
-            }
-            else
-            {
-                return -1;
             }
         }
 
