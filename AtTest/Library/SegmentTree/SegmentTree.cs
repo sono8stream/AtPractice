@@ -9,7 +9,7 @@ namespace AtTest.Library.SegmentTree
 {
     class ARC033_C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
