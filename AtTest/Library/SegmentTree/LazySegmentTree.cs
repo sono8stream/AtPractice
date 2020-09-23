@@ -7,9 +7,9 @@ using static System.Math;
 
 namespace AtTest.Library.SegmentTree
 {
-    class LazySegmentTree
+    class ABC179_F
     {
-        static void ain(string[] args)
+        static void Main(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
@@ -21,112 +21,138 @@ namespace AtTest.Library.SegmentTree
 
         static void Method(string[] args)
         {
+            int[] nq = ReadInts();
+            int n = nq[0];
+            int q = nq[1];
+
+            var hors = new LazySegmentTree<int>(n, Min, n - 2, int.MaxValue / 2);
+            var vers = new LazySegmentTree<int>(n, Min, n - 2, int.MaxValue / 2);
+
+            long res = (long)(n - 2) * (n - 2);
+            for (int i = 0; i < q; i++)
+            {
+                int[] query = ReadInts();
+                int l = query[0];
+                int r = query[1];
+
+                if (l == 1)
+                {
+                    int len = vers.Look(r - 2);
+                    if (len > 0)
+                    {
+                        hors.Update(0, len - 1, r - 2);
+                        res -= len;
+                    }
+                }
+                if (l == 2)
+                {
+                    int len = hors.Look(r - 2);
+                    if (len > 0)
+                    {
+                        vers.Update(0, len - 1, r - 2);
+                        res -= len;
+                    }
+                }
+            }
+
+            WriteLine(res);
         }
 
-        class LazySegtree<T, U>
+        class LazySegmentTree<T>
         {
-            int n;
-            T[] data;
-            U[] lazy;
-            bool[] isLazy;
-            Func<T, T, T> calc;
-            Func<T, U, int, T> apply;
-            Func<U, U, U> merge;
-            T exValue;
+            int totalLength;
+            T[] tree;
+            Func<T, T, T> evaluate;
 
             /// <summary>
-            /// 遅延セグメントツリーの構築
+            /// 要素数lengthの遅延セグ木
             /// </summary>
-            /// <param name="m">要素数</param>
-            /// <param name="calc">要素のマージ</param>
-            /// <param name="apply">要素に作用素を作用</param>
-            /// <param name="merge">作用素のマージ</param>
-            /// <param name="exValue">単位元</param>
-            public LazySegtree(int m, Func<T, T, T> calc, Func<T, U, int, T> apply, Func<U, U, U> merge, T exValue)
+            /// <param name="length"></param>
+            /// <param name="evaluate">比較関数</param>
+            /// <param name="initialValue">初期値</param>
+            /// <param name="exValue">例外値</param>
+            public LazySegmentTree(int length, Func<T, T, T> evaluate, T initialValue, T exValue)
             {
-                this.calc = calc;
-                this.apply = apply;
-                this.merge = merge;
-                this.exValue = exValue;
-                n = 1;
-                while (n < m) n <<= 1;
-                data = new T[n * 2 - 1];
-                lazy = new U[n * 2 - 1];
-                isLazy = new bool[n * 2 - 1];
-                for (int i = 0; i < data.Length; i++) data[i] = exValue;
-            }
-
-            public LazySegtree(int m, Func<T, T, T> calc, Func<T, U, int, T> apply,
-                Func<U, U, U> merge, T exData, T initialValue) 
-                : this(m, calc, apply, merge, exData)
-            {
-                for (int i = 0; i < m; i++) data[i + n - 1] = initialValue;
-                for (int i = n - 2; i >= 0; i--)
+                totalLength = 1;
+                while (totalLength < length)
                 {
-                    data[i] = calc(data[i * 2 + 1], data[i * 2 + 2]);
+                    totalLength *= 2;
+                }
+
+                this.evaluate = evaluate;
+
+                tree = new T[totalLength * 2 - 1];
+                for (int i = 0; i < tree.Length; i++)
+                {
+                    tree[i] = exValue;
+                }
+                for (int i = 0; i < length; i++)
+                {
+                    tree[i + totalLength - 1] = initialValue;
                 }
             }
 
-            public LazySegtree(int m, Func<T, T, T> calc, Func<T, U, int, T> apply,
-                Func<U, U, U> merge, T exData,
-                IList<T> initialValue)
-                : this(m, calc, apply, merge, exData)
+            /// <summary>
+            /// [left, right]をvalで更新
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            /// <param name="val"></param>
+            public void Update(int left, int right, T val)
             {
-                for (int i = 0; i < m; i++) data[i + n - 1] = initialValue[i];
-                for (int i = n - 2; i >= 0; i--)
+                if (left >= totalLength || right < 0 || right < left)
                 {
-                    data[i] = calc(data[i * 2 + 1], data[i * 2 + 2]);
+                    return;
                 }
+
+                Query(left, right, 0, 0, totalLength - 1, val);
             }
 
-            void AssignLazy(int k, U x)
+            /// <summary>
+            /// [left, right]が[top,last]と一致していればvalで更新，そうでなければ分割して評価
+            /// 再帰処理
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            /// <param name="i"></param>
+            /// <param name="top"></param>
+            /// <param name="last"></param>
+            /// <param name="val"></param>
+            void Query(int left, int right, int i, int top, int last, T val)
             {
-                if (k >= lazy.Length) return;
-                if (isLazy[k]) lazy[k] = merge(lazy[k], x);
+                if (left == top && right == last)
+                {
+                    tree[i] = evaluate(tree[i], val);
+                }
                 else
                 {
-                    isLazy[k] = true;
-                    lazy[k] = x;
+                    int half = (top + last) / 2;
+                    if (left <= half)
+                    {
+                        Query(left, Min(right, half), i * 2 + 1, top, half, val);
+                    }
+                    if (right >= half + 1)
+                    {
+                        Query(Max(left, half + 1), right, i * 2 + 2, half + 1, last, val);
+                    }
                 }
             }
 
-            void Eval(int k, int len)
+            public T Look(int i)
             {
-                if (!isLazy[k]) return;
-                AssignLazy(k * 2 + 1, lazy[k]);
-                AssignLazy(k * 2 + 2, lazy[k]);
-                data[k] = apply(data[k], lazy[k], len);
-                isLazy[k] = false;
-            }
+                int now = i + totalLength - 1;
+                T val = tree[now];
 
-            T Update(int s, int t, U x, int k, int l, int r)
-            {
-                Eval(k, r - l);
-                if (r <= s || t <= l) return data[k];
-                if (s <= l && r <= t)
+                while (now > 0)
                 {
-                    AssignLazy(k, x);
-                    return apply(data[k], lazy[k], r - l);
+                    now = (now - 1) / 2;
+                    val = evaluate(val, tree[now]);
                 }
-                return data[k] = calc(Update(s, t, x, k * 2 + 1, l, (l + r) / 2),
-                                      Update(s, t, x, k * 2 + 2, (l + r) / 2, r));
-            }
 
-            T Run(int s, int t, int k, int l, int r)
-            {
-                Eval(k, r - l);
-                if (r <= s || t <= l) return exValue;
-                if (s <= l && r <= t) return data[k];
-                return calc(Run(s, t, k * 2 + 1, l, (l + r) / 2),
-                            Run(s, t, k * 2 + 2, (l + r) / 2, r));
+                return val;
             }
-
-            /// <summary>update [s, t]</summary>
-            public void Update(int s, int t, U x) { t++; Update(s, t, x, 0, 0, n); }
-            /// <summary>return node[s, t]</summary>
-            public T this[int s, int t] => Run(s, t);
-            T Run(int s, int t) { t++; return Run(s, t, 0, 0, n); }
         }
+
 
         private static string Read() { return ReadLine(); }
         private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }

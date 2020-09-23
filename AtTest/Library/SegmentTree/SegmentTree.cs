@@ -7,50 +7,90 @@ using static System.Math;
 
 namespace AtTest.Library.SegmentTree
 {
-    class SegmentTree
+    class ARC033_C
     {
-        static void main(string[] args)
+        static void Main(string[] args)
         {
+            var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
+            SetOut(sw);
+
             Method(args);
+
+            Out.Flush();
         }
 
         static void Method(string[] args)
         {
-
+            int q = ReadInt();
+            SegmentTree<int> segTree = new SegmentTree<int>(200010, (a, b) => a + b, 0, 0);
+            for (int i = 0; i < q; i++)
+            {
+                int[] tx = ReadInts();
+                int t = tx[0];
+                int x = tx[1];
+                if (t == 1)
+                {
+                    segTree.Update(x, 1);
+                }
+                else
+                {
+                    int bottom = 0;
+                    int top = 200010;
+                    while (bottom + 1 < top)
+                    {
+                        int mid = (bottom + top) / 2;
+                        if (segTree.Scan(1, mid) < x)
+                        {
+                            bottom = mid;
+                        }
+                        else
+                        {
+                            top = mid;
+                        }
+                    }
+                    WriteLine(top);
+                    segTree.Update(top, 0);
+                }
+            }
         }
 
-        class SegTree<T>
+        class SegmentTree<T>
         {
             int totalLength;
             T[] tree;
             Func<T, T, T> integrate;
             T exValue;
 
-            public SegTree(int length, Func<T, T, T> integrate, T exValue)
+            public SegmentTree(int length, Func<T, T, T> integrate, T initialValue, T exValue)
             {
-                this.integrate = integrate;
-                this.exValue = exValue;
                 totalLength = 1;
-                while (totalLength < length) totalLength *= 2;
+                while (totalLength < length)
+                {
+                    totalLength *= 2;
+                }
 
-                tree = new T[2 * totalLength - 1];
-                for (int i = 0; i < tree.Length; i++) tree[i] = exValue;
-            }
+                this.integrate = integrate;
 
-            public SegTree(int length, T initialValue,
-                Func<T, T, T> integrate, T exValue)
-                : this(length, integrate, exValue)
-            {
+                tree = new T[totalLength * 2 - 1];
+                for (int i = 0; i < tree.Length; i++)
+                {
+                    tree[i] = exValue;
+                }
                 for (int i = 0; i < length; i++)
                 {
                     tree[i + totalLength - 1] = initialValue;
                 }
+                this.exValue = exValue;
+
                 UpdateAll();
             }
 
-            public void AssignWithoutUpdate(int i, T value)
+            void UpdateAll()
             {
-                tree[i + totalLength - 1] = value;
+                for (int i = totalLength - 2; i >= 0; i--)
+                {
+                    tree[i] = integrate(tree[i * 2 + 1], tree[i * 2 + 2]);
+                }
             }
 
             public void Update(int i, T value)
@@ -60,37 +100,60 @@ namespace AtTest.Library.SegmentTree
                 while (now > 0)
                 {
                     now = (now - 1) / 2;
-                    tree[now] = integrate(
-                        tree[now * 2 + 1], tree[now * 2 + 2]);
+                    tree[now] = integrate(tree[now * 2 + 1], tree[now * 2 + 2]);
                 }
             }
 
-            public void UpdateAll()
+
+            /// <summary>
+            /// [left, right]を取得
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            public T Scan(int left, int right)
             {
-                for (int i = totalLength - 2; i >= 0; i--)
+                if (left >= totalLength || right < 0 || right < left)
                 {
-                    tree[i] = integrate(tree[i * 2 + 1], tree[i * 2 + 2]);
+                    return exValue;
+                }
+
+                return Query(left, right, 0, 0, totalLength - 1);
+            }
+
+            /// <summary>
+            /// [left, right]が[top,last]と一致していればその値を，そうでなければ統合して返す
+            /// 再帰処理
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            /// <param name="i"></param>
+            /// <param name="top"></param>
+            /// <param name="last"></param>
+            T Query(int left, int right, int i, int top, int last)
+            {
+                if (left == top && right == last)
+                {
+                    return tree[i];
+                }
+                else
+                {
+                    int half = (top + last) / 2;
+                    T val = exValue;
+                    if (left <= half)
+                    {
+                        val = integrate(val, Query(left, Min(right, half), i * 2 + 1, top, half));
+                    }
+                    if (right >= half + 1)
+                    {
+                        val = integrate(val, Query(Max(left, half + 1), right, i * 2 + 2, half + 1, last));
+                    }
+                    return val;
                 }
             }
 
-            public T Look(int i) { return tree[i + totalLength - 1]; }
-
-            //[top,last)
-            public T Scan(int top, int last) {
-                return Query(top, last, 0, 0, totalLength);
-            }
-
-            T Query(int top, int last, int i, int left, int right)
+            public T Look(int i)
             {
-                if (right <= top || last <= left) return exValue;
-                if (top <= left && right <= last) return tree[i];
-
-                T leftValue = Query(top, last, i * 2 + 1,
-                    left, (left + right) / 2);
-                T rightValue = Query(top, last, (i + 1) * 2,
-                    (left + right) / 2, right);
-
-                return integrate(leftValue, rightValue);
+                return tree[i + totalLength - 1];
             }
         }
 
