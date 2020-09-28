@@ -43,3 +43,15 @@ D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csproj.CoreCompileInputs.cache
 D:\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.genruntimeconfig.cache
+C:\Users\Robotics\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.deps.json
+C:\Users\Robotics\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.json
+C:\Users\Robotics\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.runtimeconfig.dev.json
+C:\Users\Robotics\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.dll
+C:\Users\Robotics\csharp\AtPractice\AtTest\bin\Debug\netcoreapp2.0\AtTest.pdb
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csprojAssemblyReference.cache
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfoInputs.cache
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.AssemblyInfo.cs
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.csproj.CoreCompileInputs.cache
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.dll
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.pdb
+C:\Users\Robotics\csharp\AtPractice\AtTest\obj\Debug\netcoreapp2.0\AtTest.genruntimeconfig.cache
