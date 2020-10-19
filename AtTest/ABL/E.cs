@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.Library.SegmentTree
+namespace AtTest.ABL
 {
-    class ABC179_F
+    class E
     {
         static void ain(string[] args)
         {
@@ -24,42 +24,38 @@ namespace AtTest.Library.SegmentTree
             int[] nq = ReadInts();
             int n = nq[0];
             int q = nq[1];
-            /*
-            var hors = new LazySegmentTree<int>(n, Min, n - 2, int.MaxValue / 2);
-            var vers = new LazySegmentTree<int>(n, Min, n - 2, int.MaxValue / 2);
-
-            long res = (long)(n - 2) * (n - 2);
-            for (int i = 0; i < q; i++)
+            long mask = 998244353;
+            long[] oneones = new long[n];
+            long[] ones = new long[n];
+            oneones[0] = 1;
+            ones[0] = 1;
+            for(int i = 1; i < n; i++)
             {
-                int[] query = ReadInts();
-                int l = query[0];
-                int r = query[1];
-
-                if (l == 1)
-                {
-                    int len = vers.Look(r - 2);
-                    if (len > 0)
-                    {
-                        hors.Update(0, len - 1, r - 2);
-                        res -= len;
-                    }
-                }
-                if (l == 2)
-                {
-                    int len = hors.Look(r - 2);
-                    if (len > 0)
-                    {
-                        vers.Update(0, len - 1, r - 2);
-                        res -= len;
-                    }
-                }
+                oneones[i] = (oneones[i - 1] * 10 + 1) % mask;
+                ones[i] = (ones[i - 1] * 10) % mask;
             }
+            var tree = new LazySegmentTree<long, int>(n, (a, b) => b, (a, b) =>
+            {
+                long val = oneones[a.len - 1] * ones[a.dig];
+                val *= b;
+                val %= mask;
 
-            WriteLine(res);
-            */
+                return val;
+            },
+                (a, b) => (a.val + b.val) % mask, 1, 0);
+
+            int[][] lrds = new int[q][];
+            for(int i = 0; i < q; i++)
+            {
+                lrds[i] = ReadInts();
+                tree.Update(lrds[i][0] - 1, lrds[i][1] - 1, lrds[i][2]);
+                WriteLine(tree.Scan(0, n - 1));
+            }
         }
 
-        class LazySegmentTree<T, U>
+        
+
+        class LazySegmentTree<T,U>
         {
             int totalLength;
             Node[] valTree;
@@ -98,8 +94,8 @@ namespace AtTest.Library.SegmentTree
             /// <param name="integrate">結合関数</param>
             /// <param name="initialValue">初期値</param>
             /// <param name="exValue">例外値</param>
-            public LazySegmentTree(int length, Func<U, U, U> evaluate, Func<Node, U, T> project,
-                Func<Node, Node, T> integrate, U initValue, T exValue)
+            public LazySegmentTree(int length, Func<U, U, U> evaluate,Func<Node,U,T> project,
+                Func<Node, Node, T> integrate, U initValue,T exValue)
             {
                 totalLength = 1;
                 while (totalLength < length)
@@ -139,7 +135,7 @@ namespace AtTest.Library.SegmentTree
             /// <param name="val"></param>
             public void Update(int left, int right, U val)
             {
-                if (left < 0 || right >= totalLength || right < left)
+                if (left <0 || right >=totalLength || right < left)
                 {
                     return;
                 }
@@ -186,9 +182,9 @@ namespace AtTest.Library.SegmentTree
                 }
             }
 
-            public T Scan(int left, int right)
+            public T Scan(int left,int right)
             {
-                if (left < 0 || right >= totalLength || right < left)
+                if (left <0 || right >=totalLength || right < left)
                 {
                     return exValue;
                 }
@@ -211,18 +207,18 @@ namespace AtTest.Library.SegmentTree
                     var rightNode = new Node(exValue, -1, -1);
                     if (left <= half)
                     {
-                        leftNode = ScanQuery(left, Min(right, half), i * 2 + 1, top, half);
+                        leftNode=ScanQuery(left, Min(right, half), i * 2 + 1, top, half);
                     }
                     if (right >= half + 1)
                     {
-                        rightNode = ScanQuery(Max(left, half + 1), right, i * 2 + 2, half + 1, last);
+                        rightNode=ScanQuery(Max(left, half + 1), right, i * 2 + 2, half + 1, last);
                     }
 
                     if (leftNode.len == -1)
                     {
                         return rightNode;
                     }
-                    if (rightNode.len == -1)
+                    if(rightNode.len==-1)
                     {
                         return leftNode;
                     }
@@ -247,7 +243,6 @@ namespace AtTest.Library.SegmentTree
                 }
             }
         }
-
 
         private static string Read() { return ReadLine(); }
         private static char[] ReadChars() { return Array.ConvertAll(Read().Split(), a => a[0]); }

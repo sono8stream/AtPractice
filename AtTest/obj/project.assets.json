@@ -664,24 +664,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Robotics\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\sono8\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Robotics\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
+      "projectUniqueName": "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
       "projectName": "AtTest",
-      "projectPath": "C:\\Users\\Robotics\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
-      "packagesPath": "C:\\Users\\Robotics\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Robotics\\csharp\\AtPractice\\AtTest\\obj\\",
+      "projectPath": "D:\\csharp\\AtPractice\\AtTest\\AtTest.csproj",
+      "packagesPath": "C:\\Users\\sono8\\.nuget\\packages\\",
+      "outputPath": "D:\\csharp\\AtPractice\\AtTest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\Robotics\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\sono8\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
@@ -721,7 +722,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
