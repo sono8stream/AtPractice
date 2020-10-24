@@ -5,7 +5,7 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ACL_001
+namespace AtTest.ARC_105
 {
     class B
     {
@@ -21,47 +21,34 @@ namespace AtTest.ACL_001
 
         static void Method(string[] args)
         {
-            long n = ReadLong();
-            if (n == 1)
-            {
-                WriteLine(1);
-                return;
-            }
+            int n = ReadInt();
+            int[] array = ReadInts();
 
-            long res = long.MaxValue;
-            for (long i = 1; i * i <= 2 * n; i++)
+            int res = array[0];
+            for(int i = 1; i < n; i++)
             {
-                if (2*n % i != 0)
-                {
-                    continue;
-                }
-
-                long other = 2 * n / i;
-                long gcd;
-                long x = 0, y = 0;
-                gcd = ExtendedEuclidean(i, other, ref x, ref y);
-                if (gcd == 1 && x != 0 && y != 0)
-                {
-                    res = Min(res, Abs(i * x));
-                    res = Min(res, Abs(other * y));
-                }
+                res = (int)GCD(res, array[i]);
             }
 
             WriteLine(res);
         }
 
-        static long ExtendedEuclidean(long a,long b,ref long x,ref long y)
+        static long GCD(long a, long b)
         {
-            if (b == 0)
+            if (b > a)
             {
-                x = 1;
-                y = 0;
-                return a;
+                long temp = b;
+                b = a;
+                a = temp;
             }
-
-            long d = ExtendedEuclidean(b, a % b, ref y, ref x);
-            y -= a / b * x;
-            return d;
+            long c = b;
+            do
+            {
+                c = a % b;
+                a = b;
+                b = c;
+            } while (c > 0);
+            return a;
         }
 
         private static string Read() { return ReadLine(); }

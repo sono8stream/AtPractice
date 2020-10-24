@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ACL_001
+namespace AtTest.ARC_105
 {
-    class B
+    class D
     {
         static void ain(string[] args)
         {
@@ -21,47 +21,34 @@ namespace AtTest.ACL_001
 
         static void Method(string[] args)
         {
-            long n = ReadLong();
-            if (n == 1)
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
             {
-                WriteLine(1);
-                return;
-            }
+                int n = ReadInt();
+                int[] array = ReadInts();
 
-            long res = long.MaxValue;
-            for (long i = 1; i * i <= 2 * n; i++)
-            {
-                if (2*n % i != 0)
+                if (n % 2 == 0)
                 {
-                    continue;
-                }
+                    Array.Sort(array);
+                    bool allSet = true;
+                    for(int j = 0; j < n; j += 2)
+                    {
+                        if (array[j] == array[j + 1])
+                        {
+                            continue;
+                        }
 
-                long other = 2 * n / i;
-                long gcd;
-                long x = 0, y = 0;
-                gcd = ExtendedEuclidean(i, other, ref x, ref y);
-                if (gcd == 1 && x != 0 && y != 0)
+                        allSet = false;
+                        break;
+                    }
+
+                    WriteLine(allSet ? "Second" : "First");
+                }
+                else
                 {
-                    res = Min(res, Abs(i * x));
-                    res = Min(res, Abs(other * y));
+                    WriteLine("Second");
                 }
             }
-
-            WriteLine(res);
-        }
-
-        static long ExtendedEuclidean(long a,long b,ref long x,ref long y)
-        {
-            if (b == 0)
-            {
-                x = 1;
-                y = 0;
-                return a;
-            }
-
-            long d = ExtendedEuclidean(b, a % b, ref y, ref x);
-            y -= a / b * x;
-            return d;
         }
 
         private static string Read() { return ReadLine(); }

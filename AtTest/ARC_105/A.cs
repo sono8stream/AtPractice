@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ACL_001
+namespace AtTest.ARC_105
 {
-    class B
+    class A
     {
         static void ain(string[] args)
         {
@@ -21,47 +21,28 @@ namespace AtTest.ACL_001
 
         static void Method(string[] args)
         {
-            long n = ReadLong();
-            if (n == 1)
-            {
-                WriteLine(1);
-                return;
-            }
+            int[] abcd = ReadInts();
+            int all = abcd.Sum();
 
-            long res = long.MaxValue;
-            for (long i = 1; i * i <= 2 * n; i++)
+            for(int i = 0; i < 16; i++)
             {
-                if (2*n % i != 0)
+                int tmp = 0;
+                for(int j = 0; j < 4; j++)
                 {
-                    continue;
+                    if ((i & (1 << j)) > 0)
+                    {
+                        tmp += abcd[j];
+                    }
                 }
 
-                long other = 2 * n / i;
-                long gcd;
-                long x = 0, y = 0;
-                gcd = ExtendedEuclidean(i, other, ref x, ref y);
-                if (gcd == 1 && x != 0 && y != 0)
+                if (tmp == all - tmp)
                 {
-                    res = Min(res, Abs(i * x));
-                    res = Min(res, Abs(other * y));
+                    WriteLine("Yes");
+                    return;
                 }
             }
 
-            WriteLine(res);
-        }
-
-        static long ExtendedEuclidean(long a,long b,ref long x,ref long y)
-        {
-            if (b == 0)
-            {
-                x = 1;
-                y = 0;
-                return a;
-            }
-
-            long d = ExtendedEuclidean(b, a % b, ref y, ref x);
-            y -= a / b * x;
-            return d;
+            WriteLine("No");
         }
 
         private static string Read() { return ReadLine(); }
