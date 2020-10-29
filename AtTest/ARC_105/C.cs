@@ -10,7 +10,7 @@ namespace AtTest.ARC_105
 {
     class C
     {
-        static void Main(string[] args)
+        static void ain(string[] args)
         {
             var sw = new System.IO.StreamWriter(OpenStandardOutput()) { AutoFlush = false };
             SetOut(sw);
@@ -44,7 +44,7 @@ namespace AtTest.ARC_105
                 }
             }
 
-            ///複数ラクダを並べたとき，両端が最低でもどれだけ離れているべきか計算
+            ///複数ラクダを並べたとき両端が最低でもどれだけ離れているべきか計算
             int all = 1 << n;
             long[] constraints = new long[all];
             for (int i = 0; i < all; i++)
