@@ -56,21 +56,37 @@ namespace AtTest._400Problems_remain_
                 }
             }
 
+            int res = MaxFlow(graph, 0, r * c + 1);
+            Console.WriteLine(Math.Max(dotCnt - res, res));
+        }
+
+        static int MaxFlow(List<Edge>[] graph, int start, int goal)
+        {
             int[] levels;
             int res = 0;
-            do
+            while (true)
             {
-                levels = BFS(graph, 0);
-                int[] iterator = new int[r * c + 2];
-                int flow = 0;
-                do
+                levels = BFS(graph, start);
+                if (levels[goal] <= 0)
                 {
-                    flow = DFS(ref iterator, ref graph, levels,
-                        0, r * c + 1, int.MaxValue);
+                    break;
+                }
+
+                int[] iterator = new int[graph.Length];
+                while (true)
+                {
+                    int flow = DFS(ref iterator, ref graph, levels,
+                         start, goal, int.MaxValue);
+                    if (flow == 0)
+                    {
+                        break;
+                    }
+
                     res += flow;
-                } while (flow > 0);
-            } while (levels[r * c + 1] > 0);
-            Console.WriteLine(Math.Max(dotCnt - res, res));
+                }
+            }
+
+            return res;
         }
 
         //calc min distance
