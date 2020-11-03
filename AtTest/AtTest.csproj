@@ -23,8 +23,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ABC_181\" />
-  </ItemGroup>
-
 </Project>
