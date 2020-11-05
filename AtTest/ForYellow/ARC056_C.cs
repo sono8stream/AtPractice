@@ -26,55 +26,55 @@ namespace AtTest.ForYellow
             int k = nk[1];
 
             int[,] ws = new int[n, n];
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 int[] row = ReadInts();
-                for(int j = 0; j < n; j++)
+                for (int j = 0; j < n; j++)
                 {
                     ws[i, j] = row[j];
                 }
             }
 
             int all = 1 << n;
-            int[,] minuses = new int[all, n];
-            for (int i = 0; i < all; i++)
+            int[] sums = new int[all];
+            for (int i = 1; i < all; i++)
             {
-                for (int j = 0; j < n; j++)
+                int top = 0;
+                int topVal = 1;
+                while (topVal * 2 <= i)
+                {
+                    topVal *= 2;
+                    top++;
+                }
+
+                int tmp = 0;
+                for (int j = 0; j < top; j++)
                 {
                     if (((1 << j) & i) > 0)
                     {
-                        continue;
-                    }
-
-                    for (int l = 0; l < n; l++)
-                    {
-                        if (((1 << l) & i) > 0)
-                        {
-                            minuses[i, j] += ws[j, l];
-                        }
+                        tmp += ws[top, j];
                     }
                 }
+                sums[i] = sums[i - topVal] + tmp;
             }
 
             int[] dp = new int[all];
-            for(int i = 1; i < all; i++)
+            for (int i = 1; i < all; i++)
             {
                 int val = int.MinValue;
-                for (int j = i; ; j = (j - 1) & i)
+                int top = 0;
+                int topVal = 1;
+                while (topVal * 2 <= i)
                 {
-                    int tmp = dp[j];
-                    tmp += k;
+                    top++;
+                    topVal *= 2;
+                }
 
-                    int div = 1;
-                    for(int l = 0; l < n; l++)
-                    {
-                        if ((div & j) > 0)
-                        {
-                            tmp -= minuses[i - j, l];
-                        }
-                        div <<= 1;
-                    }
-                    val = Max(val, tmp);
+
+                for (int j = i - topVal; ; j = (j - 1) & i)
+                {
+                    int minus = sums[i] - sums[i - j - topVal] - sums[j + topVal];
+                    val = Max(val, dp[i - j - topVal] + k - minus);
 
                     if (j == 0)
                     {
