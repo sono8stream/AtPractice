@@ -21,6 +21,27 @@ namespace AtTest.CodeForces._1437
 
         static void Method(string[] args)
         {
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
+            {
+                long[] lr = ReadLongs();
+                long l = lr[0];
+                long r = lr[1];
+                long min = r + 1;
+                long bottom = min / 2;
+                if (min % 2 == 1)
+                {
+                    bottom++;
+                }
+                if (bottom > l)
+                {
+                    WriteLine("NO");
+                }
+                else
+                {
+                    WriteLine("YES");
+                }
+            }
         }
 
         private static string Read() { return ReadLine(); }

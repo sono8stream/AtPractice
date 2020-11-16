@@ -21,6 +21,28 @@ namespace AtTest.CodeForces._1437
 
         static void Method(string[] args)
         {
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
+            {
+                int n = ReadInt();
+                string s = Read();
+
+                int oneSeqs = 0;
+                int zeroSeqs = 0;
+                for(int j = 1; j < n; j++)
+                {
+                    if (s[j] =='0'&&s[j - 1] == '0')
+                        {
+                            zeroSeqs++;
+                        }
+                    if (s[j] == '1'&&s[j-1]=='1')
+                    {
+                        oneSeqs++;
+                    }
+                }
+
+                WriteLine(Max(oneSeqs, zeroSeqs));
+            }
         }
 
         private static string Read() { return ReadLine(); }

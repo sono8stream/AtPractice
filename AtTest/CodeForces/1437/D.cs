@@ -21,6 +21,41 @@ namespace AtTest.CodeForces._1437
 
         static void Method(string[] args)
         {
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
+            {
+                int n = ReadInt();
+                int[] array = ReadInts();
+                Queue<int> que = new Queue<int>();
+                for(int j = 1; j < n; j++)
+                {
+                    que.Enqueue(array[j]);
+                }
+
+                int depth = 0;
+                int nodes = 1;
+                while (true)
+                {
+                    int nextNodes = 0;
+                    while (nodes > 0)// 葉に生やせるだけ生やす
+                    {
+                        int prev = 0;
+                        while (que.Count > 0 && que.Peek() > prev)
+                        {
+                            nextNodes++;
+                            prev = que.Dequeue();
+                        }
+                        nodes--;
+                    }
+                    depth++;
+                    nodes = nextNodes;
+                    if (que.Count == 0)
+                    {
+                        break;
+                    }
+                }
+                WriteLine(depth);
+            }
         }
 
         private static string Read() { return ReadLine(); }
