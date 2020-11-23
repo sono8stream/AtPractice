@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.ABC_184
+namespace AtTest.CodeForces._1422
 {
-    class D
+    class A
     {
         static void ain(string[] args)
         {
@@ -21,22 +21,18 @@ namespace AtTest.ABC_184
 
         static void Method(string[] args)
         {
-            int[] abc = ReadInts();
-
-            double[,,] dp = new double[105, 105, 105];
-            for (int i = 99; i >= 0; i--)
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
             {
-                for (int j = 99; j >= 0; j--)
-                {
-                    for (int k = 99; k >= 0; k--)
-                    {
-                        dp[i, j, k] += (dp[i + 1, j, k] + 1) * i / (i + j + k);
-                        dp[i, j, k] += (dp[i, j + 1, k] + 1) * j / (i + j + k);
-                        dp[i, j, k] += (dp[i, j, k + 1] + 1) * k / (i + j + k);
-                    }
-                }
+                long[] abc = ReadLongs();
+                Array.Sort(abc);
+                long a = abc[0];
+                long b = abc[1];
+                long c = abc[2];
+
+                WriteLine(a + c - b);
             }
-            WriteLine(dp[abc[0], abc[1], abc[2]]);
+
         }
 
         private static string Read() { return ReadLine(); }
