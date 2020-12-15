@@ -5,9 +5,9 @@ using System.Text;
 using static System.Console;
 using static System.Math;
 
-namespace AtTest.CodeForces._1371
+namespace AtTest.CodeForces._1369
 {
-    class F
+    class C
     {
         static void ain(string[] args)
         {
@@ -21,64 +21,49 @@ namespace AtTest.CodeForces._1371
 
         static void Method(string[] args)
         {
-            int[] np = ReadInts();
-            int n = np[0];
-            int p = np[1];
-            int[] array = ReadInts();
-            Array.Sort(array);
-
-            long min = 0;
-            for (int i = 0; i < n; i++)
+            int t = ReadInt();
+            for(int i = 0; i < t; i++)
             {
-                if (min + i < array[i])
-                {
-                    min = array[i] - i;
-                }
-            }
+                int[] nk = ReadInts();
+                int n = nk[0];
+                int k = nk[1];
+                long[] array = ReadLongs();
+                Array.Sort(array);
+                Array.Reverse(array);
+                int[] ws = ReadInts();
+                Array.Sort(ws);
 
-            long bottom = 0;
-            long top = int.MaxValue;
-            while (bottom + 1 < top)
-            {
-                long mid = (bottom + top) / 2;
-                int cnt = 0;
-                int idx = 0;
-                bool ok = false;
-                for (int i = 0; i < n; i++)
+                int ones = 0;
+                for(int j = 0; j < k; j++)
                 {
-                    while (idx < n && array[idx] <= mid + i)
+                    if (ws[j] == 1)
                     {
-                        cnt++;
-                        idx++;
-                    }
-                    if (cnt - i >= p)
-                    {
-                        ok = true;
-                        break;
+                        ones++;
                     }
                 }
 
-                if (ok)
+                long res = 0;
+                for(int j = 0; j < k; j++)
                 {
-                    top = mid;
+                    if (ws[j] == 1)
+                    {
+                        res += array[j] * 2;
+                    }
+                    else
+                    {
+                        res += array[j];
+                    }
                 }
-                else
+                int now = k - 1;
+                for (int j = ones; j < k; j++)
                 {
-                    bottom = mid;
+                    int remain = ws[j] - 1;
+                    now += remain;
+                    res += array[now];
                 }
-            }
 
-            long res = Max(bottom - min + 1, 0);
-            WriteLine(res);
-            for(long i = min; i <= bottom; i++)
-            {
-                Write(i);
-                if (i < bottom)
-                {
-                    Write(" ");
-                }
+                WriteLine(res);
             }
-            WriteLine();
         }
 
         private static string Read() { return ReadLine(); }
