@@ -36,7 +36,7 @@ namespace AtTest.CodeForces._1355
             }
 
             long totalSum = array.Sum();
-            long res = Min(totalSum * r, (array[n - 1] * n - totalSum) * a);
+            long res = Min((totalSum - array[0] * n) * r, (array[n - 1] * n - totalSum) * a);
             long bottom = array[0];
             long top = int.MaxValue;
             while (bottom + 1 < top)
