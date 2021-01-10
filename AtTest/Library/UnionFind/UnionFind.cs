@@ -51,7 +51,7 @@ namespace AtTest.Library.UnionFind
                 for (int i = 0; i < length; i++)
                 {
                     tree[i] = i;
-                    size[i] = 0;
+                    size[i] = 1;
                 }
             }
 
@@ -77,7 +77,7 @@ namespace AtTest.Library.UnionFind
                 int ry = Root(y);
                 if (rx == ry) return;
 
-                if (rx > ry)
+                if (GetSize(rx) < GetSize(ry))
                 {
                     int temp = rx;
                     rx = ry;
