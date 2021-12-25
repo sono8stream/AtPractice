@@ -93,6 +93,11 @@ namespace AtTest.Library.SegmentTree
                 }
             }
 
+            /// <summary>
+            /// iにある値をvalueに書き換える
+            /// </summary>
+            /// <param name="i"></param>
+            /// <param name="value"></param>
             public void Update(int i, T value)
             {
                 int now = i + totalLength - 1;
@@ -123,12 +128,13 @@ namespace AtTest.Library.SegmentTree
             /// <summary>
             /// [left, right]が[top,last]と一致していればその値を，そうでなければ統合して返す
             /// 再帰処理
+            /// 右左の違いを気にする
             /// </summary>
-            /// <param name="left"></param>
-            /// <param name="right"></param>
-            /// <param name="i"></param>
-            /// <param name="top"></param>
-            /// <param name="last"></param>
+            /// <param name="left">配列中のScanしたい左端インデックス</param>
+            /// <param name="right">配列中のScanしたい右端インデックス</param>
+            /// <param name="i">現在見ているツリー中の要素のインデックス</param>
+            /// <param name="top">現在見ているツリー中の要素がカバーする配列中の左端インデックス</param>
+            /// <param name="last">現在見ているツリー中の要素がカバーする配列中の右端インデックス</param>
             T Query(int left, int right, int i, int top, int last)
             {
                 if (left == top && right == last)
@@ -139,15 +145,19 @@ namespace AtTest.Library.SegmentTree
                 {
                     int half = (top + last) / 2;
                     T val = exValue;
-                    if (left <= half)
+
+                    if (right <= half)
                     {
-                        val = integrate(val, Query(left, Min(right, half), i * 2 + 1, top, half));
+                        return Query(left, right, i * 2 + 1, top, half);
                     }
-                    if (right >= half + 1)
+                    if (left > half)
                     {
-                        val = integrate(val, Query(Max(left, half + 1), right, i * 2 + 2, half + 1, last));
+                        return Query(left, right, i * 2 + 2, half + 1, last);
                     }
-                    return val;
+
+                    T leftNode = Query(left, half, i * 2 + 1, top, half);
+                    T rightNode = Query(half + 1, right, i * 2 + 2, half + 1, last);
+                    return integrate(leftNode, rightNode);
                 }
             }
 
