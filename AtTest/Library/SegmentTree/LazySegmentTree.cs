@@ -365,11 +365,11 @@ namespace AtTest.Library.SegmentTree
             /// [left, right]が[top,last]と一致していればvalで更新，そうでなければ分割して評価
             /// 再帰処理
             /// </summary>
-            /// <param name="left"></param>
-            /// <param name="right"></param>
-            /// <param name="i"></param>
-            /// <param name="top"></param>
-            /// <param name="last"></param>
+            /// <param name="left">配列中のScanしたい左端インデックス</param>
+            /// <param name="right">配列中のScanしたい右端インデックス</param>
+            /// <param name="i">現在見ているツリー中の要素のインデックス</param>
+            /// <param name="top">現在見ているツリー中の要素がカバーする配列中の左端インデックス</param>
+            /// <param name="last">現在見ているツリー中の要素がカバーする配列中の右端インデックス</param>
             /// <param name="val"></param>
             void UpdateQuery(int left, int right, int i, int top, int last, LazyValueType val)
             {
@@ -410,6 +410,16 @@ namespace AtTest.Library.SegmentTree
                 return ScanQuery(left, right, 0, 0, totalLength - 1).val;
             }
 
+            /// <summary>
+            /// [left, right]が[top,last]と一致していればその値を，そうでなければ統合して返す
+            /// 再帰処理
+            /// 右左の違いを気にする
+            /// </summary>
+            /// <param name="left">配列中のScanしたい左端インデックス</param>
+            /// <param name="right">配列中のScanしたい右端インデックス</param>
+            /// <param name="i">現在見ているツリー中の要素のインデックス</param>
+            /// <param name="top">現在見ているツリー中の要素がカバーする配列中の左端インデックス</param>
+            /// <param name="last">現在見ているツリー中の要素がカバーする配列中の右端インデックス</param>
             Node ScanQuery(int left, int right, int i, int top, int last)
             {
                 if (left == top && right == last)
