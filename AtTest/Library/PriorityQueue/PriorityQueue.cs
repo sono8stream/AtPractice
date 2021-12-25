@@ -138,14 +138,17 @@ namespace Dijkstra
             public void Enqueue(T value)
             {
                 Add(value);
-                int c = Count - 1;
-                while (c > 0)
+                int current = Count - 1;
+                while (current > 0)
                 {
-                    int p = (c - 1) / 2;
-                    if (list[c].CompareTo(list[p]) >= 0) break;
+                    int parent = (current - 1) / 2;
+                    if (list[current].CompareTo(list[parent]) >= 0)
+                    {
+                        break;
+                    }
 
-                    Swap(p, c);
-                    c = p;
+                    Swap(parent, current);
+                    current = parent;
                 }
             }
 
@@ -156,19 +159,25 @@ namespace Dijkstra
                 if (Count == 0) return value;
 
                 list[0] = list[Count];
-                int p = 0;
+                int parent = 0;
                 while (true)
                 {
-                    int c1 = p * 2 + 1;
-                    int c2 = p * 2 + 2;
-                    if (c1 >= Count) break;
+                    int currentLeft = parent * 2 + 1;
+                    int currentRight = parent * 2 + 2;
+                    if (currentLeft >= Count)
+                    {
+                        break;
+                    }
 
-                    int c = (c2 >= Count || list[c1].CompareTo(list[c2]) == -1)
-                        ? c1 : c2;
-                    if (list[c].CompareTo(list[p]) >= 0) break;
+                    int current = (currentRight >= Count || list[currentLeft].CompareTo(list[currentRight]) == -1)
+                        ? currentLeft : currentRight;
+                    if (list[current].CompareTo(list[parent]) >= 0)
+                    {
+                        break;
+                    }
 
-                    Swap(p, c);
-                    p = c;
+                    Swap(parent, current);
+                    parent = current;
                 }
                 return value;
             }

@@ -248,6 +248,214 @@ namespace AtTest.Library.SegmentTree
             }
         }
 
+        /// <summary>
+        /// 位置を特定可能なノードを用いる遅延セグメント木
+        /// </summary>
+        /// <typeparam name="ValueType">保持する値の型</typeparam>
+        /// <typeparam name="LazyValueType">遅延評価で反映させる値の型</typeparam>
+        class LazySegmentTree3<ValueType, LazyValueType>
+        {
+            int totalLength;
+            Node[] valTree;
+            LazyValueType[] lazyTree;
+            bool[] haveLazy;
+
+            // 遅延評価値を伝播させる処理
+            Func<LazyValueType, LazyValueType, LazyValueType> evaluate;
+            // 遅延評価値を保持する値に反映させる処理
+            Func<Node, LazyValueType, ValueType> project;
+            // 保持する値の畳み込み処理
+            Func<Node, Node, ValueType> integrate;
+
+            // 範囲外の値
+            ValueType exValue;
+
+            public struct Node
+            {
+                public ValueType val;
+                // 同じdepthFromTopでの左からの位置（0-indexed）
+                public int indexFromLeft;
+                // 畳みこんでいる要素サイズ
+                public int length;
+
+                public Node(ValueType val, int indexFromLeft, int length)
+                {
+                    this.val = val;
+                    this.indexFromLeft = indexFromLeft;
+                    this.length = length;
+                }
+            }
+
+            /// <summary>
+            /// 要素数lengthの遅延セグ木
+            /// </summary>
+            /// <param name="length"></param>
+            /// <param name="evaluate">遅延評価値を伝播させる処理</param>
+            /// <param name="project">遅延評価値を保持する値に反映させる処理</param>
+            /// <param name="integrate">保持する値の畳み込み処理</param>
+            /// <param name="initialValue">初期値を生成するための遅延評価値</param>
+            /// <param name="exValue">保持する値の例外値</param>
+            public LazySegmentTree3(int length, 
+                Func<LazyValueType, LazyValueType, LazyValueType> evaluate,
+                Func<Node, LazyValueType, ValueType> project,
+                Func<Node, Node, ValueType> integrate, LazyValueType initValue, ValueType exValue)
+            {
+                totalLength = 1;
+                while (totalLength < length)
+                {
+                    totalLength *= 2;
+                }
+
+                this.evaluate = evaluate;
+                this.project = project;
+                this.integrate = integrate;
+
+                lazyTree = new LazyValueType[totalLength * 2 - 1];
+                haveLazy = new bool[totalLength * 2 - 1];
+                valTree = new Node[totalLength * 2 - 1];
+
+                int nodeLength = totalLength;
+                int remainLength = length;
+                for (int i = 0; i < length; i++)
+                {
+                    int currentIndexFromLeft = length - remainLength;
+                    int currentNodeLength;
+                    // ノードに畳みこまれている要素数を計算
+                    if (remainLength < nodeLength)
+                    {
+                        currentNodeLength = remainLength;
+                        remainLength = length;
+                        nodeLength /= 2;
+                    }
+                    else
+                    {
+                        currentNodeLength = nodeLength;
+                        remainLength -= nodeLength;
+                    }
+
+                    valTree[i + totalLength - 1] = new Node(exValue, currentIndexFromLeft, currentNodeLength);
+                    valTree[i + totalLength - 1].val = project(valTree[i + totalLength - 1], initValue);
+                }
+
+                for (int i = totalLength - 2; i >= 0; i--)
+                {
+                    valTree[i].val = integrate(valTree[i * 2 + 1], valTree[i * 2 + 2]);
+                }
+
+                this.exValue = exValue;
+            }
+
+            /// <summary>
+            /// [left, right]をvalで更新
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            /// <param name="val"></param>
+            public void Update(int left, int right, LazyValueType val)
+            {
+                if (left < 0 || right >= totalLength || right < left)
+                {
+                    return;
+                }
+
+                UpdateQuery(left, right, 0, 0, totalLength - 1, val);
+            }
+
+            /// <summary>
+            /// [left, right]が[top,last]と一致していればvalで更新，そうでなければ分割して評価
+            /// 再帰処理
+            /// </summary>
+            /// <param name="left"></param>
+            /// <param name="right"></param>
+            /// <param name="i"></param>
+            /// <param name="top"></param>
+            /// <param name="last"></param>
+            /// <param name="val"></param>
+            void UpdateQuery(int left, int right, int i, int top, int last, LazyValueType val)
+            {
+                if (left == top && right == last)
+                {
+                    haveLazy[i] = true;
+                    lazyTree[i] = evaluate(lazyTree[i], val);
+                    valTree[i].val = project(valTree[i], lazyTree[i]);
+                    while (i > 0)
+                    {
+                        i = (i - 1) / 2;
+                        valTree[i].val = integrate(valTree[i * 2 + 1], valTree[i * 2 + 2]);
+                    }
+                }
+                else
+                {
+                    EvaluateLazy(i);
+
+                    int half = (top + last) / 2;
+                    if (left <= half)
+                    {
+                        UpdateQuery(left, Min(right, half), i * 2 + 1, top, half, val);
+                    }
+                    if (right >= half + 1)
+                    {
+                        UpdateQuery(Max(left, half + 1), right, i * 2 + 2, half + 1, last, val);
+                    }
+                }
+            }
+
+            public ValueType Scan(int left, int right)
+            {
+                if (left < 0 || right >= totalLength || right < left)
+                {
+                    return exValue;
+                }
+
+                return ScanQuery(left, right, 0, 0, totalLength - 1).val;
+            }
+
+            Node ScanQuery(int left, int right, int i, int top, int last)
+            {
+                if (left == top && right == last)
+                {
+                    return valTree[i];
+                }
+                else
+                {
+                    EvaluateLazy(i);
+
+                    int half = (top + last) / 2;
+
+                    if (right <= half)
+                    {
+                        return ScanQuery(left, right, i * 2 + 1, top, half);
+                    }
+                    if (left > half)
+                    {
+                        return ScanQuery(left, right, i * 2 + 2, half + 1, last);
+                    }
+
+                    Node leftNode = ScanQuery(left, half, i * 2 + 1, top, half);
+                    Node rightNode = ScanQuery(half + 1, right, i * 2 + 2, half + 1, last);
+                    ValueType value = integrate(leftNode,rightNode);
+
+                    return new Node(value, leftNode.indexFromLeft, leftNode.length + rightNode.length);
+                }
+            }
+
+            void EvaluateLazy(int i)
+            {
+                if (i * 2 + 2 < lazyTree.Length && haveLazy[i])
+                {
+                    haveLazy[i * 2 + 1] = true;
+                    lazyTree[i * 2 + 1] = evaluate(lazyTree[i * 2 + 1], lazyTree[i]);
+                    valTree[i * 2 + 1].val = project(valTree[i * 2 + 1], lazyTree[i * 2 + 1]);
+
+                    haveLazy[i * 2 + 2] = true;
+                    lazyTree[i * 2 + 2] = evaluate(lazyTree[i * 2 + 2], lazyTree[i]);
+                    valTree[i * 2 + 2].val = project(valTree[i * 2 + 2], lazyTree[i * 2 + 2]);
+
+                    haveLazy[i] = false;
+                }
+            }
+        }
+
         // ノードを含まないもの
         class LazySegmentTree2<T, U>
         {
